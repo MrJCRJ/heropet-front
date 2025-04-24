@@ -14,6 +14,21 @@ const PedidoView = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Função para formatar a data corretamente, considerando o fuso horário
+  const formatarData = (dataString: string) => {
+    if (!dataString) return "";
+
+    // Cria a data no fuso horário local
+    const data = new Date(dataString);
+
+    // Corrige para o fuso horário local
+    const dataLocal = new Date(
+      data.getTime() + data.getTimezoneOffset() * 60000
+    );
+
+    return dataLocal.toLocaleDateString("pt-BR");
+  };
+
   useEffect(() => {
     const carregarPedido = async () => {
       try {
@@ -91,12 +106,12 @@ const PedidoView = () => {
             </div>
             <div>
               <strong>Data do Pedido:</strong>
-              <span>{new Date(pedido.dataPedido).toLocaleDateString()}</span>
+              <span>{formatarData(pedido.dataPedido)}</span>
             </div>
             {pedido.dataEntrega && (
               <div>
                 <strong>Data de Entrega:</strong>
-                <span>{new Date(pedido.dataEntrega).toLocaleDateString()}</span>
+                <span>{formatarData(pedido.dataEntrega)}</span>
               </div>
             )}
             <div>

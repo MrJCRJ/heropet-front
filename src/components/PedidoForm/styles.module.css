@@ -81,8 +81,13 @@
   transition: background-color 0.2s;
 }
 
-.addButton:hover {
+.addButton:hover:not(:disabled) {
   background-color: #218838;
+}
+
+.addButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 .itensList {
@@ -195,7 +200,6 @@
   font-size: 15px;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .itemForm {
     grid-template-columns: 1fr;

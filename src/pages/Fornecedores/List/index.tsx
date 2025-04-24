@@ -45,6 +45,9 @@ const FornecedorListPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
+        <button onClick={() => navigate("/")} className={styles.backButton}>
+          Voltar
+        </button>
         <h1>Fornecedores</h1>
         <button
           onClick={() => navigate("/fornecedores/novo")}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { listarPedidos, removerPedido, Pedido } from "../../../api/pedidos";
 import styles from "./styles.module.css";
-import Modal from "../../../components/Modal"; // Importe o componente Modal
+import Modal from "../../../components/Modal";
 
 const PedidoList = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -54,15 +54,35 @@ const PedidoList = () => {
     }
   };
 
-  if (loading) return <div>Carregando...</div>;
-  if (error) return <div>{error}</div>;
+  // Função para formatar a data corretamente, considerando o fuso horário
+  const formatarData = (dataString: string) => {
+    if (!dataString) return "";
+
+    // Cria a data no fuso horário local
+    const data = new Date(dataString);
+
+    // Corrige para o fuso horário local
+    const dataLocal = new Date(
+      data.getTime() + data.getTimezoneOffset() * 60000
+    );
+
+    return dataLocal.toLocaleDateString("pt-BR");
+  };
+
+  if (loading) return <div className={styles.loading}>Carregando...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
 
   return (
     <div className={styles.container}>
-      <h1>Lista de Pedidos</h1>
-      <Link to="/pedidos/novo" className={styles.novoPedido}>
-        Novo Pedido
-      </Link>
+      <div className={styles.header}>
+        <button onClick={() => navigate("/")} className={styles.backButton}>
+          Voltar
+        </button>
+        <h1>Lista de Pedidos</h1>
+        <Link to="/pedidos/novo" className={styles.novoPedido}>
+          Novo Pedido
+        </Link>
+      </div>
 
       <div className={styles.filtros}>
         <button onClick={() => carregarPedidos()}>Todos</button>
@@ -88,7 +108,7 @@ const PedidoList = () => {
               <td>{pedido._id?.substring(0, 6)}...</td>
               <td>{pedido.tipo}</td>
               <td>{pedido.nomeClienteFornecedor}</td>
-              <td>{new Date(pedido.dataPedido).toLocaleDateString()}</td>
+              <td>{formatarData(pedido.dataPedido)}</td>
               <td>R$ {pedido.totalPedido.toFixed(2)}</td>
               <td>{pedido.status}</td>
               <td className={styles.actions}>

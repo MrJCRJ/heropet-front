@@ -25,3 +25,36 @@
 .addButton:hover {
   background-color: #3182ce;
 }
+.backButton {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: auto; /* Pushes other header items to the right */
+}
+
+.backButton:hover {
+  background-color: #5a6268;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.addButton {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background-color: #218838;
+}
