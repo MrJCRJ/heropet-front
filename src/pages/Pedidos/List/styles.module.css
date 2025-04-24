@@ -1,0 +1,127 @@
+.container {
+  padding: 20px;
+}
+
+.novoPedido {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.filtros {
+  margin-bottom: 20px;
+}
+
+.filtros button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.filtros button:hover {
+  background-color: #e0e0e0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action {
+  color: #2196f3;
+  text-decoration: none;
+}
+
+.action:hover {
+  text-decoration: underline;
+}
+
+.deleteAction {
+  color: #f44336;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.deleteAction:hover {
+  text-decoration: underline;
+}
+
+.deleteAction:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* Estilos do Modal */
+.modalContent {
+  padding: 20px;
+}
+
+.modalContent p {
+  margin-bottom: 15px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalCancel {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modalCancel:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.modalConfirm {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modalConfirm:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.modalCancel:disabled,
+.modalConfirm:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

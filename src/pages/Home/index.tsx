@@ -14,6 +14,12 @@ const Home = () => {
         <Link to="/fornecedores/novo" className={styles.button}>
           Adicionar Fornecedor
         </Link>
+        <Link to="/pedidos" className={styles.button}>
+          Ver Pedidos
+        </Link>
+        <Link to="/pedidos/novo" className={styles.button}>
+          Criar Pedido
+        </Link>
       </div>
     </div>
   );

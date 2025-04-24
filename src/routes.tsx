@@ -5,6 +5,10 @@ import FornecedorList from "./pages/Fornecedores/List";
 import FornecedorCreate from "./pages/Fornecedores/Create";
 import FornecedorEdit from "./pages/Fornecedores/Edit";
 import FornecedorView from "./pages/Fornecedores/View";
+import PedidoList from "./pages/Pedidos/List";
+import PedidoCreate from "./pages/Pedidos/Create";
+import PedidoView from "./pages/Pedidos/View";
+import PedidoEdit from "./pages/Pedidos/Edit";
 import NotFound from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -35,6 +39,27 @@ export const router = createBrowserRouter([
           {
             path: ":cnpj/editar",
             element: <FornecedorEdit />,
+          },
+        ],
+      },
+      {
+        path: "pedidos",
+        children: [
+          {
+            index: true,
+            element: <PedidoList />,
+          },
+          {
+            path: "novo",
+            element: <PedidoCreate />,
+          },
+          {
+            path: ":id",
+            element: <PedidoView />,
+          },
+          {
+            path: ":id/editar",
+            element: <PedidoEdit />,
           },
         ],
       },
