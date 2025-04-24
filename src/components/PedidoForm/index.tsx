@@ -75,21 +75,6 @@ const PedidoForm = ({
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value, type } = e.target;
-    const checked =
-      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
-
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
-
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -98,7 +83,18 @@ const PedidoForm = ({
         <FormBasics
           formData={formData}
           isEditing={isEditing}
-          handleChange={handleChange}
+          handleChange={(e) => {
+            const { name, value, type } = e.target;
+            const checked =
+              type === "checkbox"
+                ? (e.target as HTMLInputElement).checked
+                : undefined;
+            setFormData({
+              ...formData,
+              [name]: type === "checkbox" ? checked : value,
+            });
+          }}
+          setFormData={setFormData}
         />
 
         <FormItems

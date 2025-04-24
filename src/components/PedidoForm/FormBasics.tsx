@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { Pedido } from "../../api/pedidos";
+import { listarFornecedores, Fornecedor } from "../../api/fornecedores";
 import styles from "./styles.module.css";
 
 interface FormBasicsProps {
@@ -9,10 +11,64 @@ interface FormBasicsProps {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => void;
+  setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
 }
 
-const FormBasics = ({ formData, isEditing, handleChange }: FormBasicsProps) => {
-  // Helper function to convert ISO date to yyyy-MM-dd format
+const FormBasics = ({
+  formData,
+  isEditing,
+  handleChange,
+  setFormData,
+}: FormBasicsProps) => {
+  const [fornecedoresCadastrados, setFornecedoresCadastrados] = useState<
+    Fornecedor[]
+  >([]);
+  const [suggestions, setSuggestions] = useState<Fornecedor[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Carrega os fornecedores cadastrados
+  useEffect(() => {
+    const carregarFornecedores = async () => {
+      try {
+        const response = await listarFornecedores();
+        setFornecedoresCadastrados(response.data);
+      } catch (err) {
+        console.error("Erro ao carregar fornecedores:", err);
+      }
+    };
+
+    if (!isEditing) {
+      carregarFornecedores();
+    }
+  }, [isEditing]);
+
+  // Atualiza as sugestões quando o documento muda
+  useEffect(() => {
+    if (formData.documentoClienteFornecedor && !isEditing) {
+      const filtered = fornecedoresCadastrados.filter((fornecedor) =>
+        fornecedor.cnpj.includes(formData.documentoClienteFornecedor)
+      );
+      setSuggestions(filtered);
+      setShowSuggestions(filtered.length > 0);
+    } else {
+      setShowSuggestions(false);
+    }
+  }, [formData.documentoClienteFornecedor, fornecedoresCadastrados, isEditing]);
+
+  const handleDocumentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(e);
+    setShowSuggestions(true);
+  };
+
+  const selectSuggestion = (fornecedor: Fornecedor) => {
+    setFormData((prev) => ({
+      ...prev,
+      documentoClienteFornecedor: fornecedor.cnpj,
+      nomeClienteFornecedor: fornecedor.nome || "",
+    }));
+    setShowSuggestions(false);
+  };
+
   const formatDateForInput = (dateString: string | undefined) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -36,15 +92,34 @@ const FormBasics = ({ formData, isEditing, handleChange }: FormBasicsProps) => {
       </div>
 
       <div className={styles.formGroup}>
-        <label>Documento (CPF/CNPJ):</label>
-        <input
-          type="text"
-          name="documentoClienteFornecedor"
-          value={formData.documentoClienteFornecedor}
-          onChange={handleChange}
-          required
-          disabled={isEditing}
-        />
+        <label>Documento (CNPJ):</label>
+        <div className={styles.documentoContainer}>
+          <input
+            type="text"
+            name="documentoClienteFornecedor"
+            value={formData.documentoClienteFornecedor}
+            onChange={handleDocumentoChange}
+            required
+            disabled={isEditing}
+            placeholder="Digite o CNPJ ou selecione um fornecedor"
+          />
+          {showSuggestions && (
+            <ul className={styles.suggestionsList}>
+              {suggestions.map((fornecedor, index) => (
+                <li
+                  key={index}
+                  onClick={() => selectSuggestion(fornecedor)}
+                  className={styles.suggestionItem}
+                >
+                  <span className={styles.cnpj}>{fornecedor.cnpj}</span>
+                  {fornecedor.nome && (
+                    <span className={styles.nome}> - {fornecedor.nome}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className={styles.formGroup}>
