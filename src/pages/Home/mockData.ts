@@ -1,14 +1,20 @@
-import { ItemPedido, Pedido } from "../../api/pedidos";
+export interface MonthlyStock {
+  month: number;
+  year: number;
+  stock: number;
+  purchases: number;
+  sales: number;
+}
 
-// Interface para os produtos mockados
-interface MockProduct {
+export interface MockProduct {
   id: number;
   name: string;
   brand: string;
-  currentStock: number;
+  initialStock: number;
+  monthlyStocks: MonthlyStock[];
 }
 
-const generateMockProducts = (): MockProduct[] => {
+export const generateMockProducts = (): MockProduct[] => {
   const products = [
     { name: "Ração Premium Cães Adultos", brand: "DogDeluxe" },
     { name: "Ração Standard Gatos Castrados", brand: "CatHealth" },
@@ -19,69 +25,49 @@ const generateMockProducts = (): MockProduct[] => {
     { name: "Areia Higiênica Gatos", brand: "CatHealth" },
   ];
 
-  return products.map((p, i) => ({
-    id: i + 1,
-    ...p,
-    currentStock: Math.floor(Math.random() * 500) + 100,
-  }));
-};
-
-const generateMockOrders = (products: MockProduct[]): Pedido[] => {
-  const orders: Pedido[] = [];
   const currentDate = new Date();
 
-  // Gerar pedidos para os últimos 12 meses
-  for (let i = 0; i < 12; i++) {
-    const date = new Date();
-    date.setMonth(currentDate.getMonth() - i);
+  return products.map((p, i) => {
+    const initialStock = Math.floor(Math.random() * 500) + 100;
+    const monthlyStocks: MonthlyStock[] = [];
+    let currentStock = initialStock;
 
-    // 2-5 pedidos por mês
-    const ordersCount = Math.floor(Math.random() * 4) + 2;
+    // Gera histórico dos últimos 12 meses
+    for (let m = 11; m >= 0; m--) {
+      const date = new Date();
+      date.setMonth(currentDate.getMonth() - m);
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
 
-    for (let j = 0; j < ordersCount; j++) {
-      const orderDate = new Date(date);
-      orderDate.setDate(Math.floor(Math.random() * 28) + 1);
+      // Gera valores mais realistas para compras e vendas
+      const baseDemand = Math.floor(Math.random() * 30) + 10;
+      const seasonalFactor = 1 + 0.5 * Math.sin(((month - 6) * Math.PI) / 6); // Variação sazonal
+      const brandFactor = p.brand === "DogDeluxe" ? 1.3 : 1; // Marca mais popular
 
-      const isPurchase = Math.random() > 0.5;
-      const itemsCount = Math.floor(Math.random() * 4) + 1;
-      const items: ItemPedido[] = [];
+      const purchases =
+        Math.floor(baseDemand * seasonalFactor * brandFactor * 1.5) + 15;
+      const sales = Math.floor(baseDemand * seasonalFactor * brandFactor) + 5;
 
-      let total = 0;
-      for (let k = 0; k < itemsCount; k++) {
-        const product = products[Math.floor(Math.random() * products.length)];
-        const quantity = Math.floor(Math.random() * 50) + 5;
-        const unitPrice = Math.floor(Math.random() * 100) + 10;
+      // Atualiza estoque (não permite negativo)
+      currentStock = Math.max(0, currentStock + purchases - sales);
 
-        items.push({
-          produto: product.name,
-          quantidade: quantity,
-          precoUnitario: unitPrice,
-          total: quantity * unitPrice,
-        });
-
-        total += quantity * unitPrice;
-      }
-
-      orders.push({
-        _id: `order_${i}_${j}`,
-        tipo: isPurchase ? "COMPRA" : "VENDA",
-        status: "CONCLUIDO",
-        documentoClienteFornecedor: isPurchase
-          ? `CNPJ_FORNECEDOR_${Math.floor(Math.random() * 10)}`
-          : `CNPJ_CLIENTE_${Math.floor(Math.random() * 50)}`,
-        nomeClienteFornecedor: isPurchase
-          ? "Fornecedor Exemplo"
-          : "Petshop Cliente",
-        dataPedido: orderDate.toISOString(),
-        itens: items,
-        totalPedido: total,
-        temNotaFiscal: Math.random() > 0.3,
+      monthlyStocks.push({
+        month,
+        year,
+        stock: currentStock,
+        purchases,
+        sales,
       });
     }
-  }
 
-  return orders;
+    return {
+      id: i + 1,
+      name: p.name,
+      brand: p.brand,
+      initialStock,
+      monthlyStocks,
+    };
+  });
 };
 
 export const mockProducts = generateMockProducts();
-export const mockOrders = generateMockOrders(mockProducts);
