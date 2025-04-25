@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { listarPedidos, removerPedido, Pedido } from "../../../api/pedidos";
 import styles from "./styles.module.css";
 import Modal from "../../../components/Modal";
@@ -12,7 +12,6 @@ const PedidoList = () => {
     null
   );
   const [isDeleting, setIsDeleting] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     carregarPedidos();
@@ -42,9 +41,6 @@ const PedidoList = () => {
     try {
       await removerPedido(pedidoParaExcluir);
       setPedidos(pedidos.filter((pedido) => pedido._id !== pedidoParaExcluir));
-      navigate("/pedidos", {
-        state: { message: "Pedido excluído com sucesso!" },
-      });
     } catch (err) {
       setError("Erro ao excluir pedido");
       console.error(err);
@@ -54,19 +50,10 @@ const PedidoList = () => {
     }
   };
 
-  // Função para formatar a data corretamente, considerando o fuso horário
   const formatarData = (dataString: string) => {
     if (!dataString) return "";
-
-    // Cria a data no fuso horário local
     const data = new Date(dataString);
-
-    // Corrige para o fuso horário local
-    const dataLocal = new Date(
-      data.getTime() + data.getTimezoneOffset() * 60000
-    );
-
-    return dataLocal.toLocaleDateString("pt-BR");
+    return data.toLocaleDateString("pt-BR");
   };
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
@@ -75,19 +62,40 @@ const PedidoList = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button onClick={() => navigate("/")} className={styles.backButton}>
+        <Link
+          to="/fornecedores"
+          className={`${styles.button} ${styles.secondary}`}
+        >
           Voltar
-        </button>
+        </Link>
         <h1>Lista de Pedidos</h1>
-        <Link to="/pedidos/novo" className={styles.novoPedido}>
+        <Link
+          to="/pedidos/novo"
+          className={`${styles.button} ${styles.success}`}
+        >
           Novo Pedido
         </Link>
       </div>
 
-      <div className={styles.filtros}>
-        <button onClick={() => carregarPedidos()}>Todos</button>
-        <button onClick={() => carregarPedidos("VENDA")}>Vendas</button>
-        <button onClick={() => carregarPedidos("COMPRA")}>Compras</button>
+      <div className={styles.filters}>
+        <button
+          onClick={() => carregarPedidos()}
+          className={`${styles.button} ${styles.secondary}`}
+        >
+          Todos
+        </button>
+        <button
+          onClick={() => carregarPedidos("VENDA")}
+          className={`${styles.button} ${styles.secondary}`}
+        >
+          Vendas
+        </button>
+        <button
+          onClick={() => carregarPedidos("COMPRA")}
+          className={`${styles.button} ${styles.secondary}`}
+        >
+          Compras
+        </button>
       </div>
 
       <table className={styles.table}>
@@ -109,21 +117,24 @@ const PedidoList = () => {
               <td>{pedido.tipo}</td>
               <td>{pedido.nomeClienteFornecedor}</td>
               <td>{formatarData(pedido.dataPedido)}</td>
-              <td>R$ {pedido.totalPedido.toFixed(2)}</td>
+              <td>R$ {pedido.totalPedido?.toFixed(2)}</td>
               <td>{pedido.status}</td>
-              <td className={styles.actions}>
-                <Link to={`/pedidos/${pedido._id}`} className={styles.action}>
+              <td>
+                <Link
+                  to={`/pedidos/${pedido._id}`}
+                  className={styles.actionLink}
+                >
                   Ver
                 </Link>
                 <Link
                   to={`/pedidos/${pedido._id}/editar`}
-                  className={styles.action}
+                  className={styles.actionLink}
                 >
                   Editar
                 </Link>
                 <button
                   onClick={() => handleDeleteClick(pedido._id!)}
-                  className={styles.deleteAction}
+                  className={styles.dangerLink}
                   disabled={isDeleting}
                 >
                   Excluir
@@ -134,7 +145,6 @@ const PedidoList = () => {
         </tbody>
       </table>
 
-      {/* Modal de confirmação */}
       <Modal
         isOpen={!!pedidoParaExcluir}
         onClose={() => setPedidoParaExcluir(null)}
@@ -146,17 +156,17 @@ const PedidoList = () => {
           <div className={styles.modalActions}>
             <button
               onClick={() => setPedidoParaExcluir(null)}
-              className={styles.modalCancel}
+              className={`${styles.button} ${styles.secondary}`}
               disabled={isDeleting}
             >
               Cancelar
             </button>
             <button
               onClick={confirmDelete}
-              className={styles.modalConfirm}
+              className={`${styles.button} ${styles.danger}`}
               disabled={isDeleting}
             >
-              {isDeleting ? "Excluindo..." : "Confirmar Exclusão"}
+              {isDeleting ? "Excluindo..." : "Confirmar"}
             </button>
           </div>
         </div>

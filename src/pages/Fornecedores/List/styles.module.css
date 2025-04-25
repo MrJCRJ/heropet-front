@@ -1,60 +1,99 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem 1rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.button {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.backButton {
+  background-color: #4a5568;
+  color: white;
+}
+
+.backButton:hover {
+  background-color: #2d3748;
 }
 
 .addButton {
-  padding: 0.5rem 1rem;
   background-color: #4299e1;
   color: white;
-  border: none;
-  border-radius: 0.25rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
 }
 
 .addButton:hover {
   background-color: #3182ce;
 }
-.backButton {
-  padding: 8px 16px;
-  background-color: #6c757d;
+
+.pedidosButton {
+  background-color: #38a169;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: auto; /* Pushes other header items to the right */
 }
 
-.backButton:hover {
-  background-color: #5a6268;
+.pedidosButton:hover {
+  background-color: #2f855a;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.addButton {
-  padding: 8px 16px;
-  background-color: #28a745;
+.catalogButton {
+  background-color: #9f7aea; /* Cor roxa para diferenciar */
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
-.addButton:hover {
-  background-color: #218838;
+.catalogButton:hover {
+  background-color: #805ad5;
+}
+
+/* Loading and error states */
+.loading {
+  color: #4a5568;
+  text-align: center;
+  padding: 2rem;
+}
+
+.error {
+  color: #e53e3e;
+  text-align: center;
+  padding: 1rem;
+  background-color: #fff5f5;
+  border-radius: 0.375rem;
+  margin: 1rem 0;
 }

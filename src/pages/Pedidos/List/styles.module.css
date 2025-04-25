@@ -1,66 +1,178 @@
+/* Estilos Base */
 .container {
-  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-.novoPedido {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 10px 15px;
-  background-color: #4caf50;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
+/* Cabeçalho */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.filtros {
-  margin-bottom: 20px;
+.header h1 {
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
 }
 
-.filtros button {
-  margin-right: 10px;
-  padding: 5px 10px;
+/* Botões e Ações */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
   cursor: pointer;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  text-decoration: none;
+  text-align: center;
 }
 
-.filtros button:hover {
-  background-color: #e0e0e0;
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Cores dos Botões */
+.primary {
+  background-color: #4299e1;
+  color: white;
+}
+
+.primary:hover {
+  background-color: #3182ce;
+}
+
+.success {
+  background-color: #48bb78;
+  color: white;
+}
+
+.success:hover {
+  background-color: #38a169;
+}
+
+.danger {
+  background-color: #f56565;
+  color: white;
+}
+
+.danger:hover {
+  background-color: #e53e3e;
+}
+
+.secondary {
+  background-color: #a0aec0;
+  color: white;
+}
+
+.secondary:hover {
+  background-color: #718096;
+}
+
+.purple {
+  background-color: #9f7aea;
+  color: white;
+}
+
+.purple:hover {
+  background-color: #805ad5;
+}
+
+/* Tabelas */
 .table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .table th,
 .table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  padding: 0.75rem 1rem;
   text-align: left;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .table th {
-  background-color: #f2f2f2;
+  background-color: #f7fafc;
+  font-weight: 600;
+  color: #4a5568;
 }
 
-.actions {
+.table tr:hover td {
+  background-color: #f8fafc;
+}
+
+/* Filtros */
+.filters {
   display: flex;
-  gap: 10px;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.action {
-  color: #2196f3;
+/* Modal */
+.modalContent {
+  padding: 1.5rem;
+}
+
+.modalContent p {
+  margin-bottom: 1rem;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Estados */
+.loading {
+  color: #4a5568;
+  text-align: center;
+  padding: 2rem;
+}
+
+.error {
+  color: #e53e3e;
+  text-align: center;
+  padding: 1rem;
+  background-color: #fff5f5;
+  border-radius: 0.375rem;
+  margin: 1rem 0;
+}
+
+/* Links de Ação */
+.actionLink {
+  color: #4299e1;
   text-decoration: none;
+  margin-right: 0.75rem;
 }
 
-.action:hover {
+.actionLink:hover {
   text-decoration: underline;
 }
 
-.deleteAction {
-  color: #f44336;
+.dangerLink {
+  color: #f56565;
   background: none;
   border: none;
   cursor: pointer;
@@ -68,81 +180,6 @@
   font: inherit;
 }
 
-.deleteAction:hover {
+.dangerLink:hover {
   text-decoration: underline;
-}
-
-.deleteAction:disabled {
-  color: #ccc;
-  cursor: not-allowed;
-  text-decoration: none;
-}
-
-/* Estilos do Modal */
-.modalContent {
-  padding: 20px;
-}
-
-.modalContent p {
-  margin-bottom: 15px;
-}
-
-.modalActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.modalCancel {
-  padding: 8px 16px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modalCancel:hover:not(:disabled) {
-  background-color: #5a6268;
-}
-
-.modalConfirm {
-  padding: 8px 16px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modalConfirm:hover:not(:disabled) {
-  background-color: #c82333;
-}
-
-.modalCancel:disabled,
-.modalConfirm:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.backButton {
-  padding: 8px 16px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.backButton:hover {
-  background-color: #5a6268;
 }

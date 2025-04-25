@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   listarFornecedores,
   removerFornecedor,
@@ -12,7 +12,6 @@ const FornecedorListPage = () => {
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const carregarFornecedores = async () => {
@@ -45,16 +44,30 @@ const FornecedorListPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button onClick={() => navigate("/")} className={styles.backButton}>
+        <Link to="/" className={`${styles.button} ${styles.backButton}`}>
           Voltar
-        </button>
+        </Link>
         <h1>Fornecedores</h1>
-        <button
-          onClick={() => navigate("/fornecedores/novo")}
-          className={styles.addButton}
-        >
-          Adicionar Fornecedor
-        </button>
+        <div className={styles.actions}>
+          <Link
+            to="/pedidos"
+            className={`${styles.button} ${styles.pedidosButton}`}
+          >
+            Ver Pedidos
+          </Link>
+          <Link
+            to="/catalogo"
+            className={`${styles.button} ${styles.catalogButton}`}
+          >
+            Catálogo de Produtos (em construção)
+          </Link>
+          <Link
+            to="/fornecedores/novo"
+            className={`${styles.button} ${styles.addButton}`}
+          >
+            Adicionar Fornecedor
+          </Link>
+        </div>
       </div>
 
       <FornecedorList
