@@ -21,6 +21,12 @@ export interface Pedido {
   observacoes?: string;
 }
 
+export interface PeriodFilter {
+  type: "month" | "year";
+  month?: number;
+  year: number;
+}
+
 export const criarPedido = (pedido: Omit<Pedido, "_id">) => {
   return httpClient.post("/pedidos", pedido);
 };

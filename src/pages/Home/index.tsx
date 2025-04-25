@@ -1,26 +1,38 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { PeriodFilters } from "./PeriodFilters";
+import { StockSummary } from "./StockSummary";
+import { FinancialSummary } from "./FinancialSummary";
+import { mockOrders } from "./mockData";
 import styles from "./styles.module.css";
+import { PeriodFilter } from "../../api/pedidos";
 
 const Home = () => {
+  const currentDate = new Date();
+  const [filter, setFilter] = useState<PeriodFilter>({
+    type: "month",
+    month: currentDate.getMonth() + 1,
+    year: currentDate.getFullYear(),
+  });
+
   return (
     <div className={styles.container}>
       <h1>Bem-vindo ao Sistema da HeroPet</h1>
-      <p>Gerenciamento de forma eficiente</p>
 
       <div className={styles.actions}>
         <Link to="/fornecedores" className={styles.button}>
-          Ver Fornecedores
+          Fornecedores
         </Link>
-        <Link to="/fornecedores/novo" className={styles.button}>
-          Adicionar Fornecedor
-        </Link>
-        <Link to="/pedidos" className={styles.button}>
-          Ver Pedidos
-        </Link>
-        <Link to="/pedidos/novo" className={styles.button}>
-          Criar Pedido
+        <Link to="/clientes" className={styles.button}>
+          Clientes (Em construção)
         </Link>
       </div>
+
+      <PeriodFilters filter={filter} onChange={setFilter} />
+
+      <StockSummary orders={mockOrders} filter={filter} />
+
+      <FinancialSummary orders={mockOrders} filter={filter} />
     </div>
   );
 };
