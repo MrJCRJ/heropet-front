@@ -5,7 +5,9 @@ import styles from "./styles.module.css";
 const StockHistory = () => {
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Evolução de Estoque (Últimos 12 Meses)</h2>
+      <h2 className={styles.title}>
+        Evolução de Estoque (Últimos 12 Meses) - Informações apenas para test
+      </h2>
 
       <div className={styles.productsGrid}>
         {mockProducts.map((product) => (
