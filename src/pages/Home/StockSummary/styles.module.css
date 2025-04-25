@@ -82,3 +82,51 @@ tr:hover {
     font-size: 0.8rem;
   }
 }
+.stockOverview {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.overviewCard {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.overviewCard span {
+  display: block;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.overviewCard strong {
+  font-size: 1.5rem;
+  color: #2c3e50;
+}
+
+.warning {
+  color: #dc3545 !important;
+}
+
+.ok {
+  color: #28a745;
+}
+
+.lowStockRow {
+  background-color: #fff3f3 !important;
+}
+
+.lowStockRow:hover {
+  background-color: #ffecec !important;
+}
+
+/* Adicionar ao existente */
+.tableHeader:nth-child(5),
+.tableCell:nth-child(5),
+.tableHeader:nth-child(6),
+.tableCell:nth-child(6) {
+  text-align: center;
+}
