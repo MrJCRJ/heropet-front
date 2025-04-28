@@ -1,122 +1,85 @@
 /* src/pages/Home/styles.module.css */
 
-.container {
+.homeContainer {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
 }
 
-h1 {
-  color: #2c3e50;
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  font-weight: 600;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-}
-
-.button {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  background-color: #3498db;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.button:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.summarySection {
+.stockHistoryContainer {
   background-color: #fff;
   border-radius: 10px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
 }
 
-.summarySection h2 {
+.stockHistoryTitle {
   color: #2c3e50;
-  margin-bottom: 1.5rem;
   font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
   border-bottom: 2px solid #ecf0f1;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.8rem;
 }
 
-/* Estilos para os filtros (caso queira sobrescrever os padrões) */
-.filters {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  align-items: center;
-  justify-content: center;
+/* Estilos para a tabela de histórico */
+.stockTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+.stockTable th {
   background-color: #f8f9fa;
   padding: 1rem;
-  border-radius: 8px;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
-.filters button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
+.stockTable td {
+  padding: 1rem;
+  border-bottom: 1px solid #ecf0f1;
 }
 
-.filters button.activeFilter {
-  background-color: #3498db;
-  color: white;
-  border-color: #3498db;
+.stockTable tr:last-child td {
+  border-bottom: none;
 }
 
-.filters select {
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  background-color: #fff;
+.stockTable tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Status indicators */
+.statusIn {
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.statusOut {
+  color: #e74c3c;
+  font-weight: 500;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .container {
+  .homeContainer {
     padding: 1rem;
   }
 
-  h1 {
-    font-size: 2rem;
+  .stockHistoryContainer {
+    padding: 1rem;
   }
 
-  .actions {
-    flex-direction: column;
-    align-items: center;
+  .stockHistoryTitle {
+    font-size: 1.5rem;
   }
 
-  .button {
-    width: 100%;
-    text-align: center;
-  }
-
-  .filters {
-    flex-direction: column;
-    align-items: stretch;
+  .stockTable th,
+  .stockTable td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
   }
 }
