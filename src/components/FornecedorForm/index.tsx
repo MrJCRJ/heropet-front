@@ -1,28 +1,8 @@
 import { FormEvent, useState } from "react";
-import styles from "./styles.module.css";
-import { Endereco } from "../../api/fornecedores";
-
-export interface FornecedorFormProps {
-  initialData?: {
-    cnpj: string;
-    nome?: string;
-    nomeFantasia?: string;
-    email?: string;
-    telefone?: string;
-    endereco?: Endereco;
-  };
-  onSubmit: (data: {
-    cnpj: string;
-    nome?: string;
-    nomeFantasia?: string;
-    email?: string;
-    telefone?: string;
-    endereco?: Endereco;
-  }) => void;
-  isEditing?: boolean;
-  isLoading?: boolean;
-  error?: string | null;
-}
+import { FornecedorFormProps, FornecedorFormData } from "./types";
+import { FornecedorFormFields } from "./FornecedorFormFields";
+import { SubmitButton } from "./SubmitButton";
+import { FormError } from "./FormError";
 
 const FornecedorForm = ({
   initialData = {
@@ -41,27 +21,30 @@ const FornecedorForm = ({
   isLoading = false,
   error = null,
 }: FornecedorFormProps) => {
-  const [formData, setFormData] = useState({
-    cnpj: initialData.cnpj || "",
-    nome: initialData.nome || "",
-    nomeFantasia: initialData.nomeFantasia || "",
-    email: initialData.email || "",
-    telefone: initialData.telefone || "",
-    endereco: {
-      cep: initialData.endereco?.cep || "",
-      numero: initialData.endereco?.numero || "",
-    },
-  });
+  const [formData, setFormData] = useState<FornecedorFormData>(initialData);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  // Função para limpar os dados antes do envio com tratamento para undefined
+  const cleanData = (data: FornecedorFormData): FornecedorFormData => {
+    return {
+      ...data,
+      cnpj: data.cnpj.replace(/\D/g, ""),
+      telefone: data.telefone?.replace(/\D/g, "") || "", // Trata telefone opcional
+      endereco: {
+        cep: data.endereco?.cep?.replace(/\D/g, "") || "", // Trata endereco opcional
+        numero: data.endereco?.numero || "",
+        complemento: data.endereco?.complemento || "",
+        // Adicione outros campos do endereço conforme necessário
+      },
+    };
+  };
 
+  const handleChange = (name: string, value: string) => {
     if (name.includes("endereco.")) {
       const field = name.split(".")[1];
       setFormData({
         ...formData,
         endereco: {
-          ...formData.endereco,
+          ...(formData.endereco || {}), // Garante que endereco existe
           [field]: value,
         },
       });
@@ -75,129 +58,29 @@ const FornecedorForm = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    // Prepara os dados para envio, convertendo strings vazias para undefined
-    const dadosParaEnviar = {
-      cnpj: formData.cnpj,
-      nome: formData.nome || undefined,
-      nomeFantasia: formData.nomeFantasia || undefined,
-      email: formData.email || undefined,
-      telefone: formData.telefone || undefined,
-      endereco: {
-        cep: formData.endereco.cep || undefined,
-        numero: formData.endereco.numero || undefined,
-      },
-    };
-
-    onSubmit(dadosParaEnviar);
+    const cleanedData = cleanData(formData);
+    console.log("Dados limpos para envio:", cleanedData);
+    onSubmit(cleanedData);
   };
 
   return (
-    <div className={styles.container}>
-      <h2>{isEditing ? "Editar Fornecedor" : "Novo Fornecedor"}</h2>
+    <div className="max-w-2xl mx-auto p-4">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        {isEditing ? "Editar Fornecedor" : "Novo Fornecedor"}
+      </h2>
 
-      {error && <div className={styles.error}>{error}</div>}
+      <FormError error={error} />
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        {!isEditing && (
-          <div className={styles.formGroup}>
-            <label htmlFor="cnpj">CNPJ:</label>
-            <input
-              type="text"
-              id="cnpj"
-              name="cnpj"
-              value={formData.cnpj}
-              onChange={handleChange}
-              required
-              disabled={isLoading}
-            />
-          </div>
-        )}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <FornecedorFormFields
+          formData={formData}
+          isLoading={isLoading}
+          isEditing={isEditing}
+          onChange={handleChange}
+        />
 
-        <div className={styles.formGroup}>
-          <label htmlFor="nome">Nome:</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={formData.nome}
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="nomeFantasia">Nome Fantasia:</label>
-          <input
-            type="text"
-            id="nomeFantasia"
-            name="nomeFantasia"
-            value={formData.nomeFantasia}
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="telefone">Telefone:</label>
-          <input
-            type="text"
-            id="telefone"
-            name="telefone"
-            value={formData.telefone}
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-
-        <fieldset className={styles.fieldset}>
-          <legend>Endereço</legend>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="endereco.cep">CEP:</label>
-            <input
-              type="text"
-              id="endereco.cep"
-              name="endereco.cep"
-              value={formData.endereco.cep}
-              onChange={handleChange}
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="endereco.numero">Número:</label>
-            <input
-              type="text"
-              id="endereco.numero"
-              name="endereco.numero"
-              value={formData.endereco.numero}
-              onChange={handleChange}
-              disabled={isLoading}
-            />
-          </div>
-        </fieldset>
-
-        <div className={styles.buttons}>
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={isLoading ? styles.loading : ""}
-          >
-            {isLoading ? "Salvando..." : "Salvar"}
-          </button>
+        <div className="flex justify-end space-x-3">
+          <SubmitButton isLoading={isLoading} />
         </div>
       </form>
     </div>

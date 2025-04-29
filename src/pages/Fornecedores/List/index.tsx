@@ -6,7 +6,6 @@ import {
   type Fornecedor,
 } from "../../../api/fornecedores";
 import FornecedorList from "../../../components/FornecedorList";
-import styles from "./styles.module.css";
 
 const FornecedorListPage = () => {
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
@@ -42,33 +41,39 @@ const FornecedorListPage = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <Link to="/" className={`${styles.button} ${styles.backButton}`}>
-          Voltar
-        </Link>
-        <h1>Fornecedores</h1>
-        <div className={styles.actions}>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8 flex-wrap">
+        <div className="flex gap-3 flex-wrap justify-end">
           <Link
             to="/pedidos"
-            className={`${styles.button} ${styles.pedidosButton}`}
+            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-medium transition-all hover:-translate-y-px shadow-sm hover:shadow-md inline-flex items-center justify-center text-sm"
           >
-            Ver Pedidos
+            Pedidos
           </Link>
           <Link
             to="/catalogo"
-            className={`${styles.button} ${styles.catalogButton}`}
+            className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md font-medium transition-all hover:-translate-y-px shadow-sm hover:shadow-md inline-flex items-center justify-center text-sm"
           >
-            Catálogo de Produtos (em construção)
+            Catálogo de Produtos
           </Link>
           <Link
             to="/fornecedores/novo"
-            className={`${styles.button} ${styles.addButton}`}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-medium transition-all hover:-translate-y-px shadow-sm hover:shadow-md inline-flex items-center justify-center text-sm"
           >
             Adicionar Fornecedor
           </Link>
         </div>
       </div>
+
+      {isLoading && (
+        <div className="text-gray-600 text-center py-8">Carregando...</div>
+      )}
+
+      {error && (
+        <div className="text-red-600 text-center py-4 bg-red-50 rounded-md my-4">
+          {error}
+        </div>
+      )}
 
       <FornecedorList
         fornecedores={fornecedores}

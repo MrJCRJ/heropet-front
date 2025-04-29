@@ -15,7 +15,15 @@ const httpClient = axios.create({
 httpClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.code === "ERR_NETWORK") {
+    if (error.response) {
+      // Erros 4xx/5xx
+      console.error("Erro na resposta:", error.response.data);
+      return Promise.reject({
+        message: error.response.data.message || "Erro na requisição",
+        status: error.response.status,
+        data: error.response.data,
+      });
+    } else if (error.code === "ERR_NETWORK") {
       return Promise.reject(
         new Error(
           "Não foi possível conectar ao servidor. Verifique sua conexão."
