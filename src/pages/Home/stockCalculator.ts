@@ -1,3 +1,5 @@
+// File: src/pages/Home/stockCalculator.ts
+
 import { Pedido } from "../../api/pedidos";
 import { MockProduct } from "./mockData";
 

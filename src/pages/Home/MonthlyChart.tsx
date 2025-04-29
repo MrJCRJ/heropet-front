@@ -1,4 +1,4 @@
-import { MonthlyStock } from "../mockData";
+import { MonthlyStock } from "./mockData";
 import { useMemo } from "react";
 
 interface MonthlyChartProps {

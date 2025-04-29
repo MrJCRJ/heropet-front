@@ -1,9 +1,32 @@
+// File: src/pages/Home/ProductCard/index.tsx
+
 import { useState, useCallback, useMemo } from "react";
-import { MockProduct } from "../mockData";
-import MonthlyChart from "../MonthlyChart";
-import StockTooltip from "../StockTooltip";
+import { MockProduct } from "./mockData";
+import MonthlyChart from "./MonthlyChart";
+import StockTooltip from "./StockTooltip";
 
 const ProductCard = ({ product }: { product: MockProduct }) => {
+  // Corrigindo os warnings do ESLint com useMemo
+  const safeMonthlyStocks = useMemo(
+    () =>
+      product?.monthlyStocks ||
+      Array(12).fill({
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+        stock: 0,
+        purchases: 0,
+        sales: 0,
+      }),
+    [product?.monthlyStocks]
+  );
+
+  const hasData = useMemo(
+    () =>
+      safeMonthlyStocks.length > 0 &&
+      safeMonthlyStocks.some((m) => m.purchases > 0 || m.sales > 0),
+    [safeMonthlyStocks]
+  );
+
   const [tooltip, setTooltip] = useState({
     visible: false,
     content: "",
@@ -11,17 +34,18 @@ const ProductCard = ({ product }: { product: MockProduct }) => {
     y: 0,
   });
 
-  // Dados calculados
+  // Dados calculados com fallbacks
   const { currentStock, initialStock, variation } = useMemo(() => {
-    const current =
-      product.monthlyStocks[product.monthlyStocks.length - 1].stock;
-    const initial = product.initialStock;
+    const current = hasData
+      ? safeMonthlyStocks[safeMonthlyStocks.length - 1].stock
+      : 0;
+    const initial = product?.initialStock || 0;
     return {
       currentStock: current,
       initialStock: initial,
       variation: current - initial,
     };
-  }, [product]);
+  }, [hasData, safeMonthlyStocks, product?.initialStock]);
 
   // Formatação de valores
   const formatNumber = (num: number) => num.toLocaleString("pt-BR");
@@ -31,12 +55,14 @@ const ProductCard = ({ product }: { product: MockProduct }) => {
   // Handlers otimizados com useCallback
   const handleTooltip = useCallback(
     (
-      month: (typeof product.monthlyStocks)[0],
+      month: (typeof safeMonthlyStocks)[0],
       index: number,
       e: React.MouseEvent
     ) => {
+      if (!hasData) return;
+
       const prevMonth =
-        index > 0 ? product.monthlyStocks[index - 1].stock : month.stock;
+        index > 0 ? safeMonthlyStocks[index - 1].stock : month.stock;
       const diff = month.stock - prevMonth;
       const totalMovement = month.purchases + month.sales;
       const purchasePercentage =
@@ -68,7 +94,7 @@ const ProductCard = ({ product }: { product: MockProduct }) => {
         y: e.clientY,
       });
     },
-    [product]
+    [hasData, safeMonthlyStocks]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -79,12 +105,27 @@ const ProductCard = ({ product }: { product: MockProduct }) => {
     setTooltip((prev) => ({ ...prev, x: e.clientX, y: e.clientY }));
   }, []);
 
+  if (!product) {
+    return (
+      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+        <p>Produto não disponível</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
       {/* Cabeçalho */}
       <div className="mb-5 pb-3 border-b border-gray-100">
-        <h3 className="text-xl font-semibold text-gray-800">{product.name}</h3>
-        <span className="text-sm text-gray-500">{product.brand}</span>
+        <h3 className="text-xl font-semibold text-gray-800">
+          {product?.name || "Produto sem nome"}
+        </h3>
+        {/* Adicionei para debug */}
+        <p className="text-xs text-gray-400">
+          {hasData
+            ? `${safeMonthlyStocks.length} meses de dados`
+            : "Sem dados históricos"}
+        </p>
       </div>
 
       {/* Resumo do Estoque */}
@@ -111,23 +152,31 @@ const ProductCard = ({ product }: { product: MockProduct }) => {
 
       {/* Gráfico */}
       <div className="mb-2">
-        <MonthlyChart
-          monthlyStocks={product.monthlyStocks}
-          initialStock={initialStock}
-          onMouseEnter={handleTooltip}
-          onMouseLeave={handleMouseLeave}
-          onMouseMove={handleMouseMove}
-          barWidth={24}
-          chartHeight={180}
-        />
+        {hasData ? (
+          <MonthlyChart
+            monthlyStocks={safeMonthlyStocks}
+            initialStock={initialStock}
+            onMouseEnter={handleTooltip}
+            onMouseLeave={handleMouseLeave}
+            onMouseMove={handleMouseMove}
+            barWidth={24}
+            chartHeight={180}
+          />
+        ) : (
+          <div className="h-[180px] flex items-center justify-center text-gray-400">
+            Dados de estoque não disponíveis
+          </div>
+        )}
       </div>
 
       {/* Tooltip */}
-      <StockTooltip
-        tooltip={tooltip}
-        offset={{ x: 15, y: 15 }}
-        maxWidth={280}
-      />
+      {hasData && (
+        <StockTooltip
+          tooltip={tooltip}
+          offset={{ x: 15, y: 15 }}
+          maxWidth={280}
+        />
+      )}
     </div>
   );
 };
