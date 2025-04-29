@@ -4,13 +4,14 @@ import FormHeader from "./FormHeader";
 import FormBasics from "./FormBasics";
 import FormItems from "./FormItems";
 import FormActions from "./FormActions";
-import styles from "./styles.module.css";
+import Alert from "../../components/Alert";
 
 interface PedidoFormProps {
   initialData?: Omit<Pedido, "_id">;
   onSubmit: (pedido: Omit<Pedido, "_id">) => Promise<void>;
   onCancel: () => void;
   isEditing?: boolean;
+  isSubmitting?: boolean;
 }
 
 const PedidoForm = ({
@@ -19,7 +20,6 @@ const PedidoForm = ({
   onCancel,
   isEditing = false,
 }: PedidoFormProps) => {
-  // Helper function to ensure proper date format
   const normalizeDate = (dateString?: string) => {
     if (!dateString) return new Date().toISOString().split("T")[0];
     return new Date(dateString).toISOString().split("T")[0];
@@ -54,7 +54,6 @@ const PedidoForm = ({
     }
 
     try {
-      // Ensure all dates are properly formatted before submission
       const dataToSubmit = {
         ...formData,
         dataPedido: normalizeDate(formData.dataPedido),
@@ -75,35 +74,48 @@ const PedidoForm = ({
     }
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value, type } = e.target;
+    const checked =
+      type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
+
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
   return (
-    <div className={styles.container}>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <div className="max-w-4xl mx-auto p-4 sm:p-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <FormHeader isEditing={isEditing} />
 
-        <FormBasics
-          formData={formData}
-          isEditing={isEditing}
-          handleChange={(e) => {
-            const { name, value, type } = e.target;
-            const checked =
-              type === "checkbox"
-                ? (e.target as HTMLInputElement).checked
-                : undefined;
-            setFormData({
-              ...formData,
-              [name]: type === "checkbox" ? checked : value,
-            });
-          }}
-          setFormData={setFormData}
-        />
+        <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
+          <FormBasics
+            formData={formData}
+            isEditing={isEditing}
+            handleChange={handleChange}
+            setFormData={setFormData}
+          />
+        </div>
 
-        <FormItems
-          formData={formData}
-          setFormData={setFormData}
-          setError={setError}
-        />
+        <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
+          <FormItems
+            formData={formData}
+            setFormData={setFormData}
+            setError={setError}
+          />
+        </div>
 
-        {error && <div className={styles.error}>{error}</div>}
+        {error && (
+          <div className="mt-4">
+            <Alert type="error" message={error} />
+          </div>
+        )}
 
         <FormActions
           isSubmitting={isSubmitting}
