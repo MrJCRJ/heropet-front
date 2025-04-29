@@ -28,7 +28,7 @@ export const generateMockProducts = (): MockProduct[] => {
   const currentDate = new Date();
 
   return products.map((p, i) => {
-    const initialStock = Math.floor(Math.random() * 500) + 100;
+    const initialStock = Math.floor(Math.random() * 1) + 100;
     const monthlyStocks: MonthlyStock[] = [];
     let currentStock = initialStock;
 
@@ -45,8 +45,8 @@ export const generateMockProducts = (): MockProduct[] => {
       const brandFactor = p.brand === "DogDeluxe" ? 1.3 : 1; // Marca mais popular
 
       const purchases =
-        Math.floor(baseDemand * seasonalFactor * brandFactor * 1.5) + 15;
-      const sales = Math.floor(baseDemand * seasonalFactor * brandFactor) + 5;
+        Math.floor(baseDemand * seasonalFactor * brandFactor * 1.5) + 5;
+      const sales = Math.floor(baseDemand * seasonalFactor * brandFactor) + 25;
 
       // Atualiza estoque (não permite negativo)
       currentStock = Math.max(0, currentStock + purchases - sales);

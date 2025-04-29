@@ -14,7 +14,21 @@ const FornecedorCreate = () => {
     setError(null);
 
     try {
-      await criarFornecedor(formData);
+      // Prepara os dados para enviar, convertendo email vazio para undefined
+      const dataToSend = {
+        ...formData,
+        email: formData.email?.trim() || undefined, // Converte string vazia para undefined
+        endereco: formData.endereco
+          ? {
+              ...formData.endereco,
+              // Garante que campos vazios do endereço sejam undefined
+              complemento: formData.endereco.complemento || undefined,
+              numero: formData.endereco.numero || undefined,
+            }
+          : undefined,
+      };
+
+      await criarFornecedor(dataToSend);
       navigate("/fornecedores", {
         state: {
           successMessage: "Fornecedor criado com sucesso!",

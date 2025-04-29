@@ -1,5 +1,14 @@
 import httpClient from "./httpClient";
 
+export interface EnderecoViaCep {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+}
+
 export interface Endereco {
   cep?: string;
   logradouro?: string;
@@ -42,4 +51,34 @@ export const atualizarFornecedor = (
 
 export const removerFornecedor = async (cnpj: string) => {
   return httpClient.delete(`/fornecedores/${cnpj}`);
+};
+
+// Nova função para buscar endereço por CEP
+export const buscarEnderecoPorCep = async (
+  cep: string
+): Promise<EnderecoViaCep> => {
+  // Remove caracteres não numéricos
+  const cepNumerico = cep.replace(/\D/g, "");
+
+  // Faz a requisição para a API ViaCEP
+  const response = await fetch(`https://viacep.com.br/ws/${cepNumerico}/json/`);
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar endereço");
+  }
+
+  const data = await response.json();
+
+  if (data.erro) {
+    throw new Error("CEP não encontrado");
+  }
+
+  return {
+    cep: data.cep,
+    logradouro: data.logradouro,
+    complemento: data.complemento,
+    bairro: data.bairro,
+    localidade: data.localidade,
+    uf: data.uf,
+  };
 };

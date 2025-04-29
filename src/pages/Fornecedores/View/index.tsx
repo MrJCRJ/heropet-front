@@ -4,11 +4,32 @@ import {
   buscarFornecedor,
   Fornecedor,
   removerFornecedor,
+  buscarEnderecoPorCep,
 } from "../../../api/fornecedores";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import Alert from "../../../components/Alert";
 import Button from "../../../components/Button";
 import DetailCard from "../../../components/DetailCard";
+
+// Formatting functions
+const formatCNPJ = (cnpj: string) => {
+  return cnpj.replace(
+    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+    "$1.$2.$3/$4-$5"
+  );
+};
+
+const formatPhone = (phone: string) => {
+  const nums = phone.replace(/\D/g, "");
+  if (nums.length === 11) {
+    return nums.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+  }
+  return nums.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3");
+};
+
+const formatCEP = (cep: string) => {
+  return cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+};
 
 const FornecedorView = () => {
   const { cnpj } = useParams<{ cnpj: string }>();
@@ -17,6 +38,7 @@ const FornecedorView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loadingCep, setLoadingCep] = useState(false);
 
   useEffect(() => {
     const carregarFornecedor = async () => {
@@ -27,7 +49,33 @@ const FornecedorView = () => {
         setError(null);
 
         const response = await buscarFornecedor(cnpj);
-        setFornecedor(response.data);
+        const fornecedorData = response.data;
+
+        // Se tiver CEP mas não tiver logradouro, busca o endereço
+        if (
+          fornecedorData.endereco?.cep &&
+          !fornecedorData.endereco.logradouro
+        ) {
+          setLoadingCep(true);
+          try {
+            const endereco = await buscarEnderecoPorCep(
+              fornecedorData.endereco.cep
+            );
+            fornecedorData.endereco = {
+              ...fornecedorData.endereco,
+              logradouro: endereco.logradouro,
+              bairro: endereco.bairro,
+              localidade: endereco.localidade,
+              uf: endereco.uf,
+            };
+          } catch (err) {
+            console.error("Erro ao buscar endereço:", err);
+          } finally {
+            setLoadingCep(false);
+          }
+        }
+
+        setFornecedor(fornecedorData);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Erro ao carregar fornecedor"
@@ -139,31 +187,61 @@ const FornecedorView = () => {
       </div>
 
       <DetailCard title="Informações Básicas">
-        <DetailCard.Row label="CNPJ" value={fornecedor.cnpj} />
+        <DetailCard.Row
+          label="CNPJ"
+          value={fornecedor.cnpj ? formatCNPJ(fornecedor.cnpj) : ""}
+        />
         <DetailCard.Row label="Nome" value={fornecedor.nome} />
         <DetailCard.Row label="Nome Fantasia" value={fornecedor.nomeFantasia} />
         <DetailCard.Row label="Email" value={fornecedor.email} />
-        <DetailCard.Row label="Telefone" value={fornecedor.telefone} />
+        <DetailCard.Row
+          label="Telefone"
+          value={fornecedor.telefone ? formatPhone(fornecedor.telefone) : ""}
+        />
       </DetailCard>
 
-      {fornecedor.endereco && (
+      {(fornecedor.endereco || loadingCep) && (
         <DetailCard title="Endereço" className="mt-6">
-          <DetailCard.Row label="CEP" value={fornecedor.endereco.cep} />
-          <DetailCard.Row
-            label="Logradouro"
-            value={fornecedor.endereco.logradouro}
-          />
-          <DetailCard.Row label="Número" value={fornecedor.endereco.numero} />
-          <DetailCard.Row
-            label="Complemento"
-            value={fornecedor.endereco.complemento}
-          />
-          <DetailCard.Row label="Bairro" value={fornecedor.endereco.bairro} />
-          <DetailCard.Row
-            label="Cidade"
-            value={fornecedor.endereco.localidade}
-          />
-          <DetailCard.Row label="UF" value={fornecedor.endereco.uf} />
+          {loadingCep ? (
+            <div className="flex justify-center py-4">
+              <LoadingSpinner size="md" />
+            </div>
+          ) : (
+            <>
+              <DetailCard.Row
+                label="CEP"
+                value={
+                  fornecedor.endereco?.cep
+                    ? formatCEP(fornecedor.endereco.cep)
+                    : ""
+                }
+              />
+              <DetailCard.Row
+                label="Logradouro"
+                value={fornecedor.endereco?.logradouro || "Não informado"}
+              />
+              <DetailCard.Row
+                label="Número"
+                value={fornecedor.endereco?.numero || "Não informado"}
+              />
+              <DetailCard.Row
+                label="Complemento"
+                value={fornecedor.endereco?.complemento || "Não informado"}
+              />
+              <DetailCard.Row
+                label="Bairro"
+                value={fornecedor.endereco?.bairro || "Não informado"}
+              />
+              <DetailCard.Row
+                label="Cidade"
+                value={fornecedor.endereco?.localidade || "Não informado"}
+              />
+              <DetailCard.Row
+                label="UF"
+                value={fornecedor.endereco?.uf || "Não informado"}
+              />
+            </>
+          )}
         </DetailCard>
       )}
     </div>

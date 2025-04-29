@@ -38,7 +38,7 @@ export const FornecedorFormFields = ({
       newErrors.cnpj = "CNPJ inválido";
     } else if (
       name === "email" &&
-      value &&
+      value && // Só valida se tiver valor
       !value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
     ) {
       newErrors.email = "Email inválido";
@@ -117,11 +117,19 @@ export const FornecedorFormFields = ({
         disabled={isLoading}
         error={errors.email}
         onBlur={(e) => {
+          // Só valida se tiver valor
           if (
             e.target.value &&
             !e.target.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
           ) {
             setErrors((prev) => ({ ...prev, email: "Email inválido" }));
+          } else {
+            // Remove o erro se estiver vazio ou válido
+            setErrors((prev) => {
+              const newErrors = { ...prev };
+              delete newErrors.email;
+              return newErrors;
+            });
           }
         }}
       />
@@ -144,7 +152,7 @@ export const FornecedorFormFields = ({
           value={formData.endereco?.cep || ""}
           onChange={(value) => {
             handleChange("endereco.cep", value);
-            // Limpa os campos de endereço quando o CEP muda
+            // Limpa os campos de endereço quando o CEP muda e não está completo
             if (value.length < 9) {
               setAddress({
                 logradouro: "",
