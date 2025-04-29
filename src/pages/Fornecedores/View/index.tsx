@@ -3,28 +3,35 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   buscarFornecedor,
   Fornecedor,
-  Endereco,
   removerFornecedor,
 } from "../../../api/fornecedores";
-import styles from "./styles.module.css";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import Alert from "../../../components/Alert";
+import Button from "../../../components/Button";
+import DetailCard from "../../../components/DetailCard";
 
 const FornecedorView = () => {
-  const { cnpj } = useParams();
+  const { cnpj } = useParams<{ cnpj: string }>();
   const navigate = useNavigate();
   const [fornecedor, setFornecedor] = useState<Fornecedor | null>(null);
-  const endereco: Endereco | undefined = fornecedor?.endereco;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const carregarFornecedor = async () => {
       try {
         if (!cnpj) throw new Error("CNPJ não fornecido");
+
+        setLoading(true);
+        setError(null);
+
         const response = await buscarFornecedor(cnpj);
         setFornecedor(response.data);
       } catch (err) {
-        setError("Erro ao carregar fornecedor");
-        console.error(err);
+        setError(
+          err instanceof Error ? err.message : "Erro ao carregar fornecedor"
+        );
       } finally {
         setLoading(false);
       }
@@ -34,100 +41,131 @@ const FornecedorView = () => {
   }, [cnpj]);
 
   const handleDelete = async () => {
-    if (window.confirm("Tem certeza que deseja excluir este fornecedor?")) {
-      try {
-        await removerFornecedor(cnpj!);
-        navigate("/fornecedores", { state: { deleted: true } });
-      } catch (err) {
-        setError("Erro ao excluir fornecedor");
-        console.error(err);
-      }
+    if (
+      !cnpj ||
+      !window.confirm("Tem certeza que deseja excluir este fornecedor?")
+    ) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await removerFornecedor(cnpj);
+      navigate("/fornecedores", {
+        state: {
+          success: true,
+          message: "Fornecedor excluído com sucesso!",
+        },
+      });
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Erro ao excluir fornecedor"
+      );
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  if (loading) return <div>Carregando...</div>;
-  if (error) return <div>{error}</div>;
-  if (!fornecedor) return <div>Fornecedor não encontrado</div>;
+  const handleEdit = () => {
+    navigate(`/fornecedores/${cnpj}/editar`);
+  };
+
+  const handleBack = () => {
+    navigate("/fornecedores");
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-4">
+        <Alert
+          type="error"
+          message={error}
+          actions={
+            <Button variant="secondary" onClick={handleBack}>
+              Voltar
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
+
+  if (!fornecedor) {
+    return (
+      <div className="max-w-4xl mx-auto p-4">
+        <Alert
+          type="info"
+          message="Fornecedor não encontrado"
+          actions={
+            <Button variant="secondary" onClick={handleBack}>
+              Voltar
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>Detalhes do Fornecedor</h2>
-        <div className={styles.actions}>
-          <button onClick={() => navigate(`/fornecedores/${cnpj}/editar`)}>
+    <div className="max-w-4xl mx-auto p-4 md:p-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">
+          Detalhes do Fornecedor
+        </h1>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="primary" onClick={handleEdit}>
             Editar
-          </button>
-          <button onClick={handleDelete} className={styles.deleteButton}>
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleDelete}
+            loading={isDeleting}
+            disabled={isDeleting}
+          >
             Excluir
-          </button>
-          <button onClick={() => navigate("/fornecedores")}>Voltar</button>
+          </Button>
+          <Button variant="secondary" onClick={handleBack}>
+            Voltar
+          </Button>
         </div>
       </div>
 
-      <div className={styles.details}>
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>CNPJ:</span>
-          <span className={styles.detailValue}>{fornecedor.cnpj}</span>
-        </div>
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Nome:</span>
-          <span className={styles.detailValue}>{fornecedor.nome}</span>
-        </div>
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Nome Fantasia:</span>
-          <span className={styles.detailValue}>{fornecedor.nomeFantasia}</span>
-        </div>
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Email:</span>
-          <span className={styles.detailValue}>{fornecedor.email}</span>
-        </div>
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Telefone:</span>
-          <span className={styles.detailValue}>{fornecedor.telefone}</span>
-        </div>
+      <DetailCard title="Informações Básicas">
+        <DetailCard.Row label="CNPJ" value={fornecedor.cnpj} />
+        <DetailCard.Row label="Nome" value={fornecedor.nome} />
+        <DetailCard.Row label="Nome Fantasia" value={fornecedor.nomeFantasia} />
+        <DetailCard.Row label="Email" value={fornecedor.email} />
+        <DetailCard.Row label="Telefone" value={fornecedor.telefone} />
+      </DetailCard>
 
-        <h3 className={styles.sectionTitle}>Endereço</h3>
-        {endereco && (
-          <>
-            <div className={styles.detailRow}>
-              <span className={styles.detailLabel}>CEP:</span>
-              <span className={styles.detailValue}>{endereco.cep}</span>
-            </div>
-            {endereco.logradouro && (
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>Logradouro:</span>
-                <span className={styles.detailValue}>
-                  {endereco.logradouro}
-                </span>
-              </div>
-            )}
-            <div className={styles.detailRow}>
-              <span className={styles.detailLabel}>Número:</span>
-              <span className={styles.detailValue}>{endereco.numero}</span>
-            </div>
-            {endereco.bairro && (
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>Bairro:</span>
-                <span className={styles.detailValue}>{endereco.bairro}</span>
-              </div>
-            )}
-            {endereco.localidade && (
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>Cidade:</span>
-                <span className={styles.detailValue}>
-                  {endereco.localidade}
-                </span>
-              </div>
-            )}
-            {endereco.uf && (
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>UF:</span>
-                <span className={styles.detailValue}>{endereco.uf}</span>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+      {fornecedor.endereco && (
+        <DetailCard title="Endereço" className="mt-6">
+          <DetailCard.Row label="CEP" value={fornecedor.endereco.cep} />
+          <DetailCard.Row
+            label="Logradouro"
+            value={fornecedor.endereco.logradouro}
+          />
+          <DetailCard.Row label="Número" value={fornecedor.endereco.numero} />
+          <DetailCard.Row
+            label="Complemento"
+            value={fornecedor.endereco.complemento}
+          />
+          <DetailCard.Row label="Bairro" value={fornecedor.endereco.bairro} />
+          <DetailCard.Row
+            label="Cidade"
+            value={fornecedor.endereco.localidade}
+          />
+          <DetailCard.Row label="UF" value={fornecedor.endereco.uf} />
+        </DetailCard>
+      )}
     </div>
   );
 };
