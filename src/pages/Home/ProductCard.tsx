@@ -108,9 +108,6 @@ const ProductCard = ({ product }: { product: Product }) => {
           <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
             {product.name}
           </h3>
-          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
-            #{product.id}
-          </span>
         </div>
       </div>
 
