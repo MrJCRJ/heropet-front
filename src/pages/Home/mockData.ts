@@ -9,21 +9,21 @@ export interface MonthlyStock {
   sales: number;
 }
 
-export interface MockProduct {
-  id: number;
+export interface Product {
+  id: string;
   name: string;
-  initialStock: number;
+  currentStock: number;
   monthlyStocks: MonthlyStock[];
 }
 
-export const generateRealStockData = async (): Promise<MockProduct[]> => {
+export const generateRealStockData = async (): Promise<Product[]> => {
   try {
     const response = await getHistoricoEstoque();
 
-    return response.map((produto, index) => ({
-      id: index + 1,
+    return response.map((produto) => ({
+      id: produto.produtoId,
       name: produto.nome,
-      initialStock: produto.historicoMensal[0]?.estoque || 0,
+      currentStock: produto.estoqueAtual,
       monthlyStocks: produto.historicoMensal.map((item) => ({
         month: item.mes,
         year: item.ano,

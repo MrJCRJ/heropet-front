@@ -1,13 +1,12 @@
 // File: src/pages/Home/StockHistory/index.tsx
 import { useState, useEffect } from "react";
-import { mockProducts } from "./mockData";
+import { mockProducts, Product } from "./mockData";
 import ProductCard from "./ProductCard";
 import PaginationControls from "./PaginationControls";
-import { MockProduct } from "./mockData";
 
 const StockHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [products, setProducts] = useState<MockProduct[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
