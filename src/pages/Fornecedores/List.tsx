@@ -16,7 +16,7 @@ const FornecedorListPage = () => {
     const carregarFornecedores = async () => {
       try {
         const response = await listarFornecedores();
-        setFornecedores(response.data);
+        setFornecedores(response);
       } catch (err) {
         setError("Erro ao carregar fornecedores");
         console.error(err);

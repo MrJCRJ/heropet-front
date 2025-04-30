@@ -49,10 +49,6 @@ const ClienteFormFields = ({ isEdit }: ClienteFormFieldsProps) => {
 
       <AddressFields
         address={{
-          logradouro: values.logradouro || "",
-          bairro: values.bairro || "",
-          localidade: values.localidade || "",
-          uf: values.uf || "",
           numero: values.numero || "",
           complemento: values.complemento || "",
         }}
