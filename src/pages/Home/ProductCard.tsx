@@ -1,6 +1,7 @@
 // File: src/pages/Home/ProductCard.tsx
+
 import { useState, useCallback, useMemo } from "react";
-import { Product, MonthlyStock } from "./mockData";
+import { Product, MonthlyStock } from "./types";
 import MonthlyChart from "./MonthlyChart";
 import StockTooltip from "./StockTooltip";
 
@@ -113,7 +114,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-gray-50 p-3 rounded-lg">
-          <p className="text-sm text-gray-500 mb-1">Current Stock</p>
+          <p className="text-sm text-gray-500 mb-1">Estoque atual</p>
           <p className="text-2xl font-bold text-gray-800">
             {formatNumber(currentStock)}
           </p>
@@ -124,7 +125,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             stockVariation >= 0 ? "bg-green-50" : "bg-red-50"
           }`}
         >
-          <p className="text-sm text-gray-500 mb-1">Variation</p>
+          <p className="text-sm text-gray-500 mb-1">Variação</p>
           <div className="flex items-end gap-1">
             <p
               className={`text-xl font-bold ${
@@ -166,7 +167,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <p>No historical data</p>
+            <p>Nenhum dado no histórico</p>
           </div>
         )}
       </div>

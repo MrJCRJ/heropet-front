@@ -1,20 +1,7 @@
 // File: src/pages/Home/mockData.ts
+
 import { getHistoricoEstoque } from "../../api/estoque";
-
-export interface MonthlyStock {
-  month: number;
-  year: number;
-  stock: number;
-  purchases: number;
-  sales: number;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  currentStock: number;
-  monthlyStocks: MonthlyStock[];
-}
+import { Product } from "./types";
 
 export const generateRealStockData = async (): Promise<Product[]> => {
   try {

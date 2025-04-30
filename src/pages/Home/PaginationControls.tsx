@@ -1,9 +1,5 @@
-interface PaginationControlsProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  maxVisiblePages?: number;
-}
+// File: src/pages/Home/PaginationControls.tsx
+import { PaginationControlsProps } from "./types";
 
 const PaginationControls = ({
   currentPage,
@@ -163,24 +159,6 @@ const PaginationControls = ({
             />
           </svg>
         </button>
-      </div>
-
-      {/* Seletor de página */}
-      <div className="flex items-center gap-2 text-sm">
-        <span>Ir para página:</span>
-        <select
-          value={currentPage}
-          onChange={(e) => onPageChange(Number(e.target.value))}
-          className="border rounded-md px-2 py-1"
-          aria-label="Selecionar página"
-        >
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <option key={page} value={page}>
-              {page}
-            </option>
-          ))}
-        </select>
-        <span>de {totalPages}</span>
       </div>
     </div>
   );

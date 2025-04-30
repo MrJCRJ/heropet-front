@@ -1,27 +1,7 @@
 // File: src/pages/Home/StockTooltip.tsx
+
 import React, { useEffect, useRef } from "react";
-
-interface TooltipPosition {
-  x: number;
-  y: number;
-}
-
-interface TooltipContent {
-  title: string;
-  items: {
-    label: string;
-    value: string;
-    color?: string;
-  }[];
-}
-
-interface StockTooltipProps {
-  visible: boolean;
-  position: TooltipPosition;
-  content: TooltipContent;
-  offset?: { x: number; y: number };
-  maxWidth?: number;
-}
+import { StockTooltipProps } from "./types";
 
 const StockTooltip: React.FC<StockTooltipProps> = ({
   visible,

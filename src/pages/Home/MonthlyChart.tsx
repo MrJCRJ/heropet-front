@@ -1,19 +1,7 @@
-import { MonthlyStock } from "./mockData";
-import { useMemo } from "react";
+// File: src/pages/Home/MonthlyChart.tsx
 
-interface MonthlyChartProps {
-  monthlyStocks: MonthlyStock[];
-  initialStock: number;
-  onMouseEnter: (
-    month: MonthlyStock,
-    index: number,
-    e: React.MouseEvent
-  ) => void;
-  onMouseLeave: () => void;
-  onMouseMove: (e: React.MouseEvent) => void;
-  barWidth?: number;
-  chartHeight?: number;
-}
+import { useMemo } from "react";
+import { MonthlyChartProps } from "./types";
 
 const MonthlyChart = ({
   monthlyStocks,
@@ -112,7 +100,7 @@ const MonthlyChart = ({
               <div className={`text-xs mt-1 ${colors.valueLabel}`}>
                 <div>Total: {month.purchases}</div>
                 <div className="text-red-600">Vendas: {month.sales}</div>
-                <div className="text-blue-600">Stock: {month.stock}</div>
+                <div className="text-blue-600">Estoque: {month.stock}</div>
               </div>
             </div>
           );

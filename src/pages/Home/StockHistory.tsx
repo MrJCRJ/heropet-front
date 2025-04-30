@@ -1,6 +1,8 @@
 // File: src/pages/Home/StockHistory/index.tsx
+
 import { useState, useEffect } from "react";
-import { mockProducts, Product } from "./mockData";
+import { mockProducts } from "./mockData";
+import { Product } from "./types";
 import ProductCard from "./ProductCard";
 import PaginationControls from "./PaginationControls";
 
@@ -51,7 +53,7 @@ const StockHistory = () => {
   return (
     <div className="bg-white rounded-lg p-6 mb-8 shadow-md">
       <h2 className="text-gray-800 text-xl md:text-2xl mb-6 pb-3 border-b border-gray-100">
-        Evolução de Estoque
+        Gerenciamento do Estoque
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
