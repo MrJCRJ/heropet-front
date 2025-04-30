@@ -1,5 +1,4 @@
 import { Outlet, Link } from "react-router-dom";
-import logo from "../../../images/logo.jpeg";
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   return (
@@ -8,7 +7,7 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
         <div className="max-w-6xl mx-auto w-full px-4 py-4">
           <div className="flex items-center justify-center gap-4 mb-4">
             <img
-              src={logo}
+              src=""
               alt="Logo HeroPet"
               className="h-16 rounded-full border-4 border-blue-500 transition-transform hover:scale-105"
             />
