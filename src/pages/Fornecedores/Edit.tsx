@@ -4,10 +4,10 @@ import {
   buscarFornecedor,
   atualizarFornecedor,
   type Fornecedor,
-} from "../../../api/fornecedores";
-import FornecedorForm from "../../../components/FornecedorForm";
-import LoadingSpinner from "../../../components/LoadingSpinner";
-import Alert from "../../../components/Alert";
+} from "../../api/fornecedores";
+import FornecedorForm from "../../components/FornecedorForm";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import Alert from "../../components/Alert";
 
 const FornecedorEditPage = () => {
   const { cnpj } = useParams<{ cnpj: string }>();

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { listarPedidos, removerPedido, Pedido } from "../../../api/pedidos";
-import Modal from "../../../components/Modal";
-import LoadingSpinner from "../../../components/LoadingSpinner";
-import Alert from "../../../components/Alert";
+import { listarPedidos, removerPedido, Pedido } from "../../api/pedidos";
+import Modal from "../../components/Modal";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import Alert from "../../components/Alert";
 
 const PedidoList = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);

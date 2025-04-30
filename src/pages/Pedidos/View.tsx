@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { buscarPedido, removerPedido, Pedido } from "../../../api/pedidos";
+import { buscarPedido, removerPedido, Pedido } from "../../api/pedidos";
 import { Link } from "react-router-dom";
-import Modal from "../../../components/Modal";
-import LoadingSpinner from "../../../components/LoadingSpinner";
-import Alert from "../../../components/Alert";
+import Modal from "../../components/Modal";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import Alert from "../../components/Alert";
 
 const PedidoView = () => {
   const { id } = useParams();

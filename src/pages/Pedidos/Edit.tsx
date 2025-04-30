@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { buscarPedido, atualizarPedido, Pedido } from "../../../api/pedidos";
-import PedidoForm from "../../../components/PedidoForm";
-import LoadingSpinner from "../../../components/LoadingSpinner";
-import Alert from "../../../components/Alert";
+import { buscarPedido, atualizarPedido, Pedido } from "../../api/pedidos";
+import PedidoForm from "../../components/PedidoForm";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import Alert from "../../components/Alert";
 
 const PedidoEdit = () => {
   const { id } = useParams();

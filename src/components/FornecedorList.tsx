@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { type Fornecedor } from "../../api/fornecedores";
+import { type Fornecedor } from "../api/fornecedores";
 import { useState } from "react";
 
 // Funções de formatação

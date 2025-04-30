@@ -5,11 +5,11 @@ import {
   Fornecedor,
   removerFornecedor,
   buscarEnderecoPorCep,
-} from "../../../api/fornecedores";
-import LoadingSpinner from "../../../components/LoadingSpinner";
-import Alert from "../../../components/Alert";
-import Button from "../../../components/Button";
-import DetailCard from "../../../components/DetailCard";
+} from "../../api/fornecedores";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import Alert from "../../components/Alert";
+import Button from "../../components/Button";
+import DetailCard from "../../components/DetailCard";
 
 // Formatting functions
 const formatCNPJ = (cnpj: string) => {
