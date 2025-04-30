@@ -104,11 +104,7 @@ const MonthlyChart = ({
                       height: `${salesHeight}%`,
                     }}
                     aria-label={`Vendas: ${month.sales}`}
-                  >
-                    <div className="absolute bottom-full left-0 right-0 text-center text-xs opacity-0 group-hover:opacity-100">
-                      Sales: {month.sales}
-                    </div>
-                  </div>
+                  ></div>
                 )}
               </div>
 
