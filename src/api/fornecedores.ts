@@ -34,8 +34,9 @@ export const criarFornecedor = (
   return httpClient.post("/fornecedores", fornecedor);
 };
 
-export const listarFornecedores = () => {
-  return httpClient.get("/fornecedores");
+export const listarFornecedores = async (): Promise<Fornecedor[]> => {
+  const response = await httpClient.get("/fornecedores");
+  return response.data || response; // Tenta response.data primeiro, se não, retorna response diretamente
 };
 
 export const buscarFornecedor = (cnpj: string) => {

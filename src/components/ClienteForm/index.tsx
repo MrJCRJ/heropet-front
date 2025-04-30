@@ -1,18 +1,14 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { ClienteFormValues } from "./types";
-import ClienteFormFields from "./ClienteFormFields"; // Alterado para importação padrão
+import ClienteFormFields from "./ClienteFormFields";
 import { SubmitButton } from "./SubmitButton";
 import axios from "axios";
 import httpClient from "../../api/httpClient";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Alert from "../Alert";
-
-interface ClienteFormProps {
-  initialValues?: ClienteFormValues;
-  isEdit?: boolean;
-}
+import { ClienteFormProps } from "./types";
 
 const ClienteForm = ({ initialValues, isEdit = false }: ClienteFormProps) => {
   const navigate = useNavigate();
@@ -54,22 +50,20 @@ const ClienteForm = ({ initialValues, isEdit = false }: ClienteFormProps) => {
   ) => {
     try {
       setError(null);
-      console.log("Submetendo valores:", values);
 
-      const response = isEdit
-        ? await httpClient.put(`/clientes/${values.cpfOuCnpj}`, values)
-        : await httpClient.post("/clientes", values);
+      if (isEdit) {
+        await httpClient.put(`/clientes/${values.cpfOuCnpj}`, values);
+      } else {
+        await httpClient.post("/clientes", values);
+      }
 
-      console.log("Resposta do servidor:", response.data);
       navigate("/clientes");
     } catch (err: unknown) {
-      console.error("Erro completo:", err);
       if (axios.isAxiosError(err)) {
         const message = err.response?.data?.message || err.message;
         setError(
           `Erro ao ${isEdit ? "atualizar" : "cadastrar"} cliente: ${message}`
         );
-        console.error("Detalhes do erro:", err.response?.data);
       } else if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -93,10 +87,7 @@ const ClienteForm = ({ initialValues, isEdit = false }: ClienteFormProps) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
         enableReinitialize
-        validate={(values) => {
-          console.log("Validação atual:", values);
-          return {};
-        }}
+        validate={() => ({})}
       >
         {({ isSubmitting }) => (
           <Form className="space-y-4">

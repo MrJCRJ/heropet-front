@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useCallback } from "react";
 import { Pedido } from "../../api/pedidos";
-import { listarFornecedores, Fornecedor } from "../../api/fornecedores";
+import { useClientesFornecedores } from "./useClientesFornecedores";
+import { ClienteFornecedorSelect } from "./ClienteFornecedorSelect";
+import { formatDateForInput, formatDocumento } from "./utils";
 
 interface FormBasicsProps {
   formData: Omit<Pedido, "_id">;
@@ -13,90 +15,66 @@ interface FormBasicsProps {
   setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
 }
 
-const FormBasics = ({
+export const FormBasics = ({
   formData,
   isEditing,
   handleChange,
   setFormData,
 }: FormBasicsProps) => {
-  const [fornecedoresCadastrados, setFornecedoresCadastrados] = useState<
-    Fornecedor[]
-  >([]);
-  const [suggestions, setSuggestions] = useState<Fornecedor[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isLoadingFornecedores, setIsLoadingFornecedores] = useState(false);
+  const { fornecedores, clientes, loading, error } = useClientesFornecedores(
+    formData.tipo
+  );
 
-  useEffect(() => {
-    const carregarFornecedores = async () => {
-      if (isEditing) return;
-
-      setIsLoadingFornecedores(true);
-      try {
-        const response = await listarFornecedores();
-        setFornecedoresCadastrados(response.data);
-      } catch (err) {
-        console.error("Erro ao carregar fornecedores:", err);
-      } finally {
-        setIsLoadingFornecedores(false);
-      }
-    };
-
-    carregarFornecedores();
-  }, [isEditing]);
-
-  useEffect(() => {
-    if (formData.documentoClienteFornecedor && !isEditing) {
-      const filtered = fornecedoresCadastrados.filter((fornecedor) =>
-        fornecedor.cnpj.includes(formData.documentoClienteFornecedor)
-      );
-      setSuggestions(filtered);
-      setShowSuggestions(filtered.length > 0);
-    } else {
-      setShowSuggestions(false);
-    }
-  }, [formData.documentoClienteFornecedor, fornecedoresCadastrados, isEditing]);
-
-  const handleDocumentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleChange(e);
-    setShowSuggestions(true);
-  };
-
-  const selectSuggestion = (fornecedor: Fornecedor) => {
+  const limparCampos = useCallback(() => {
     setFormData((prev) => ({
       ...prev,
-      documentoClienteFornecedor: fornecedor.cnpj,
-      nomeClienteFornecedor: fornecedor.nome || "",
+      nomeClienteFornecedor: "",
+      documentoClienteFornecedor: "",
     }));
-    setShowSuggestions(false);
+  }, [setFormData]);
+
+  const handleTipoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleChange(e);
+    limparCampos();
   };
 
-  const formatDateForInput = (dateString: string | undefined) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    // Handle timezone offset to get correct local date
-    const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - offset * 60 * 1000);
-    return localDate.toISOString().split("T")[0];
+  const handleSelectClienteFornecedor = (nome: string, documento: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      nomeClienteFornecedor: nome,
+      documentoClienteFornecedor: documento,
+    }));
   };
 
-  const formatCNPJ = (cnpj: string) => {
-    if (!cnpj) return "";
-    return cnpj.replace(
-      /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-      "$1.$2.$3/$4-$5"
-    );
-  };
+  const items =
+    formData.tipo === "COMPRA"
+      ? fornecedores.map((f) => ({ nome: f.nome, documento: f.cnpj }))
+      : clientes.map((c) => ({ nome: c.nome, documento: c.cpfOuCnpj }));
 
   return (
     <div className="space-y-6">
-      {/* Seção de Informações Básicas */}
+      {/* Seções de erro e loading */}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="text-center py-4">
+          <div className="animate-spin h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
+          <p className="mt-2 text-gray-600">Carregando dados...</p>
+        </div>
+      )}
+
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-gray-900">
           Informações Básicas
         </h3>
 
-        {/* Tipo de Pedido */}
+        {/* Tipo de Pedido e Status */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Tipo de Pedido */}
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-700">
               Tipo de Pedido
@@ -104,7 +82,7 @@ const FormBasics = ({
             <select
               name="tipo"
               value={formData.tipo}
-              onChange={handleChange}
+              onChange={handleTipoChange}
               className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                 isEditing ? "bg-gray-100 cursor-not-allowed" : ""
               }`}
@@ -136,65 +114,32 @@ const FormBasics = ({
 
         {/* Documento e Nome */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1 relative">
-            <label className="block text-sm font-medium text-gray-700">
-              Documento (CNPJ/CPF)
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                name="documentoClienteFornecedor"
-                value={formData.documentoClienteFornecedor}
-                onChange={handleDocumentoChange}
-                required
-                disabled={isEditing}
-                placeholder="Digite o documento ou selecione um fornecedor"
-                className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                  isEditing ? "bg-gray-100 cursor-not-allowed" : ""
-                }`}
-              />
-              {isLoadingFornecedores && !isEditing && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-                </div>
-              )}
-            </div>
-
-            {showSuggestions && (
-              <ul className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-1 max-h-60 overflow-auto border border-gray-200">
-                {suggestions.map((fornecedor, index) => (
-                  <li
-                    key={index}
-                    onClick={() => selectSuggestion(fornecedor)}
-                    className="px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer flex flex-col"
-                  >
-                    <span className="font-medium">
-                      {formatCNPJ(fornecedor.cnpj)}
-                    </span>
-                    {fornecedor.nome && (
-                      <span className="text-gray-500 truncate">
-                        {fornecedor.nome}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-700">
-              Nome
+              Documento
             </label>
             <input
               type="text"
-              name="nomeClienteFornecedor"
-              value={formData.nomeClienteFornecedor}
+              name="documentoClienteFornecedor"
+              value={formatDocumento(formData.documentoClienteFornecedor)}
               onChange={handleChange}
               required
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              disabled={true}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-100"
             />
           </div>
+
+          <ClienteFornecedorSelect
+            tipo={formData.tipo}
+            value={formData.nomeClienteFornecedor}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, nomeClienteFornecedor: value }))
+            }
+            onSelect={handleSelectClienteFornecedor}
+            disabled={isEditing}
+            items={items}
+            loading={loading}
+          />
         </div>
 
         {/* Datas */}

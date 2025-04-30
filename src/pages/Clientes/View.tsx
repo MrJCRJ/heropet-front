@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import httpClient from "../../api/httpClient";
+import { buscarCliente } from "../../api/clientes";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Alert from "../../components/Alert";
 import DetailCard from "../../components/DetailCard";
-import axios from "axios";
 
 interface Cliente {
   cpfOuCnpj: string;
@@ -24,12 +23,10 @@ const ClienteView = () => {
   useEffect(() => {
     const fetchCliente = async () => {
       try {
-        const response = await httpClient.get(`/clientes/${cpfOuCnpj}`);
-        setCliente(response.data);
+        const data = await buscarCliente(cpfOuCnpj!);
+        setCliente(data);
       } catch (err: unknown) {
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || "Erro ao carregar cliente");
-        } else if (err instanceof Error) {
+        if (err instanceof Error) {
           setError(err.message);
         } else {
           setError("Erro desconhecido ao carregar cliente");
@@ -66,7 +63,9 @@ const ClienteView = () => {
         <DetailCard.Row label="Telefone" value={cliente.telefone} />
         <DetailCard.Row label="CEP" value={cliente.cep} />
         <DetailCard.Row label="Número" value={cliente.numero} />
-        <DetailCard.Row label="Complemento" value={cliente.complemento} />
+        {cliente.complemento && (
+          <DetailCard.Row label="Complemento" value={cliente.complemento} />
+        )}
       </DetailCard>
     </div>
   );

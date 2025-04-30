@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import httpClient from "../../api/httpClient";
+import { useParams, useNavigate } from "react-router-dom";
+import { buscarCliente, atualizarCliente } from "../../api/clientes";
 import ClienteForm from "../../components/ClienteForm";
+import type { ClienteFormValues } from "../../components/ClienteForm/types";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Alert from "../../components/Alert";
-import { ClienteFormValues } from "../../components/ClienteForm/types";
-import axios from "axios";
 
 const ClienteEdit = () => {
   const { cpfOuCnpj } = useParams<{ cpfOuCnpj: string }>();
+  const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState<ClienteFormValues | null>(
     null
   );
@@ -18,12 +18,10 @@ const ClienteEdit = () => {
   useEffect(() => {
     const fetchCliente = async () => {
       try {
-        const response = await httpClient.get(`/clientes/${cpfOuCnpj}`);
-        setInitialValues(response.data);
+        const cliente = await buscarCliente(cpfOuCnpj!);
+        setInitialValues(cliente);
       } catch (err: unknown) {
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || "Erro ao carregar cliente");
-        } else if (err instanceof Error) {
+        if (err instanceof Error) {
           setError(err.message);
         } else {
           setError("Erro ao carregar cliente");
@@ -36,11 +34,33 @@ const ClienteEdit = () => {
     fetchCliente();
   }, [cpfOuCnpj]);
 
+  const handleSubmit = async (values: ClienteFormValues) => {
+    try {
+      await atualizarCliente(cpfOuCnpj!, values);
+      navigate(`/clientes/${cpfOuCnpj}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Erro ao atualizar cliente");
+      }
+    }
+  };
+
   if (loading) return <LoadingSpinner />;
   if (error) return <Alert type="error" message={error} />;
   if (!initialValues) return <div>Cliente não encontrado</div>;
 
-  return <ClienteForm initialValues={initialValues} isEdit />;
+  return (
+    <div>
+      {error && <Alert type="error" message={error} />}
+      <ClienteForm
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        isEdit={true}
+      />
+    </div>
+  );
 };
 
 export default ClienteEdit;

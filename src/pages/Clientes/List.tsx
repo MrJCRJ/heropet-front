@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import httpClient from "../../api/httpClient";
+import { listarClientes, excluirCliente, Cliente } from "../../api/clientes";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Alert from "../../components/Alert";
-import axios from "axios";
-
-interface Cliente {
-  cpfOuCnpj: string;
-  nome: string;
-  telefone: string;
-}
 
 const ClienteList = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
@@ -19,12 +12,10 @@ const ClienteList = () => {
   useEffect(() => {
     const fetchClientes = async () => {
       try {
-        const response = await httpClient.get("/clientes");
-        setClientes(response.data);
+        const data = await listarClientes();
+        setClientes(data);
       } catch (err: unknown) {
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || "Erro ao carregar clientes");
-        } else if (err instanceof Error) {
+        if (err instanceof Error) {
           setError(err.message);
         } else {
           setError("Erro desconhecido ao carregar clientes");
@@ -43,15 +34,12 @@ const ClienteList = () => {
     }
 
     try {
-      await httpClient.delete(`/clientes/${cpfOuCnpj}`);
-      // Atualiza a lista após exclusão
+      await excluirCliente(cpfOuCnpj);
       setClientes(
         clientes.filter((cliente) => cliente.cpfOuCnpj !== cpfOuCnpj)
       );
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        alert(err.response?.data?.message || "Erro ao excluir cliente");
-      } else if (err instanceof Error) {
+      if (err instanceof Error) {
         alert(err.message);
       } else {
         alert("Erro desconhecido ao excluir cliente");
