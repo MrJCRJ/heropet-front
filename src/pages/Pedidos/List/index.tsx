@@ -256,7 +256,7 @@ const PedidoList = () => {
 
       <Modal
         isOpen={!!pedidoParaExcluir}
-        onClose={() => setPedidoParaExcluir(null)}
+        onClose={() => !isDeleting && setPedidoParaExcluir(null)}
         title="Confirmar Exclusão"
       >
         <div className="space-y-4">
