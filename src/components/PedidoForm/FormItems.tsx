@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pedido, ItemPedido } from "../../api/pedidos";
+import { EstoqueHistorico, getHistoricoEstoque } from "../../api/estoque";
 
 interface FormItemsProps {
   formData: Omit<Pedido, "_id">;
@@ -8,6 +9,7 @@ interface FormItemsProps {
 }
 
 const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
+  const [estoque, setEstoque] = useState<EstoqueHistorico[]>([]);
   const [novoItem, setNovoItem] = useState<
     Omit<ItemPedido, "total"> & { produto: string }
   >({
@@ -16,25 +18,66 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
     precoUnitario: 0.01,
   });
 
-  const handleItemChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const carregarEstoque = async () => {
+      try {
+        const estoqueData = await getHistoricoEstoque();
+        setEstoque(estoqueData);
+      } catch (error) {
+        console.error("Erro ao carregar estoque:", error);
+        setError("Erro ao carregar lista de produtos do estoque");
+      }
+    };
+    carregarEstoque();
+  }, [setError]); // Adicionei setError como dependência
+
+  const handleItemChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setNovoItem({
-      ...novoItem,
-      [name]:
-        name === "quantidade" || name === "precoUnitario"
-          ? parseFloat(value) || 0
-          : value,
-    });
+
+    if (name === "produto") {
+      const produtoSelecionado = estoque.find((p) => p.nome === value);
+      setNovoItem({
+        ...novoItem,
+        produto: value,
+        precoUnitario: produtoSelecionado
+          ? produtoSelecionado.estoqueAtual > 0
+            ? 0.01
+            : 0
+          : 0.01,
+      });
+    } else {
+      setNovoItem({
+        ...novoItem,
+        [name]:
+          name === "quantidade" || name === "precoUnitario"
+            ? parseFloat(value) || 0
+            : value,
+      });
+    }
   };
 
   const adicionarItem = () => {
     if (!novoItem.produto.trim()) {
-      setError("Por favor, informe o nome do produto");
+      setError("Por favor, selecione um produto");
       return;
     }
 
     if (novoItem.quantidade <= 0 || novoItem.precoUnitario <= 0) {
       setError("Quantidade e preço devem ser maiores que zero");
+      return;
+    }
+
+    const produtoEstoque = estoque.find((p) => p.nome === novoItem.produto);
+    if (
+      produtoEstoque &&
+      produtoEstoque.estoqueAtual < novoItem.quantidade &&
+      formData.tipo === "VENDA"
+    ) {
+      setError(
+        `Quantidade indisponível em estoque (disponível: ${produtoEstoque.estoqueAtual})`
+      );
       return;
     }
 
@@ -73,6 +116,11 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
     });
   };
 
+  const getEstoqueDisponivel = (produtoNome: string) => {
+    const produto = estoque.find((p) => p.nome === produtoNome);
+    return produto ? produto.estoqueAtual : 0;
+  };
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-medium text-gray-900">Itens do Pedido</h3>
@@ -83,14 +131,19 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
           <label className="block text-sm font-medium text-gray-700">
             Produto
           </label>
-          <input
-            type="text"
+          <select
             name="produto"
             value={novoItem.produto}
             onChange={handleItemChange}
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            placeholder="Nome do produto"
-          />
+          >
+            <option value="">Selecione um produto</option>
+            {estoque.map((produto) => (
+              <option key={produto.produtoId} value={produto.nome}>
+                {produto.nome} ({produto.estoqueAtual})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="space-y-1">
@@ -104,8 +157,18 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
             onChange={handleItemChange}
             min="1"
             step="1"
+            max={
+              formData.tipo === "VENDA" && novoItem.produto
+                ? getEstoqueDisponivel(novoItem.produto)
+                : undefined
+            }
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
+          {novoItem.produto && formData.tipo === "VENDA" && (
+            <p className="text-xs text-gray-500">
+              Disponível: {getEstoqueDisponivel(novoItem.produto)}
+            </p>
+          )}
         </div>
 
         <div className="space-y-1">
