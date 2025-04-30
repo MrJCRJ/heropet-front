@@ -1,4 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   return (
@@ -7,7 +8,7 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
         <div className="max-w-6xl mx-auto w-full px-4 py-4">
           <div className="flex items-center justify-center gap-4 mb-4">
             <img
-              src=""
+              src={logo}
               alt="Logo HeroPet"
               className="h-16 rounded-full border-4 border-blue-500 transition-transform hover:scale-105"
             />
@@ -31,6 +32,12 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
               className="text-gray-100 no-underline px-4 py-2 rounded transition-all hover:bg-blue-500 hover:text-white flex items-center gap-2 font-medium"
             >
               Clientes
+            </Link>
+            <Link
+              to="/pedidos"
+              className="text-gray-100 no-underline px-4 py-2 rounded transition-all hover:bg-blue-500 hover:text-white flex items-center gap-2 font-medium"
+            >
+              Pedidos
             </Link>
           </nav>
         </div>

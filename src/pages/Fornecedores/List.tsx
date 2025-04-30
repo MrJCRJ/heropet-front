@@ -45,18 +45,6 @@ const FornecedorListPage = () => {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8 flex-wrap">
         <div className="flex gap-3 flex-wrap justify-end">
           <Link
-            to="/pedidos"
-            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-medium transition-all hover:-translate-y-px shadow-sm hover:shadow-md inline-flex items-center justify-center text-sm"
-          >
-            Pedidos
-          </Link>
-          <Link
-            to="/catalogo"
-            className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md font-medium transition-all hover:-translate-y-px shadow-sm hover:shadow-md inline-flex items-center justify-center text-sm"
-          >
-            Catálogo de Produtos
-          </Link>
-          <Link
             to="/fornecedores/novo"
             className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-medium transition-all hover:-translate-y-px shadow-sm hover:shadow-md inline-flex items-center justify-center text-sm"
           >
