@@ -9,6 +9,10 @@ import PedidoList from "./pages/Pedidos/List";
 import PedidoCreate from "./pages/Pedidos/Create";
 import PedidoView from "./pages/Pedidos/View";
 import PedidoEdit from "./pages/Pedidos/Edit";
+import ClienteList from "./pages/Clientes/List";
+import ClienteCreate from "./pages/Clientes/Create";
+import ClienteEdit from "./pages/Clientes/Edit";
+import ClienteView from "./pages/Clientes/View";
 import NotFound from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -39,6 +43,27 @@ export const router = createBrowserRouter([
           {
             path: ":cnpj/editar",
             element: <FornecedorEdit />,
+          },
+        ],
+      },
+      {
+        path: "clientes",
+        children: [
+          {
+            index: true,
+            element: <ClienteList />,
+          },
+          {
+            path: "novo",
+            element: <ClienteCreate />,
+          },
+          {
+            path: ":cpfOuCnpj",
+            element: <ClienteView />,
+          },
+          {
+            path: ":cpfOuCnpj/editar",
+            element: <ClienteEdit />,
           },
         ],
       },
