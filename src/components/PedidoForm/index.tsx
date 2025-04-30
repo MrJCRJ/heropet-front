@@ -20,9 +20,20 @@ const PedidoForm = ({
   onCancel,
   isEditing = false,
 }: PedidoFormProps) => {
-  const normalizeDate = (dateString?: string) => {
-    if (!dateString) return new Date().toISOString().split("T")[0];
-    return new Date(dateString).toISOString().split("T")[0];
+  const formatDateForInput = (dateString?: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    // Ensure we get local date in YYYY-MM-DD format
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().split("T")[0];
+  };
+
+  const formatDateForBackend = (dateString: string) => {
+    if (!dateString) return new Date().toISOString();
+    // Convert from YYYY-MM-DD to full ISO string
+    const date = new Date(dateString);
+    return date.toISOString();
   };
 
   const [formData, setFormData] = useState<Omit<Pedido, "_id">>(
@@ -31,7 +42,7 @@ const PedidoForm = ({
       status: "PENDENTE",
       documentoClienteFornecedor: "",
       nomeClienteFornecedor: "",
-      dataPedido: normalizeDate(),
+      dataPedido: formatDateForInput(new Date().toISOString()),
       itens: [],
       totalPedido: 0,
       temNotaFiscal: false,
@@ -56,9 +67,9 @@ const PedidoForm = ({
     try {
       const dataToSubmit = {
         ...formData,
-        dataPedido: normalizeDate(formData.dataPedido),
+        dataPedido: formatDateForBackend(formData.dataPedido),
         dataEntrega: formData.dataEntrega
-          ? normalizeDate(formData.dataEntrega)
+          ? formatDateForBackend(formData.dataEntrega)
           : undefined,
       };
       await onSubmit(dataToSubmit);

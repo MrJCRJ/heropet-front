@@ -73,7 +73,10 @@ const FormBasics = ({
   const formatDateForInput = (dateString: string | undefined) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toISOString().split("T")[0];
+    // Handle timezone offset to get correct local date
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().split("T")[0];
   };
 
   const formatCNPJ = (cnpj: string) => {

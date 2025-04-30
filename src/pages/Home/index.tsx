@@ -1,5 +1,6 @@
 // File: src/pages/Home/index.tsx
 
+import FinancialHistory from "./FinancialHistory";
 import StockHistory from "./StockHistory";
 
 const Home = () => {
@@ -8,6 +9,7 @@ const Home = () => {
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Resumo Geral</h2>
         <StockHistory />
+        <FinancialHistory />
       </div>
     </div>
   );

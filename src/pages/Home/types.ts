@@ -55,3 +55,29 @@ export interface MonthlyChartProps {
   barWidth?: number;
   chartHeight?: number;
 }
+
+export interface FinancialTransaction {
+  id: string;
+  date: Date;
+  type: "COMPRA" | "VENDA"; // Pode ser expandido para outros tipos depois
+  amount: number;
+  month: number;
+  year: number;
+}
+
+export interface MonthlyFinancialData {
+  month: number;
+  year: number;
+  totalSales: number;
+  totalPurchases: number;
+  profit: number;
+  transactions: FinancialTransaction[];
+}
+
+export interface FinancialSummary {
+  currentBalance: number; // Saldo atual (podemos calcular)
+  monthlyData: MonthlyFinancialData[];
+  totalSales: number;
+  totalPurchases: number;
+  totalProfit: number;
+}
