@@ -1,9 +1,7 @@
 export const formatDateForInput = (dateString: string | undefined) => {
   if (!dateString) return "";
   const date = new Date(dateString);
-  const offset = date.getTimezoneOffset();
-  const localDate = new Date(date.getTime() - offset * 60 * 1000);
-  return localDate.toISOString().split("T")[0];
+  return date.toISOString().split("T")[0];
 };
 
 export const formatDocumento = (doc: string = "") => {

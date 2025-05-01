@@ -152,7 +152,6 @@ export const FormBasics = ({
               type="date"
               name="dataPedido"
               value={formatDateForInput(formData.dataPedido)}
-              onChange={handleChange}
               required
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
@@ -167,7 +166,12 @@ export const FormBasics = ({
                 type="date"
                 name="dataEntrega"
                 value={formatDateForInput(formData.dataEntrega)}
-                onChange={handleChange}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    dataEntrega: e.target.value, // Armazena como string YYYY-MM-DD
+                  }));
+                }}
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
