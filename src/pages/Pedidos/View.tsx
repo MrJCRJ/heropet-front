@@ -31,7 +31,7 @@ const PedidoView = () => {
 
   const getStatusColor = (status: string) => {
     switch (status?.toUpperCase()) {
-      case "FINALIZADO":
+      case "PAGO":
         return "bg-green-100 text-green-800";
       case "CANCELADO":
         return "bg-red-100 text-red-800";

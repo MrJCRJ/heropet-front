@@ -11,7 +11,7 @@ export interface ItemPedido {
 export interface Pedido {
   _id?: string;
   tipo: "VENDA" | "COMPRA";
-  status: "PENDENTE" | "PROCESSANDO" | "FINALIZADO" | "CANCELADO";
+  status: "PENDENTE" | "PROCESSANDO" | "PAGO" | "CANCELADO";
   documentoClienteFornecedor: string;
   nomeClienteFornecedor: string;
   dataPedido: string;

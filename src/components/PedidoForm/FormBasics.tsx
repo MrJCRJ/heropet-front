@@ -106,7 +106,7 @@ export const FormBasics = ({
             >
               <option value="PENDENTE">Pendente</option>
               <option value="PROCESSANDO">Processando</option>
-              <option value="FINALIZADO">Finalizado</option>
+              <option value="PAGO">Pago</option>
               <option value="CANCELADO">Cancelado</option>
             </select>
           </div>
