@@ -11,11 +11,19 @@ export interface ItemPedido {
 export interface Pedido {
   _id?: string;
   tipo: "VENDA" | "COMPRA";
-  status: "PENDENTE" | "PROCESSANDO" | "PAGO" | "CANCELADO";
+  status: "PENDENTE" | "PROCESSANDO" | "PAGO" | "CANCELADO" | "ATRASADO";
   documentoClienteFornecedor: string;
   nomeClienteFornecedor: string;
   dataPedido: string;
   dataEntrega?: string;
+  vendedor?: string;
+  transportadora?: string;
+  formaPagamento?: string;
+  formaEntrega?: string;
+  dataPagamento?: string;
+  prazoPagamento?: string;
+  condicaoPagamento?: string;
+  desconto?: number;
   itens: ItemPedido[];
   totalPedido: number;
   temNotaFiscal: boolean;

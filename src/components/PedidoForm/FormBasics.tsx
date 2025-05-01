@@ -108,6 +108,7 @@ export const FormBasics = ({
               <option value="PROCESSANDO">Processando</option>
               <option value="PAGO">Pago</option>
               <option value="CANCELADO">Cancelado</option>
+              <option value="ATRASADO">Atrasado</option>
             </select>
           </div>
         </div>
@@ -143,7 +144,7 @@ export const FormBasics = ({
         </div>
 
         {/* Datas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-700">
               Data do Pedido
@@ -152,40 +153,175 @@ export const FormBasics = ({
               type="date"
               name="dataPedido"
               value={formatDateForInput(formData.dataPedido)}
+              onChange={handleChange}
               required
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
 
-          {formData.tipo === "VENDA" && (
-            <div className="space-y-1">
-              <label className="block text-sm font-medium text-gray-700">
-                Data de Entrega
-              </label>
-              <input
-                type="date"
-                name="dataEntrega"
-                value={formatDateForInput(formData.dataEntrega)}
-                onChange={(e) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    dataEntrega: e.target.value, // Armazena como string YYYY-MM-DD
-                  }));
-                }}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-          )}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Data de Entrega
+            </label>
+            <input
+              type="date"
+              name="dataEntrega"
+              value={formatDateForInput(formData.dataEntrega || "")}
+              onChange={handleChange}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Data de Pagamento
+            </label>
+            <input
+              type="date"
+              name="dataPagamento"
+              value={formatDateForInput(formData.dataPagamento || "")}
+              onChange={handleChange}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
         </div>
 
-        {/* Outras Informações */}
+        {/* Formas de Pagamento e Entrega */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Forma de Pagamento
+            </label>
+            <select
+              name="formaPagamento"
+              value={formData.formaPagamento || ""}
+              onChange={handleChange}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="">Selecione...</option>
+              <option value="DINHEIRO">Dinheiro</option>
+              <option value="CARTAO_CREDITO">Cartão de Crédito</option>
+              <option value="CARTAO_DEBITO">Cartão de Débito</option>
+              <option value="PIX">PIX</option>
+              <option value="BOLETO">Boleto</option>
+              <option value="TRANSFERENCIA">Transferência</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Forma de Entrega
+            </label>
+            <select
+              name="formaEntrega"
+              value={formData.formaEntrega || ""}
+              onChange={handleChange}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="">Selecione...</option>
+              <option value="RETIRADA">Retirada</option>
+              <option value="ENTREGA">Entrega</option>
+              <option value="CORREIOS">Correios</option>
+              <option value="TRANSPORTADORA">Transportadora</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Campos específicos para VENDA */}
+        {formData.tipo === "VENDA" && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Vendedor
+                </label>
+                <input
+                  type="text"
+                  name="vendedor"
+                  value={formData.vendedor || ""}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Transportadora
+                </label>
+                <input
+                  type="text"
+                  name="transportadora"
+                  value={formData.transportadora || ""}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Prazo de Pagamento (dias)
+                </label>
+                <input
+                  type="number"
+                  name="prazoPagamento"
+                  value={formData.prazoPagamento || ""}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Desconto (%)
+                </label>
+                <input
+                  type="number"
+                  name="desconto"
+                  value={formData.desconto || ""}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Condições de Pagamento
+                </label>
+                <select
+                  name="condicaoPagamento"
+                  value={formData.condicaoPagamento || ""}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                >
+                  <option value="">Selecione...</option>
+                  <option value="A_VISTA">À Vista</option>
+                  <option value="PRAZO_30">30 dias</option>
+                  <option value="PRAZO_60">60 dias</option>
+                  <option value="PARCELADO">Parcelado</option>
+                </select>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Nota Fiscal */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
               name="temNotaFiscal"
               checked={formData.temNotaFiscal}
-              onChange={handleChange}
+              onChange={(e) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  temNotaFiscal: e.target.checked,
+                }));
+              }}
               className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <label className="text-sm font-medium text-gray-700">
