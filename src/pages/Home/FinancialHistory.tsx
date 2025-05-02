@@ -1,3 +1,4 @@
+// File: src/pages/Home/FinancialHistory.tsx
 import { useState, useEffect } from "react";
 import { listarPedidos } from "../../api/pedidos";
 import {
@@ -5,7 +6,7 @@ import {
   MonthlyFinancialData,
   FinancialTransaction,
 } from "./types";
-import FinancialCard from "./FinancialCard";
+import MonthlyFinancialChart from "./MonthlyFinancialChart";
 import PaginationControls from "./PaginationControls";
 
 interface Pedido {
@@ -13,7 +14,6 @@ interface Pedido {
   tipo: "VENDA" | "COMPRA";
   dataPedido: string;
   totalPedido: number;
-  // Adicione outras propriedades conforme necessário
 }
 
 const FinancialHistory = () => {
@@ -24,7 +24,7 @@ const FinancialHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const itemsPerPage = 2;
+  const itemsPerPage = 6; // Mostrar mais meses por página
 
   useEffect(() => {
     const loadFinancialData = async () => {
@@ -32,11 +32,9 @@ const FinancialHistory = () => {
         const responseVendas = await listarPedidos("VENDA");
         const responseCompras = await listarPedidos("COMPRA");
 
-        // Extrair os dados da resposta Axios
         const vendas: Pedido[] = responseVendas.data;
         const compras: Pedido[] = responseCompras.data;
 
-        // Processar os dados para criar o resumo financeiro
         const processedData = processFinancialData(vendas, compras);
         setFinancialData(processedData);
       } catch (err) {
@@ -54,7 +52,6 @@ const FinancialHistory = () => {
     vendas: Pedido[],
     compras: Pedido[]
   ): FinancialSummary => {
-    // Agrupar por mês/ano e calcular totais
     const allTransactions: FinancialTransaction[] = [...vendas, ...compras].map(
       (pedido) => ({
         id: pedido._id,
@@ -66,7 +63,6 @@ const FinancialHistory = () => {
       })
     );
 
-    // Definir tipo para o acumulador
     interface MonthlyGroup {
       [key: string]: {
         month: number;
@@ -77,7 +73,6 @@ const FinancialHistory = () => {
       };
     }
 
-    // Agrupar por mês/ano
     const monthlyGroups: MonthlyGroup = allTransactions.reduce(
       (acc: MonthlyGroup, transaction) => {
         const key = `${transaction.year}-${transaction.month}`;
@@ -103,19 +98,16 @@ const FinancialHistory = () => {
       {}
     );
 
-    // Calcular lucro por mês e totais gerais
     const monthlyData: MonthlyFinancialData[] = Object.values(monthlyGroups)
       .map((month) => ({
         ...month,
         profit: month.totalSales - month.totalPurchases,
       }))
       .sort((a, b) => {
-        // Ordenar por ano e mês
         if (a.year !== b.year) return b.year - a.year;
         return b.month - a.month;
       });
 
-    // Calcular totais
     const totalSales = monthlyData.reduce(
       (sum, month) => sum + month.totalSales,
       0
@@ -127,7 +119,7 @@ const FinancialHistory = () => {
     const totalProfit = totalSales - totalPurchases;
 
     return {
-      currentBalance: totalProfit, // Simplificação - pode ser ajustado
+      currentBalance: totalProfit,
       monthlyData,
       totalSales,
       totalPurchases,
@@ -150,10 +142,6 @@ const FinancialHistory = () => {
   }
 
   const totalPages = Math.ceil(financialData.monthlyData.length / itemsPerPage);
-  const currentData = financialData.monthlyData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   return (
     <div className="bg-white rounded-lg p-6 mb-8 shadow-md">
@@ -200,14 +188,16 @@ const FinancialHistory = () => {
         </div>
       </div>
 
-      {/* Dados Mensais */}
-      <div className="grid grid-cols-1 gap-6">
-        {currentData.map((monthData) => (
-          <FinancialCard
-            key={`${monthData.year}-${monthData.month}`}
-            monthData={monthData}
-          />
-        ))}
+      {/* Gráfico Unificado */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          Histórico Anual -{" "}
+          {financialData.monthlyData[0]?.year || new Date().getFullYear()}
+        </h3>
+        <MonthlyFinancialChart
+          monthlyData={financialData.monthlyData}
+          year={financialData.monthlyData[0]?.year || new Date().getFullYear()}
+        />
       </div>
 
       <PaginationControls
