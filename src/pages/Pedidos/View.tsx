@@ -1,55 +1,38 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { buscarPedido, removerPedido, Pedido } from "../../api/pedidos";
+import {
+  buscarPedido,
+  removerPedido,
+  atualizarPedido,
+} from "../../api/pedidos";
 import { Link } from "react-router-dom";
 import Modal from "../../components/Modal";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Alert from "../../components/Alert";
+import { ParcelasView } from "./ParcelasView";
+import { ItensPedidoView } from "./ItensPedidoView";
+import { Pedido } from "./pedidoTypes";
+import { formatarData, getStatusColor } from "./pedidoUtils";
+import { PedidoStatus } from "./pedidoTypes";
 
-const PedidoView = () => {
-  const { id } = useParams();
+export const PedidoView = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [pedido, setPedido] = useState<Pedido | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const formatarData = (dataString?: string) => {
-    if (!dataString) return "-";
-    const data = new Date(dataString);
-    return data.toLocaleDateString("pt-BR");
-  };
-
-  const formatarMoeda = (valor?: number) => {
-    if (valor === undefined || valor === null) return "R$ 0,00";
-    return valor.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status?.toUpperCase()) {
-      case "PAGO":
-        return "bg-green-100 text-green-800";
-      case "CANCELADO":
-        return "bg-red-100 text-red-800";
-      case "ATRASADO":
-        return "bg-red-100 text-red-800";
-      case "PENDENTE":
-        return "bg-yellow-100 text-yellow-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const carregarPedido = async () => {
       try {
-        if (!id) throw new Error("ID não fornecido");
+        if (!id) throw new Error("ID do pedido não fornecido");
+
         setLoading(true);
         setError("");
+
         const response = await buscarPedido(id);
         setPedido(response.data);
       } catch (err) {
@@ -62,6 +45,29 @@ const PedidoView = () => {
 
     carregarPedido();
   }, [id]);
+
+  const handleTogglePago = async (numeroParcela: number) => {
+    if (!pedido || !pedido.parcelas) return;
+
+    try {
+      const parcelasAtualizadas = pedido.parcelas.map((parcela) =>
+        parcela.numero === numeroParcela
+          ? { ...parcela, pago: !parcela.pago }
+          : parcela
+      );
+
+      const pedidoAtualizado = { ...pedido, parcelas: parcelasAtualizadas };
+
+      await atualizarPedido(pedido._id!, {
+        parcelas: parcelasAtualizadas,
+      });
+
+      setPedido(pedidoAtualizado);
+    } catch (err) {
+      setError("Erro ao atualizar parcela. Tente novamente.");
+      console.error("Erro ao atualizar parcela:", err);
+    }
+  };
 
   const handleDelete = async () => {
     if (!id) return;
@@ -84,18 +90,20 @@ const PedidoView = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner />;
 
   if (error) {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <Alert type="error" message={error} />
+        <div className="mt-4">
+          <Link
+            to="/pedidos"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Voltar para lista
+          </Link>
+        </div>
       </div>
     );
   }
@@ -121,26 +129,21 @@ const PedidoView = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Detalhes do Pedido
-          </h1>
-          <p className="text-gray-500 text-sm">ID: {pedido._id}</p>
-        </div>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Detalhes do Pedido</h1>
         <Link
           to="/pedidos"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800 font-medium transition-colors"
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800 font-medium"
         >
           Voltar para lista
         </Link>
       </div>
 
       <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
-        {/* Seção de Informações Básicas */}
+        {/* Informações Básicas */}
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-lg font-medium text-gray-900 mb-4">
-            Informações Básicas
+            Informações
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
@@ -162,7 +165,7 @@ const PedidoView = () => {
               <p className="mt-1 text-sm">
                 <span
                   className={`px-2 py-1 text-xs font-medium rounded ${getStatusColor(
-                    pedido.status
+                    pedido.status as PedidoStatus
                   )}`}
                 >
                   {pedido.status}
@@ -214,63 +217,20 @@ const PedidoView = () => {
           </div>
         </div>
 
-        {/* Seção de Itens do Pedido */}
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">
-            Itens do Pedido
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Produto
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Quantidade
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Preço Unitário
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {pedido.itens.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {item.produto}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {item.quantidade}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatarMoeda(item.precoUnitario)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatarMoeda(item.total)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td
-                    colSpan={3}
-                    className="px-6 py-4 text-right text-sm font-medium text-gray-500"
-                  >
-                    <strong>Total do Pedido:</strong>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <strong>{formatarMoeda(pedido.totalPedido)}</strong>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
+        {/* Itens do Pedido */}
+        <ItensPedidoView
+          itens={pedido.itens}
+          totalPedido={pedido.totalPedido}
+        />
+
+        {/* Parcelas */}
+        {pedido.parcelas && pedido.parcelas.length > 0 && (
+          <ParcelasView
+            parcelas={pedido.parcelas}
+            onTogglePago={handleTogglePago}
+            isEditing={isEditing}
+          />
+        )}
 
         {/* Observações */}
         {pedido.observacoes && (
@@ -286,6 +246,12 @@ const PedidoView = () => {
 
         {/* Ações */}
         <div className="p-6 bg-gray-50 flex flex-wrap gap-3 justify-end">
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md"
+          >
+            {isEditing ? "Cancelar Edição" : "Editar Parcelas"}
+          </button>
           <Link
             to={`/pedidos/${id}/editar`}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium transition-colors"
@@ -312,30 +278,18 @@ const PedidoView = () => {
           <p className="text-gray-700">
             Tem certeza que deseja excluir este pedido?
           </p>
-          <p className="text-gray-600 text-sm">
-            Esta ação não pode ser desfeita.
-          </p>
           <div className="flex justify-end gap-3">
             <button
               onClick={() => setShowDeleteModal(false)}
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800 font-medium transition-colors"
-              disabled={isDeleting}
             >
               Cancelar
             </button>
             <button
               onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition-colors disabled:bg-red-400"
-              disabled={isDeleting}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition-colors"
             >
-              {isDeleting ? (
-                <span className="flex items-center gap-2">
-                  <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                  Excluindo...
-                </span>
-              ) : (
-                "Confirmar Exclusão"
-              )}
+              Confirmar Exclusão
             </button>
           </div>
         </div>

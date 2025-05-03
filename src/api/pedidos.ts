@@ -28,6 +28,12 @@ export interface Pedido {
   totalPedido: number;
   temNotaFiscal: boolean;
   observacoes?: string;
+  parcelas?: Array<{
+    numero: number;
+    dataVencimento: string;
+    valor: number;
+    pago: boolean;
+  }>;
 }
 
 export interface PeriodFilter {

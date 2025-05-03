@@ -3,8 +3,8 @@ import { Pedido } from "../../api/pedidos";
 import FormHeader from "./FormHeader";
 import FormBasics from "./FormBasics";
 import FormItems from "./FormItems";
-import FormActions from "./FormActions";
-import Alert from "../../components/Alert";
+import { FormActions } from "./FormActions"; // Corrigido para importação nomeada
+import { FormParcelamento } from "./FormParcelamento";
 
 interface PedidoFormProps {
   initialData?: Omit<Pedido, "_id">;
@@ -23,7 +23,6 @@ const PedidoForm = ({
   const formatDateForInput = (dateString?: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    // Ensure we get local date in YYYY-MM-DD format
     const offset = date.getTimezoneOffset();
     const localDate = new Date(date.getTime() - offset * 60 * 1000);
     return localDate.toISOString().split("T")[0];
@@ -31,7 +30,6 @@ const PedidoForm = ({
 
   const formatDateForBackend = (dateString: string) => {
     if (!dateString) return new Date().toISOString();
-    // Convert from YYYY-MM-DD to full ISO string
     const date = new Date(dateString);
     return date.toISOString();
   };
@@ -50,8 +48,49 @@ const PedidoForm = ({
     }
   );
 
-  const [error, setError] = useState("");
+  const [, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showParcelamento, setShowParcelamento] = useState(false);
+  const [quantidadeParcelas, setQuantidadeParcelas] = useState(1);
+  const [parcelamentoSemanal, setParcelamentoSemanal] = useState(true);
+
+  const calcularParcelas = () => {
+    const valorParcela = formData.totalPedido / quantidadeParcelas;
+    const parcelas = [];
+    const dataBase = new Date(formData.dataPedido);
+
+    for (let i = 1; i <= quantidadeParcelas; i++) {
+      const dataVencimento = new Date(dataBase);
+
+      if (parcelamentoSemanal) {
+        dataVencimento.setDate(dataBase.getDate() + i * 7);
+      } else {
+        dataVencimento.setDate(dataBase.getDate() + i * 30);
+      }
+
+      parcelas.push({
+        numero: i,
+        dataVencimento: formatDateForInput(dataVencimento.toISOString()),
+        valor:
+          i === quantidadeParcelas
+            ? formData.totalPedido - valorParcela * (quantidadeParcelas - 1)
+            : valorParcela,
+        pago: false,
+      });
+    }
+
+    return parcelas;
+  };
+
+  const handleConfirmarParcelamento = () => {
+    const parcelas = calcularParcelas();
+    setFormData({
+      ...formData,
+      parcelas,
+      condicaoPagamento: "PARCELADO",
+    });
+    setShowParcelamento(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,16 +161,37 @@ const PedidoForm = ({
           />
         </div>
 
-        {error && (
-          <div className="mt-4">
-            <Alert type="error" message={error} />
+        {formData.itens.length > 0 && !showParcelamento && (
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => setShowParcelamento(true)}
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
+            >
+              Configurar Parcelamento
+            </button>
           </div>
+        )}
+
+        {showParcelamento && (
+          <FormParcelamento
+            totalPedido={formData.totalPedido}
+            dataPedido={formData.dataPedido}
+            quantidadeParcelas={quantidadeParcelas}
+            setQuantidadeParcelas={setQuantidadeParcelas}
+            parcelamentoSemanal={parcelamentoSemanal}
+            setParcelamentoSemanal={setParcelamentoSemanal}
+          />
         )}
 
         <FormActions
           isSubmitting={isSubmitting}
           isEditing={isEditing}
           onCancel={onCancel}
+          showParcelamento={showParcelamento}
+          onConfirmParcelamento={handleConfirmarParcelamento}
+          setShowParcelamento={setShowParcelamento}
+          hasItems={formData.itens.length > 0}
         />
       </form>
     </div>

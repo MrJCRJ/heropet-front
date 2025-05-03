@@ -1,16 +1,46 @@
+// FormActions.tsx
 interface FormActionsProps {
   isSubmitting: boolean;
   isEditing: boolean;
   onCancel: () => void;
+  showParcelamento?: boolean;
+  onConfirmParcelamento?: () => void;
+  setShowParcelamento?: (value: boolean) => void;
+  hasItems?: boolean;
 }
 
-const FormActions = ({
+export const FormActions = ({
   isSubmitting,
   isEditing,
   onCancel,
+  showParcelamento,
+  onConfirmParcelamento,
+  setShowParcelamento,
+  hasItems,
 }: FormActionsProps) => {
   return (
     <div className="flex justify-end gap-4 mt-8">
+      {!showParcelamento && hasItems && (
+        <button
+          type="button"
+          onClick={() => setShowParcelamento?.(true)}
+          disabled={isSubmitting}
+          className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Configurar Parcelamento
+        </button>
+      )}
+
+      {showParcelamento && (
+        <button
+          type="button"
+          onClick={onConfirmParcelamento}
+          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors shadow-sm"
+        >
+          Confirmar Parcelamento
+        </button>
+      )}
+
       <button
         type="submit"
         disabled={isSubmitting}
@@ -34,14 +64,14 @@ const FormActions = ({
 
       <button
         type="button"
-        onClick={onCancel}
+        onClick={
+          showParcelamento ? () => setShowParcelamento?.(false) : onCancel
+        }
         disabled={isSubmitting}
         className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-md transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Cancelar
+        {showParcelamento ? "Cancelar Parcelamento" : "Cancelar"}
       </button>
     </div>
   );
 };
-
-export default FormActions;
