@@ -1,8 +1,8 @@
 // File: src/pages/Home/ProductCard.tsx
 
 import { useState, useCallback, useMemo } from "react";
-import { Product, MonthlyStock } from "./types";
-import MonthlyChart from "./MonthlyChart";
+import { Product, MonthlyStock } from "./type/types";
+import MonthlyChart from "./Chart/MonthlyChart";
 import StockTooltip from "./StockTooltip";
 
 const ProductCard = ({ product }: { product: Product }) => {

@@ -1,29 +1,51 @@
 import { useState, useCallback } from "react";
-import { MonthlyFinancialData } from "./types";
-import StockTooltip from "./StockTooltip";
+import {
+  MonthlyFinancialData,
+  ActiveDataType,
+  TooltipState,
+  ChartContainerProps,
+} from "../type/types";
+import StockTooltip from "../Financial/FinancialTooltip";
 import MonthColumn from "./MonthColumn";
+
+// Utilitários de formatação
+const formatCurrency = (value: number) => {
+  return value.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+};
+
+const getMonthName = (monthNumber: number) => {
+  return new Date(2000, monthNumber - 1, 1).toLocaleString("pt-BR", {
+    month: "long",
+  });
+};
 
 const ChartContainer = ({
   allMonthsData,
   monthlyData,
   maxValue,
-}: {
-  allMonthsData: MonthlyFinancialData[];
-  monthlyData: MonthlyFinancialData[];
-  maxValue: number;
-}) => {
+}: ChartContainerProps) => {
   const [activeMonth, setActiveMonth] = useState<number | null>(null);
-  const [activeType, setActiveType] = useState<
-    "sales" | "purchases" | "profit" | null
-  >(null);
-  const [tooltip, setTooltip] = useState({
+  const [activeType, setActiveType] = useState<ActiveDataType>(null);
+  const [tooltip, setTooltip] = useState<TooltipState>({
     visible: false,
     position: { x: 0, y: 0 },
     content: {
       title: "",
-      items: [] as Array<{ label: string; value: string; color?: string }>,
+      items: [],
     },
   });
+
+  const hasRealData = useCallback(
+    (month: MonthlyFinancialData) => {
+      return monthlyData.some(
+        (m) => m.month === month.month && m.year === month.year
+      );
+    },
+    [monthlyData]
+  );
 
   const handleBarHover = useCallback(
     (
@@ -33,40 +55,27 @@ const ChartContainer = ({
     ) => {
       const month = allMonthsData[monthIndex];
 
-      if (
-        !monthlyData.some(
-          (m) => m.month === month.month && m.year === month.year
-        )
-      ) {
+      if (!hasRealData(month)) {
         return;
       }
 
       setActiveMonth(monthIndex);
       setActiveType(type);
 
-      const items = [
+      const tooltipItems = [
         {
           label: "Vendas",
-          value: month.totalSales.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          }),
+          value: formatCurrency(month.totalSales),
           color: "text-blue-400",
         },
         {
           label: "Compras",
-          value: month.totalPurchases.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          }),
+          value: formatCurrency(month.totalPurchases),
           color: "text-red-400",
         },
         {
           label: "Lucro",
-          value: month.profit.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          }),
+          value: formatCurrency(month.profit),
           color: month.profit >= 0 ? "text-green-400" : "text-red-400",
         },
       ];
@@ -75,16 +84,15 @@ const ChartContainer = ({
         visible: true,
         position: { x: e.clientX, y: e.clientY },
         content: {
-          title: `${new Date(2000, month.month - 1, 1).toLocaleString("pt-BR", {
-            month: "long",
-          })} ${month.year}`,
+          title: `${getMonthName(month.month)} ${month.year}`,
           items: [
-            items.find((item) => item.label.toLowerCase() === type) || items[0],
+            tooltipItems.find((item) => item.label.toLowerCase() === type) ||
+              tooltipItems[0],
           ],
         },
       });
     },
-    [allMonthsData, monthlyData]
+    [allMonthsData, hasRealData]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -112,9 +120,7 @@ const ChartContainer = ({
             key={`${month.year}-${month.month}`}
             month={month}
             monthIndex={monthIndex}
-            hasData={monthlyData.some(
-              (m) => m.month === month.month && m.year === month.year
-            )}
+            hasData={hasRealData(month)}
             maxValue={maxValue}
             activeMonth={activeMonth}
             activeType={activeType}

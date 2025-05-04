@@ -1,9 +1,8 @@
-// File: src/pages/Home/StockTooltip.tsx
-
+// File: src/pages/Home/FinancialTooltip.tsx
 import React, { useEffect, useRef } from "react";
-import { StockTooltipProps } from "./type/types";
+import { StockTooltipProps } from "../type/types";
 
-const StockTooltip: React.FC<StockTooltipProps> = ({
+const FinancialTooltip: React.FC<StockTooltipProps> = ({
   visible,
   position,
   content,
@@ -53,4 +52,4 @@ const StockTooltip: React.FC<StockTooltipProps> = ({
   );
 };
 
-export default StockTooltip;
+export default FinancialTooltip;
