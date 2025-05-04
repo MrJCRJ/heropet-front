@@ -1,18 +1,12 @@
-// File: src/pages/Home/StockHistory/index.tsx
-
 import { useState, useEffect } from "react";
 import { mockProducts } from "./mockData";
 import { Product } from "./types";
 import ProductCard from "./ProductCard";
-import PaginationControls from "./PaginationControls";
 
 const StockHistory = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const itemsPerPage = 2;
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -44,12 +38,6 @@ const StockHistory = () => {
     );
   }
 
-  const totalPages = Math.ceil(products.length / itemsPerPage);
-  const currentProducts = products.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   return (
     <div className="bg-white rounded-lg p-6 mb-8 shadow-md">
       <h2 className="text-gray-800 text-xl md:text-2xl mb-6 pb-3 border-b border-gray-100">
@@ -57,16 +45,10 @@ const StockHistory = () => {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {currentProducts.map((product) => (
+        {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-
-      <PaginationControls
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
     </div>
   );
 };

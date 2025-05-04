@@ -81,3 +81,20 @@ export interface FinancialSummary {
   totalPurchases: number;
   totalProfit: number;
 }
+
+export interface MonthlyGroup {
+  [key: string]: {
+    month: number;
+    year: number;
+    totalSales: number;
+    totalPurchases: number;
+    transactions: FinancialTransaction[];
+  };
+}
+
+export interface Pedido {
+  _id: string;
+  tipo: "VENDA" | "COMPRA";
+  dataPedido: string;
+  totalPedido: number;
+}

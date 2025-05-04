@@ -1,30 +1,20 @@
-// File: src/pages/Home/FinancialHistory.tsx
 import { useState, useEffect } from "react";
 import { listarPedidos } from "../../api/pedidos";
 import {
   FinancialSummary,
   MonthlyFinancialData,
   FinancialTransaction,
+  MonthlyGroup,
+  Pedido,
 } from "./types";
 import MonthlyFinancialChart from "./MonthlyFinancialChart";
-import PaginationControls from "./PaginationControls";
-
-interface Pedido {
-  _id: string;
-  tipo: "VENDA" | "COMPRA";
-  dataPedido: string;
-  totalPedido: number;
-}
 
 const FinancialHistory = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [financialData, setFinancialData] = useState<FinancialSummary | null>(
     null
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const itemsPerPage = 6; // Mostrar mais meses por página
 
   useEffect(() => {
     const loadFinancialData = async () => {
@@ -62,16 +52,6 @@ const FinancialHistory = () => {
         year: new Date(pedido.dataPedido).getFullYear(),
       })
     );
-
-    interface MonthlyGroup {
-      [key: string]: {
-        month: number;
-        year: number;
-        totalSales: number;
-        totalPurchases: number;
-        transactions: FinancialTransaction[];
-      };
-    }
 
     const monthlyGroups: MonthlyGroup = allTransactions.reduce(
       (acc: MonthlyGroup, transaction) => {
@@ -141,8 +121,6 @@ const FinancialHistory = () => {
     );
   }
 
-  const totalPages = Math.ceil(financialData.monthlyData.length / itemsPerPage);
-
   return (
     <div className="bg-white rounded-lg p-6 mb-8 shadow-md">
       <h2 className="text-gray-800 text-xl md:text-2xl mb-6 pb-3 border-b border-gray-100">
@@ -199,12 +177,6 @@ const FinancialHistory = () => {
           year={financialData.monthlyData[0]?.year || new Date().getFullYear()}
         />
       </div>
-
-      <PaginationControls
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
     </div>
   );
 };
