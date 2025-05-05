@@ -42,7 +42,7 @@ const SalaryEvolution = () => {
           </li>
           <li>
             <strong>Compra de rações</strong>:{" "}
-            {formatCurrency(INITIAL_DATA.investment.food)}
+            {formatCurrency(1954 + 2000 + 1485)}
           </li>
           <li>
             <strong>Impressora (maio)</strong>:{" "}
