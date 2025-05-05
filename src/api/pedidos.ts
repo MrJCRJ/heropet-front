@@ -1,11 +1,28 @@
 // File: src/api/pedidos.ts
 import httpClient from "./httpClient";
 
+// Definindo os tipos de filtro
+export type FiltroPedido = "TODOS" | "VENDA" | "COMPRA";
+export type FiltroStatus =
+  | "PENDENTE"
+  | "PROCESSANDO"
+  | "PAGO"
+  | "CANCELADO"
+  | "ATRASADO";
+
 export interface ItemPedido {
   produto: string;
   quantidade: number;
   precoUnitario: number;
   total: number;
+}
+
+export interface ListarPedidosParams {
+  tipo?: FiltroPedido;
+  status?: FiltroStatus;
+  ordenacao?: "data_asc" | "data_desc";
+  page?: number;
+  limit?: number;
 }
 
 export interface Pedido {
@@ -42,13 +59,39 @@ export interface PeriodFilter {
   year: number;
 }
 
+export interface ListarPedidosParams {
+  tipo?: FiltroPedido;
+  status?: FiltroStatus;
+  ordenacao?: "data_asc" | "data_desc";
+  page?: number;
+  limit?: number;
+}
+
 export const criarPedido = (pedido: Omit<Pedido, "_id">) => {
   return httpClient.post("/pedidos", pedido);
 };
 
-export const listarPedidos = (tipo?: "VENDA" | "COMPRA") => {
-  const url = tipo ? `/pedidos?tipo=${tipo}` : "/pedidos";
-  return httpClient.get(url);
+export const listarPedidos = async (params?: ListarPedidosParams) => {
+  // Garante que valores undefined não sejam enviados
+  const cleanParams: Record<string, string> = {};
+
+  if (params?.tipo && params.tipo !== "TODOS") {
+    cleanParams.tipo = params.tipo;
+  }
+
+  if (params?.status) {
+    cleanParams.status = params.status;
+  }
+
+  if (params?.ordenacao) {
+    cleanParams.ordenacao = params.ordenacao;
+  }
+
+  const response = await httpClient.get("/pedidos", {
+    params: cleanParams,
+  });
+
+  return response.data;
 };
 
 export const buscarPedido = (id: string) => {

@@ -1,22 +1,12 @@
-import { Link } from "react-router-dom";
 import { Pedido } from "../../../api/pedidos";
 import { formatarData, formatarMoeda, getStatusColor } from "../pedidoUtils";
 
 type PedidoRowProps = {
   pedido: Pedido;
-  onDeleteClick: (pedidoId: string) => void;
-  isDeleting: boolean;
 };
 
-export const PedidoRow = ({
-  pedido,
-  onDeleteClick,
-  isDeleting,
-}: PedidoRowProps) => (
-  <tr className="hover:bg-gray-50">
-    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
-      {pedido._id?.substring(0, 6)}...
-    </td>
+export const PedidoRow = ({ pedido }: PedidoRowProps) => (
+  <>
     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
       <span
         className={`px-2 py-1 ${
@@ -46,28 +36,5 @@ export const PedidoRow = ({
         {pedido.status || "-"}
       </span>
     </td>
-    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-      <div className="flex gap-2">
-        <Link
-          to={`/pedidos/${pedido._id}`}
-          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-medium rounded transition-colors"
-        >
-          Ver
-        </Link>
-        <Link
-          to={`/pedidos/${pedido._id}/editar`}
-          className="px-3 py-1 bg-blue-200 hover:bg-blue-300 text-blue-800 text-xs font-medium rounded transition-colors"
-        >
-          Editar
-        </Link>
-        <button
-          onClick={() => onDeleteClick(pedido._id!)}
-          className="px-3 py-1 bg-red-200 hover:bg-red-300 text-red-800 text-xs font-medium rounded transition-colors"
-          disabled={isDeleting}
-        >
-          Excluir
-        </button>
-      </div>
-    </td>
-  </tr>
+  </>
 );

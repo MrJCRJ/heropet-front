@@ -1,6 +1,13 @@
 import { Pedido } from "../../../api/pedidos";
 
+// types.ts
 export type FiltroPedido = "TODOS" | "VENDA" | "COMPRA";
+export type FiltroStatus =
+  | "PAGO"
+  | "PENDENTE"
+  | "CANCELADO"
+  | "PROCESSANDO"
+  | "ATRASADO";
 
 export type PedidoListProps = {
   pedidos: Pedido[];
