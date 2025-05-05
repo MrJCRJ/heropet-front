@@ -1,6 +1,6 @@
 // File: src/pages/Home/mockData.ts
 import { getHistoricoEstoque } from "../../../api/estoque";
-import { Product, MonthlyStock } from "../type/types";
+import { Product, MonthlyStock } from "../types/types";
 import { MonthlyStockData } from "../../../api/estoque";
 
 /**

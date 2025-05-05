@@ -4,7 +4,7 @@ import {
   ActiveDataType,
   TooltipState,
   ChartContainerProps,
-} from "../type/types";
+} from "../types/types";
 import StockTooltip from "../Financial/FinancialTooltip";
 import MonthColumn from "./MonthColumn";
 

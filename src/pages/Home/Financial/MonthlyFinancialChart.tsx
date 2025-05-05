@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { MonthlyFinancialData } from "../type/types";
+import { MonthlyFinancialData } from "../types/types";
 import ChartContainer from "../Chart/ChartContainer";
 import { generateAllMonthsData, calculateMaxValue } from "../Chart/chartUtils";
 

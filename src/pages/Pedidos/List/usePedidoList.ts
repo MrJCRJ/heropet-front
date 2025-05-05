@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { listarPedidos, Pedido } from "../../../api/pedidos";
+import { listarPedidos } from "../../../api/pedidos";
 import { FiltroPedido, FiltroStatus } from "./types";
 import { ListarPedidosParams } from "../../../api/pedidos";
+import { Pedido } from "../../Home/types/pedidos";
 
 // Definindo um tipo unificado para ordenação
 export type OrdenacaoPedido = "data_asc" | "data_desc";

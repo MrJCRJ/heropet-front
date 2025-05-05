@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { MonthlyChartProps } from "../type/types";
+import { MonthlyChartProps } from "../types/types";
 
 // Constantes para estilos e configurações
 const DEFAULT_BAR_WIDTH = 28;

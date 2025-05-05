@@ -1,4 +1,4 @@
-import { MonthlyFinancialData } from "../type/types";
+import { MonthlyFinancialData } from "../types/types";
 
 /**
  * Gera dados para todos os meses do ano especificado, preenchendo com valores padrão

@@ -1,4 +1,4 @@
-import { Pedido } from "../../../api/pedidos";
+import { Pedido } from "../../Home/types/pedidos";
 import { PedidoRow } from "./ListRow";
 import { OrdenacaoPedido } from "./usePedidoList";
 

@@ -1,5 +1,5 @@
 import { MouseEvent } from "react";
-import { ChartBarProps } from "../type/types";
+import { ChartBarProps } from "../types/types";
 
 /**
  * Componente que representa uma barra individual no gráfico financeiro

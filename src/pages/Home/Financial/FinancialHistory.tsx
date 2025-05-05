@@ -5,9 +5,9 @@ import {
   MonthlyFinancialData,
   FinancialTransaction,
   MonthlyFinancialGroup,
-  Pedido,
-} from "../type/types";
+} from "../types/types";
 import MonthlyFinancialChart from "./MonthlyFinancialChart";
+import { Pedido } from "../types/pedidos";
 
 // Componente para os cards de resumo
 const SummaryCard = ({
@@ -45,19 +45,24 @@ const useFinancialData = () => {
   const [error, setError] = useState<string | null>(null);
 
   const processFinancialData = (
-    vendas: Pedido[],
-    compras: Pedido[]
+    vendas: Pedido[] | undefined, // Adicione undefined como tipo possível
+    compras: Pedido[] | undefined // Adicione undefined como tipo possível
   ): FinancialSummary => {
-    const allTransactions: FinancialTransaction[] = [...vendas, ...compras].map(
-      (pedido) => ({
-        id: pedido._id,
-        date: new Date(pedido.dataPedido),
-        type: pedido.tipo,
-        amount: pedido.totalPedido,
-        month: new Date(pedido.dataPedido).getMonth() + 1,
-        year: new Date(pedido.dataPedido).getFullYear(),
-      })
-    );
+    // Verifique se os dados são válidos antes de processar
+    const vendasArray = vendas || [];
+    const comprasArray = compras || [];
+
+    const allTransactions: FinancialTransaction[] = [
+      ...vendasArray,
+      ...comprasArray,
+    ].map((pedido) => ({
+      id: pedido._id,
+      date: new Date(pedido.dataPedido),
+      type: pedido.tipo,
+      amount: pedido.totalPedido,
+      month: new Date(pedido.dataPedido).getMonth() + 1,
+      year: new Date(pedido.dataPedido).getFullYear(),
+    }));
 
     const monthlyGroups = allTransactions.reduce<MonthlyFinancialGroup>(
       (acc, transaction) => {
@@ -115,15 +120,17 @@ const useFinancialData = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [vendas, compras] = await Promise.all([
-          listarPedidos("VENDA"),
-          listarPedidos("COMPRA"),
+        // No seu useEffect dentro de useFinancialData
+        const [responseVendas, responseCompras] = await Promise.all([
+          listarPedidos({ tipo: "VENDA" }),
+          listarPedidos({ tipo: "COMPRA" }),
         ]);
 
-        setData(processFinancialData(vendas.data, compras.data));
+        // Modifique para:
+        setData(processFinancialData(responseVendas, responseCompras));
       } catch (err) {
+        console.error("Erro detalhado:", err);
         setError("Falha ao carregar dados financeiros");
-        console.error("Erro ao carregar dados:", err);
       } finally {
         setLoading(false);
       }

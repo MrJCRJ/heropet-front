@@ -1,4 +1,4 @@
-import { MonthlyFinancialData } from "../type/types";
+import { MonthlyFinancialData } from "../types/types";
 import ChartBar from "./ChartBar";
 
 interface MonthColumnProps {

@@ -53,7 +53,7 @@ export interface TooltipState {
 export type TransactionType = "COMPRA" | "VENDA";
 
 export interface FinancialTransaction {
-  id: string;
+  id?: string;
   date: Date;
   type: TransactionType;
   amount: number;
@@ -80,14 +80,6 @@ export interface FinancialSummary {
 
 export interface MonthlyFinancialGroup {
   [key: string]: Omit<MonthlyFinancialData, "profit">;
-}
-
-// Tipos relacionados a Pedidos
-export interface Pedido {
-  _id: string;
-  tipo: TransactionType;
-  dataPedido: string;
-  totalPedido: number;
 }
 
 // Props dos componentes

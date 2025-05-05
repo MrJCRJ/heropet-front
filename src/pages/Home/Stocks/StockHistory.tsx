@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { mockProducts } from "../Dados/mockData";
-import { Product } from "../type/types";
+import { Product } from "../types/types";
 import ProductCard from "./ProductCard";
 
 const StockHistory = () => {
