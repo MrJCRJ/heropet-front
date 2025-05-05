@@ -33,11 +33,11 @@ const SalaryEvolution = () => {
             {formatCurrency(INITIAL_DATA.investment.total)}
           </li>
           <li>
-            <strong>Sua parte</strong>:{" "}
+            <strong>J.Cicero</strong>:{" "}
             {formatCurrency(INITIAL_DATA.investment.you)}
           </li>
           <li>
-            <strong>Sócio</strong>:{" "}
+            <strong>I.Jonathan</strong>:{" "}
             {formatCurrency(INITIAL_DATA.investment.partner)}
           </li>
           <li>
