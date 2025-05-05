@@ -1,11 +1,17 @@
 // utils/pedidoUtils.ts
 import { PedidoStatus } from "./pedidoTypes";
 
-export const formatarData = (dataString?: string): string => {
-  if (!dataString) return "-";
+export const formatarData = (dateString: string | undefined): string => {
+  if (!dateString) return "-";
+
   try {
-    const data = new Date(dataString);
-    return data.toLocaleDateString("pt-BR");
+    // Corrige o problema do fuso horário
+    const date = new Date(dateString);
+    const offset = date.getTimezoneOffset();
+    date.setMinutes(date.getMinutes() + offset);
+
+    // Formata no padrão brasileiro
+    return date.toLocaleDateString("pt-BR");
   } catch {
     return "-";
   }
@@ -20,7 +26,9 @@ export const formatarMoeda = (valor?: number): string => {
 };
 
 export const getStatusColor = (status?: PedidoStatus): string => {
-  switch (status?.toUpperCase()) {
+  if (!status) return "bg-gray-100 text-gray-800";
+
+  switch (status.toUpperCase()) {
     case "PAGO":
       return "bg-green-100 text-green-800";
     case "CANCELADO":

@@ -4,6 +4,7 @@ import { listarPedidos, removerPedido, Pedido } from "../../api/pedidos";
 import Modal from "../../components/Modal";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Alert from "../../components/Alert";
+import { formatarData } from "./pedidoUtils";
 
 const PedidoList = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -54,12 +55,6 @@ const PedidoList = () => {
       setIsDeleting(false);
       setPedidoParaExcluir(null);
     }
-  };
-
-  const formatarData = (dataString: string) => {
-    if (!dataString) return "-";
-    const data = new Date(dataString);
-    return data.toLocaleDateString("pt-BR");
   };
 
   const formatarMoeda = (valor?: number) => {
