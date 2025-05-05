@@ -1,4 +1,4 @@
-import { Pedido } from "../../../api/pedidos";
+import { Pedido } from "../../Home/types/pedidos";
 
 // types.ts
 export type FiltroPedido = "TODOS" | "VENDA" | "COMPRA";

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { criarPedido, Pedido } from "../../api/pedidos";
+import { criarPedido } from "../../api/pedidos";
+import { Pedido } from "../../pages/Home/types/pedidos";
 import PedidoForm from "../../components/PedidoForm";
 import Alert from "../../components/Alert";
 import LoadingSpinner from "../../components/LoadingSpinner";

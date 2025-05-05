@@ -1,4 +1,4 @@
-import { Pedido } from "../../../api/pedidos";
+import { Pedido } from "../../Home/types/pedidos";
 import { formatarData, formatarMoeda, getStatusColor } from "../pedidoUtils";
 
 type PedidoRowProps = {

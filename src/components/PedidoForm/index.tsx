@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pedido } from "../../api/pedidos";
+import { Pedido } from "../../pages/Home/types/pedidos";
 import FormHeader from "./FormHeader";
 import FormBasics from "./FormBasics";
 import FormItems from "./FormItems";

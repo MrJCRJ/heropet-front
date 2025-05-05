@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Pedido } from "../../api/pedidos";
+import { Pedido } from "../../pages/Home/types/pedidos";
 import { useClientesFornecedores } from "./useClientesFornecedores";
 import { ClienteFornecedorSelect } from "./ClienteFornecedorSelect";
 import { formatDateForInput, formatDocumento } from "./utils";

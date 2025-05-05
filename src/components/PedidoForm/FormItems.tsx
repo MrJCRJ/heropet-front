@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Pedido, ItemPedido } from "../../api/pedidos";
+import { Pedido, ItemPedido } from "../../pages/Home/types/pedidos";
 import { EstoqueHistorico, getHistoricoEstoque } from "../../api/estoque";
 
 interface FormItemsProps {
