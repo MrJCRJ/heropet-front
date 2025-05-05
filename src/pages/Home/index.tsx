@@ -1,8 +1,8 @@
 // file: src/pages/Home/index.tsx
 import { useState } from "react";
 import FinancialHistory from "./Financial/FinancialHistory";
-import SalaryEvolution from "./SalaryEvolution";
-import StockHistory from "./StockHistory";
+import SalaryEvolution from "./Salary/SalaryEvolution";
+import StockHistory from "./Stocks/StockHistory";
 
 type TabType = "financial" | "salario" | "estoque";
 
