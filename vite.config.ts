@@ -12,10 +12,4 @@ export default defineConfig({
       input: "./index.html",
     },
   },
-  server: {
-    // Configuração correta para fallback no ambiente de desenvolvimento
-    proxy: {
-      // Se necessário para APIs
-    },
-  },
 });
