@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { listarClientes, excluirCliente, Cliente } from "../../api/clientes";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components/ui/Alert";
 
 const ClienteList = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);

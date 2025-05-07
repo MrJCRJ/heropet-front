@@ -7,7 +7,7 @@ import axios from "axios";
 import httpClient from "../../api/httpClient";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Alert from "../Alert";
+import { Alert } from "../ui/Alert";
 import { ClienteFormProps } from "./types";
 
 const ClienteForm = ({ initialValues, isEdit = false }: ClienteFormProps) => {

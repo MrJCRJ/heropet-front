@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ClienteForm from "../../components/ClienteForm";
 import { criarCliente } from "../../api/clientes";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components/ui/Alert";
 import { useState } from "react";
 import { ClienteFormValues } from "../../components/ClienteForm/types";
 

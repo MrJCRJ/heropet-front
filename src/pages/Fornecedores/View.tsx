@@ -7,9 +7,9 @@ import {
   buscarEnderecoPorCep,
 } from "../../api/fornecedores";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import Alert from "../../components/Alert";
-import Button from "../../components/Button";
-import DetailCard from "../../components/DetailCard";
+import { Alert } from "../../components/ui/Alert";
+import { Button } from "../../components/ui/Button";
+import { DetailCard } from "../../components/ui/DetailCard/DetailCard";
 
 // Formatting functions
 const formatCNPJ = (cnpj: string) => {

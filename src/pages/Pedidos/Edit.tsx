@@ -4,7 +4,7 @@ import { buscarPedido, atualizarPedido } from "../../api/pedidos";
 import { Pedido } from "../Home/types/pedidos";
 import PedidoForm from "../../components/PedidoForm";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components/ui/Alert";
 
 const PedidoEdit = () => {
   const { id } = useParams<{ id: string }>(); // Tipagem mais específica

@@ -4,7 +4,7 @@ import { buscarCliente, atualizarCliente } from "../../api/clientes";
 import ClienteForm from "../../components/ClienteForm";
 import type { ClienteFormValues } from "../../components/ClienteForm/types";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components/ui/Alert";
 
 const ClienteEdit = () => {
   const { cpfOuCnpj } = useParams<{ cpfOuCnpj: string }>();

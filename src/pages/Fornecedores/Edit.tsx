@@ -7,7 +7,7 @@ import {
 } from "../../api/fornecedores";
 import FornecedorForm from "../../components/FornecedorForm";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components/ui/Alert";
 
 const FornecedorEditPage = () => {
   const { cnpj } = useParams<{ cnpj: string }>();

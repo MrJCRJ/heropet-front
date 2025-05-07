@@ -8,7 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import Modal from "../../components/Modal";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import Alert from "../../components/Alert";
+import { Alert } from "../../components/ui/Alert";
 import { ParcelasView } from "./ParcelasView";
 import { ItensPedidoView } from "./ItensPedidoView";
 import { Pedido, PedidoStatus } from "./types";
