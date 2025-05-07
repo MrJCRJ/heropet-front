@@ -1,11 +1,6 @@
 // components/ItensPedidoView.tsx
-import { ItemPedido } from "./pedidoTypes";
+import { ItensPedidoViewProps } from "./types";
 import { formatarMoeda } from "./pedidoUtils";
-
-interface ItensPedidoViewProps {
-  itens: ItemPedido[];
-  totalPedido: number;
-}
 
 export const ItensPedidoView = ({
   itens,

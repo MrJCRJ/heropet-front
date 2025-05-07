@@ -1,20 +1,6 @@
 import { useState } from "react";
-import { Pedido } from "../../Home/types/pedidos";
 import { PedidoRow } from "./ListRow";
-import { OrdenacaoPedido, FiltroPedido, FiltroStatus } from "./types";
-
-type PedidoTableProps = {
-  pedidos: Pedido[];
-  ordenacao: OrdenacaoPedido;
-  filtroTipo: FiltroPedido;
-  filtroStatus?: FiltroStatus;
-  onOrdenarClick: () => void;
-  onFilterChange: (
-    tipo?: FiltroPedido,
-    status?: FiltroStatus,
-    ordem?: OrdenacaoPedido
-  ) => void;
-};
+import { FiltroPedido, FiltroStatus, PedidoTableProps } from "../types";
 
 export const PedidoTable = ({
   pedidos,

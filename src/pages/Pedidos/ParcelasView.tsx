@@ -1,5 +1,5 @@
 // components/ParcelasView.tsx
-import { Parcela } from "./pedidoTypes";
+import { Parcela } from "./types";
 import { formatarData, formatarMoeda } from "./pedidoUtils";
 
 interface ParcelasViewProps {

@@ -1,9 +1,5 @@
-import { Pedido } from "../../Home/types/pedidos";
+import { PedidoRowProps } from "../types";
 import { formatarData, formatarMoeda, getStatusColor } from "../pedidoUtils";
-
-type PedidoRowProps = {
-  pedido: Pedido;
-};
 
 export const PedidoRow = ({ pedido }: PedidoRowProps) => (
   <>

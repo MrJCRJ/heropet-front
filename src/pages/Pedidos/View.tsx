@@ -11,9 +11,8 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import Alert from "../../components/Alert";
 import { ParcelasView } from "./ParcelasView";
 import { ItensPedidoView } from "./ItensPedidoView";
-import { Pedido } from "./pedidoTypes";
+import { Pedido, PedidoStatus } from "./types";
 import { formatarData, getStatusColor } from "./pedidoUtils";
-import { PedidoStatus } from "./pedidoTypes";
 
 export const PedidoView = () => {
   const { id } = useParams<{ id: string }>();
