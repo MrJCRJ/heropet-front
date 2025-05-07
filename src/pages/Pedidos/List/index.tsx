@@ -1,6 +1,5 @@
 import { usePedidoList } from "./usePedidoList";
 import { PedidoHeader } from "./ListHeader";
-import { PedidoFilters } from "./ListFilters";
 import { PedidoTable } from "./ListTable";
 
 import LoadingSpinner from "../../../components/LoadingSpinner";
@@ -16,7 +15,6 @@ export const PedidoList = () => {
     ordenacao,
     handleFilterChange,
     toggleOrdenacao,
-    carregarPedidos, // Certifique-se que esta função está sendo retornada pelo hook
   } = usePedidoList();
 
   if (loading && pedidos.length === 0) {
@@ -39,19 +37,13 @@ export const PedidoList = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PedidoHeader />
       <div className="mt-6">
-        <PedidoFilters
-          filtroTipo={filtroTipo}
-          filtroStatus={filtroStatus}
-          ordenacao={ordenacao}
-          onFilterChange={handleFilterChange}
-          onApplyFilters={carregarPedidos} // Adicione esta linha
-        />
-      </div>
-      <div className="mt-6">
         <PedidoTable
           pedidos={pedidos}
           ordenacao={ordenacao}
+          filtroTipo={filtroTipo}
+          filtroStatus={filtroStatus}
           onOrdenarClick={toggleOrdenacao}
+          onFilterChange={handleFilterChange}
         />
       </div>
     </div>

@@ -1,20 +1,63 @@
+import { useState } from "react";
 import { Pedido } from "../../Home/types/pedidos";
 import { PedidoRow } from "./ListRow";
-import { OrdenacaoPedido } from "./usePedidoList";
+import { OrdenacaoPedido, FiltroPedido, FiltroStatus } from "./types";
 
 type PedidoTableProps = {
   pedidos: Pedido[];
   ordenacao: OrdenacaoPedido;
+  filtroTipo: FiltroPedido;
+  filtroStatus?: FiltroStatus;
   onOrdenarClick: () => void;
+  onFilterChange: (
+    tipo?: FiltroPedido,
+    status?: FiltroStatus,
+    ordem?: OrdenacaoPedido
+  ) => void;
 };
 
 export const PedidoTable = ({
   pedidos,
   ordenacao,
+  filtroTipo,
+  filtroStatus,
   onOrdenarClick,
+  onFilterChange,
 }: PedidoTableProps) => {
-  // Debug: verifique os dados recebidos
-  console.log("Pedidos recebidos:", pedidos);
+  const [showTipoFilter, setShowTipoFilter] = useState(false);
+  const [showStatusFilter, setShowStatusFilter] = useState(false);
+
+  const tipos = [
+    { valor: "TODOS", label: "Todos" },
+    { valor: "VENDA", label: "Vendas" },
+    { valor: "COMPRA", label: "Compras" },
+  ] as const;
+
+  const status = [
+    { valor: "PAGO", label: "Pagos" },
+    { valor: "PENDENTE", label: "Pendentes" },
+    { valor: "CANCELADO", label: "Cancelados" },
+    { valor: "PROCESSANDO", label: "Processando" },
+    { valor: "ATRASADO", label: "Atrasados" },
+  ] as const;
+
+  const handleTipoChange = (tipo: FiltroPedido) => {
+    onFilterChange(
+      tipo === "TODOS" ? undefined : tipo,
+      filtroStatus,
+      ordenacao
+    );
+    setShowTipoFilter(false);
+  };
+
+  const handleStatusChange = (status?: FiltroStatus) => {
+    onFilterChange(
+      filtroTipo === "TODOS" ? undefined : filtroTipo,
+      status,
+      ordenacao
+    );
+    setShowStatusFilter(false);
+  };
 
   return (
     <div className="overflow-x-auto shadow-sm rounded-lg border border-gray-200">
@@ -22,22 +65,116 @@ export const PedidoTable = ({
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Tipo
+              <div className="flex items-center gap-1">
+                <span>Tipo</span>
+                <button
+                  onClick={() => setShowTipoFilter(!showTipoFilter)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {showTipoFilter && (
+                <div className="absolute mt-2 z-10 bg-white shadow-lg rounded-md p-2 border border-gray-200">
+                  {tipos.map((tipo) => (
+                    <button
+                      key={tipo.valor}
+                      onClick={() => handleTipoChange(tipo.valor)}
+                      className={`block w-full text-left px-3 py-1 text-sm rounded-md font-medium transition-colors ${
+                        (tipo.valor === "TODOS" && !filtroTipo) ||
+                        filtroTipo === tipo.valor
+                          ? "bg-blue-600 text-white"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {tipo.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </th>
+
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Cliente/Fornecedor
             </th>
-            <th
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-              onClick={onOrdenarClick}
-            >
-              Data {ordenacao === "data_desc" ? "↓" : "↑"}
+
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <button
+                onClick={onOrdenarClick}
+                className="flex items-center gap-1 hover:text-gray-700"
+              >
+                <span>Data</span>
+                <span>{ordenacao === "data_desc" ? "↓" : "↑"}</span>
+              </button>
             </th>
+
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Total
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
+
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">
+              <div className="flex items-center gap-1">
+                <span>Status</span>
+                <button
+                  onClick={() => setShowStatusFilter(!showStatusFilter)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {showStatusFilter && (
+                <div className="absolute mt-2 right-0 z-10 bg-white shadow-lg rounded-md p-2 border border-gray-200">
+                  <button
+                    onClick={() => handleStatusChange(undefined)}
+                    className={`block w-full text-left px-3 py-1 text-sm rounded-md font-medium transition-colors ${
+                      !filtroStatus
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    Todos
+                  </button>
+                  {status.map((stat) => (
+                    <button
+                      key={stat.valor}
+                      onClick={() => handleStatusChange(stat.valor)}
+                      className={`block w-full text-left px-3 py-1 text-sm rounded-md font-medium transition-colors ${
+                        filtroStatus === stat.valor
+                          ? "bg-blue-600 text-white"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      {stat.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </th>
           </tr>
         </thead>

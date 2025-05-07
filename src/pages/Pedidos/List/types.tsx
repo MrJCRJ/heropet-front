@@ -19,3 +19,5 @@ export type PedidoListProps = {
   onDeleteClick: (pedidoId: string) => void;
   onFilterChange: (tipo?: FiltroPedido) => void;
 };
+
+export type OrdenacaoPedido = "data_asc" | "data_desc";
