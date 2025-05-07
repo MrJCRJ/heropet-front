@@ -5,20 +5,19 @@ import { Pedido } from "../../pages/Home/types/pedidos";
 import PedidoForm from "../../components/PedidoForm";
 import Alert from "../../components/Alert";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import Modal from "../../components/Modal"; // Adicionando componente Modal
+import Modal from "../../components/Modal";
 
 const PedidoCreate = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showCancelModal, setShowCancelModal] = useState(false); // Estado para controle do modal de cancelamento
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const handleSubmit = async (pedidoData: Omit<Pedido, "_id">) => {
     try {
       setIsSubmitting(true);
       setError("");
 
-      // Validação adicional antes de enviar
       if (pedidoData.itens.length === 0) {
         throw new Error("Adicione pelo menos um item ao pedido");
       }
@@ -30,7 +29,7 @@ const PedidoCreate = () => {
           success: true,
           message: `Pedido #${response.data._id} criado com sucesso!`,
         },
-        replace: true, // Evita voltar para a página de criação com o botão "voltar"
+        replace: true,
       });
     } catch (err) {
       const errorMessage =
@@ -45,7 +44,6 @@ const PedidoCreate = () => {
   };
 
   const handleCancel = () => {
-    // Verifica se há dados não salvos antes de mostrar o modal
     setShowCancelModal(true);
   };
 
@@ -55,7 +53,6 @@ const PedidoCreate = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Modal de carregamento */}
       {isSubmitting && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
           <LoadingSpinner size="lg" />
@@ -63,25 +60,19 @@ const PedidoCreate = () => {
         </div>
       )}
 
-      {/* Mensagem de erro */}
       {error && (
         <div className="mb-6">
-          <Alert
-            type="error"
-            message={error}
-            onClose={() => setError("")} // Permite fechar o alerta
-          />
+          <Alert type="error" message={error} onClose={() => setError("")} />
         </div>
       )}
 
-      {/* Formulário principal */}
       <PedidoForm
         onSubmit={handleSubmit}
-        onCancel={handleCancel} // Usa a função de cancelamento personalizada
+        onCancel={handleCancel}
         isSubmitting={isSubmitting}
+        isEditing={false} // Definindo explicitamente como false
       />
 
-      {/* Modal de confirmação de cancelamento */}
       <Modal
         isOpen={showCancelModal}
         onClose={() => setShowCancelModal(false)}

@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
-import { formatDocumento } from "./utils";
+import React, { useState, useEffect } from "react";
+import { DropdownButton } from "./DropdownButton";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { SuggestionList } from "./SuggestionList";
 
 interface ClienteFornecedorSelectProps {
   tipo: string;
@@ -25,7 +27,6 @@ export const ClienteFornecedorSelect = ({
   const [suggestions, setSuggestions] = useState(items);
 
   useEffect(() => {
-    // Log para verificar os itens recebidos
     setSuggestions(items);
   }, [items]);
 
@@ -42,17 +43,19 @@ export const ClienteFornecedorSelect = ({
     }
   };
 
-  const selectItem = (item: { nome?: string; documento: string }) => {
+  const handleSelectItem = (item: { nome?: string; documento: string }) => {
     onSelect(item.nome || "", item.documento);
     setShowSuggestions(false);
     setShowDropdown(false);
   };
 
+  const label = tipo === "COMPRA" ? "Fornecedor" : "Cliente";
+  const placeholder = `Digite o nome do ${label.toLowerCase()} ou selecione`;
+
   return (
     <div className="space-y-1 relative">
-      <label className="block text-sm font-medium text-gray-700">
-        {tipo === "COMPRA" ? "Fornecedor" : "Cliente"}
-      </label>
+      <label className="block text-sm font-medium text-gray-700">{label}</label>
+
       <div className="relative">
         <input
           type="text"
@@ -60,57 +63,25 @@ export const ClienteFornecedorSelect = ({
           onChange={handleInputChange}
           required
           disabled={disabled}
-          placeholder={`Digite o nome do ${
-            tipo === "COMPRA" ? "fornecedor" : "cliente"
-          } ou selecione`}
+          placeholder={placeholder}
           className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pr-10 ${
             disabled ? "bg-gray-100 cursor-not-allowed" : ""
           }`}
         />
+
         {!disabled && (
-          <button
-            type="button"
-            onClick={toggleDropdown}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
-          >
-            <svg
-              className="h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-        )}
-        {loading && !disabled && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-10">
-            <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-          </div>
+          <>
+            <DropdownButton onClick={toggleDropdown} />
+            <LoadingIndicator loading={loading} />
+          </>
         )}
       </div>
 
-      {(showSuggestions || showDropdown) && suggestions.length > 0 && (
-        <ul className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-1 max-h-60 overflow-auto border border-gray-200">
-          {suggestions.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => selectItem(item)}
-              className="px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer flex flex-col"
-            >
-              <span className="font-medium">{item.nome}</span>
-              <span className="text-gray-500 truncate">
-                {formatDocumento(item.documento)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <SuggestionList
+        suggestions={suggestions}
+        onSelect={handleSelectItem}
+        visible={showSuggestions || showDropdown}
+      />
     </div>
   );
 };

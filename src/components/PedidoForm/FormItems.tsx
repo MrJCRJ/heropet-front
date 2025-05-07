@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Pedido, ItemPedido } from "../../pages/Home/types/pedidos";
 import { EstoqueHistorico, getHistoricoEstoque } from "../../api/estoque";
+import { ProductDropdown } from "./ProductDropdown";
+import { ItemsTable } from "./ItemsTable";
 
 interface FormItemsProps {
   formData: Omit<Pedido, "_id">;
@@ -8,7 +10,11 @@ interface FormItemsProps {
   setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
+export const FormItems = ({
+  formData,
+  setFormData,
+  setError,
+}: FormItemsProps) => {
   const [estoque, setEstoque] = useState<EstoqueHistorico[]>([]);
   const [novoItem, setNovoItem] = useState<
     Omit<ItemPedido, "total"> & { produto: string }
@@ -100,6 +106,13 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
     });
   };
 
+  const getEstoqueDisponivel = (produtoNome: string) => {
+    const produto = estoque.find(
+      (p) => p.nome.toLowerCase() === produtoNome.toLowerCase()
+    );
+    return produto ? produto.estoqueAtual : 0;
+  };
+
   const adicionarItem = () => {
     if (!novoItem.produto.trim()) {
       setError("Por favor, informe um produto");
@@ -115,7 +128,6 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
       return;
     }
 
-    // Verificação de estoque só se for venda e o produto existir no estoque
     if (
       produtoEstoque &&
       produtoEstoque.estoqueAtual < novoItem.quantidade &&
@@ -157,95 +169,25 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
     });
   };
 
-  const formatarMoeda = (valor: number) => {
-    return valor.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  };
-
-  const getEstoqueDisponivel = (produtoNome: string) => {
-    const produto = estoque.find(
-      (p) => p.nome.toLowerCase() === produtoNome.toLowerCase()
-    );
-    return produto ? produto.estoqueAtual : 0;
-  };
-
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-medium text-gray-900">Itens do Pedido</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-        <div className="space-y-1 relative">
+        <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">
             Produto
           </label>
-          <div className="relative">
-            <div
-              className="flex items-center justify-between cursor-pointer bg-white border border-gray-300 rounded-md px-3 py-2 shadow-sm"
-              onClick={toggleDropdown}
-            >
-              {mostrarDropdown ? (
-                <input
-                  type="text"
-                  className="w-full outline-none"
-                  value={termoBusca}
-                  onChange={handleInputChange}
-                  autoFocus
-                  placeholder="Digite para buscar..."
-                />
-              ) : (
-                <span className="truncate">
-                  {novoItem.produto || "Selecione um produto"}
-                </span>
-              )}
-              <svg
-                className={`h-5 w-5 text-gray-400 transition-transform ${
-                  mostrarDropdown ? "transform rotate-180" : ""
-                }`}
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-
-            {mostrarDropdown && (
-              <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
-                {estoqueFiltrado.length > 0 ? (
-                  estoqueFiltrado.map((produto) => (
-                    <div
-                      key={produto.produtoId}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => selecionarProduto(produto)}
-                    >
-                      {produto.nome} ({produto.estoqueAtual})
-                    </div>
-                  ))
-                ) : (
-                  <div className="px-4 py-2 text-gray-500">
-                    Nenhum produto encontrado
-                  </div>
-                )}
-
-                {produtoNaoEncontrado && termoBusca && (
-                  <div className="border-t border-gray-200">
-                    <div
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-blue-600"
-                      onClick={usarProdutoDigitado}
-                    >
-                      Adicionar "{termoBusca}" como novo produto
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          <ProductDropdown
+            mostrarDropdown={mostrarDropdown}
+            termoBusca={termoBusca}
+            estoqueFiltrado={estoqueFiltrado}
+            produtoNaoEncontrado={produtoNaoEncontrado}
+            toggleDropdown={toggleDropdown}
+            handleInputChange={handleInputChange}
+            selecionarProduto={selecionarProduto}
+            usarProdutoDigitado={usarProdutoDigitado}
+          />
         </div>
 
         <div className="space-y-1">
@@ -310,74 +252,13 @@ const FormItems = ({ formData, setFormData, setError }: FormItemsProps) => {
           <h4 className="text-md font-medium text-gray-900">
             Itens Adicionados
           </h4>
-          <div className="overflow-x-auto shadow-sm rounded-lg border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Produto
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Quantidade
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Preço Unitário
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Total
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Ações
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {formData.itens.map((item, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {item.produto}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {item.quantidade}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatarMoeda(item.precoUnitario)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatarMoeda(item.total)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <button
-                        type="button"
-                        onClick={() => removerItem(index)}
-                        className="text-red-600 hover:text-red-900 font-medium"
-                      >
-                        Remover
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot className="bg-gray-50">
-                <tr>
-                  <td
-                    colSpan={3}
-                    className="px-6 py-4 text-right text-sm font-medium text-gray-500"
-                  >
-                    <strong>Total do Pedido:</strong>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <strong>{formatarMoeda(formData.totalPedido)}</strong>
-                  </td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+          <ItemsTable
+            items={formData.itens}
+            removerItem={removerItem}
+            totalPedido={formData.totalPedido}
+          />
         </div>
       )}
     </div>
   );
 };
-
-export default FormItems;

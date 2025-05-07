@@ -1,17 +1,28 @@
+import clsx from "clsx";
+
 interface FormHeaderProps {
   isEditing: boolean;
   className?: string;
+  title?: string;
+  subtitle?: string;
 }
 
-const FormHeader = ({ isEditing, className = "" }: FormHeaderProps) => {
+export const FormHeader = ({
+  isEditing,
+  className = "",
+  title,
+  subtitle,
+}: FormHeaderProps) => {
+  const defaultTitle = isEditing ? "Editar Pedido" : "Criar Novo Pedido";
+  const headerTitle = title || defaultTitle;
+
   return (
-    <div className={`mb-6 ${className}`}>
-      <h1 className="text-2xl font-bold text-gray-800">
-        {isEditing ? "Editar Pedido" : "Criar Novo Pedido"}
-      </h1>
-      <div className="mt-2 border-b border-gray-200"></div>
-    </div>
+    <header className={clsx("mb-6", className)}>
+      <h1 className="text-2xl font-bold text-gray-800">{headerTitle}</h1>
+
+      {subtitle && <p className="mt-1 text-gray-600">{subtitle}</p>}
+
+      <div className="mt-2 border-b border-gray-200" aria-hidden="true" />
+    </header>
   );
 };
-
-export default FormHeader;
