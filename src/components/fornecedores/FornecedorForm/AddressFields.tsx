@@ -1,18 +1,4 @@
-import React from "react";
-
-interface AddressFieldsProps {
-  address: {
-    logradouro?: string;
-    bairro?: string;
-    localidade?: string;
-    uf?: string;
-    numero?: string;
-    complemento?: string;
-  };
-  onComplementoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNumeroChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled: boolean;
-}
+import { AddressFieldsProps } from "./types";
 
 export const AddressFields = ({
   address,

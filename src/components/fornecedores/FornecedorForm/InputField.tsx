@@ -1,18 +1,4 @@
-import React from "react";
-
-interface InputFieldProps {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
-  required?: boolean;
-  disabled?: boolean;
-  error?: string;
-  placeholder?: string;
-  className?: string;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void; // Adicione esta linha
-}
+import { InputFieldProps } from "./types";
 
 export const InputField = ({
   label,

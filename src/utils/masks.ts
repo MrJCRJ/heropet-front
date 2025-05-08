@@ -31,3 +31,11 @@ export const formatCPF = (value: string): string => {
     .replace(/(\d{3})(\d{1,2})/, "$1-$2") // Coloca hífen antes dos 2 últimos dígitos
     .slice(0, 14); // Limita o tamanho (14 caracteres: 999.999.999-99)
 };
+
+// Aplica máscara de CEP (00000-000)
+export const formatCEP = (cep: string): string => {
+  return cep
+    .replace(/\D/g, "")
+    .replace(/(\d{5})(\d)/, "$1-$2")
+    .slice(0, 9);
+};

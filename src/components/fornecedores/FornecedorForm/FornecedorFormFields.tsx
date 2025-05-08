@@ -1,15 +1,8 @@
 import { useState } from "react";
-import { FornecedorFormData, EnderecoViaCep } from "./types";
+import { FornecedorFormFieldsProps, EnderecoViaCep } from "./types";
 import { InputField } from "./InputField";
-import { CepField } from "./CepField";
+import { CepField } from "../../CepField";
 import { formatCNPJ, formatPhone } from "../../../utils/masks";
-
-interface FornecedorFormFieldsProps {
-  formData: FornecedorFormData;
-  isLoading: boolean;
-  isEditing: boolean;
-  onChange: (name: string, value: string) => void;
-}
 
 export const FornecedorFormFields = ({
   formData,
@@ -56,13 +49,19 @@ export const FornecedorFormFields = ({
     onChange(name, value);
   };
 
-  const handleAddressFetched = (data: EnderecoViaCep) => {
+  const handleAddressFetched = (data: Omit<EnderecoViaCep, "cep">) => {
     setAddress({
       logradouro: data.logradouro,
       bairro: data.bairro,
       localidade: data.localidade,
       uf: data.uf,
     });
+
+    // Atualiza também os campos no formData
+    onChange("endereco.logradouro", data.logradouro);
+    onChange("endereco.bairro", data.bairro);
+    onChange("endereco.localidade", data.localidade);
+    onChange("endereco.uf", data.uf);
   };
 
   return (
@@ -152,7 +151,6 @@ export const FornecedorFormFields = ({
           value={formData.endereco?.cep || ""}
           onChange={(value) => {
             handleChange("endereco.cep", value);
-            // Limpa os campos de endereço quando o CEP muda e não está completo
             if (value.length < 9) {
               setAddress({
                 logradouro: "",
@@ -163,7 +161,7 @@ export const FornecedorFormFields = ({
             }
           }}
           disabled={isLoading}
-          onAddressFetched={handleAddressFetched}
+          onAddressFound={handleAddressFetched} // Corrigido para onAddressFound
           error={errors.cep}
         />
 

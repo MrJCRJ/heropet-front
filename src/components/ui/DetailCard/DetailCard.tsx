@@ -16,6 +16,7 @@ interface DetailRowProps {
   className?: string;
   direction?: "horizontal" | "vertical";
   emptyText?: string;
+  action?: ReactNode; // Add this line
 }
 
 // Componente principal
@@ -47,6 +48,7 @@ const Row = ({
   className = "",
   direction = "horizontal",
   emptyText = "Não informado",
+  action, // Add this line
 }: DetailRowProps) => {
   const isValueEmpty = value === undefined || value === null || value === "";
 
@@ -54,7 +56,7 @@ const Row = ({
     ${className}
     ${
       direction === "horizontal"
-        ? "flex flex-col sm:flex-row gap-2 sm:gap-4"
+        ? "flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center"
         : "flex flex-col gap-1"
     }
   `;
@@ -76,7 +78,10 @@ const Row = ({
   return (
     <div className={containerClasses}>
       <span className={labelClasses}>{label}:</span>
-      <span className={valueClasses}>{isValueEmpty ? emptyText : value}</span>
+      <div className="flex-1 flex items-center gap-2">
+        <span className={valueClasses}>{isValueEmpty ? emptyText : value}</span>
+        {action && <div className="ml-2">{action}</div>}
+      </div>
     </div>
   );
 };

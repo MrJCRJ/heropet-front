@@ -10,26 +10,7 @@ import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { DetailCard } from "../../components/ui/DetailCard/DetailCard";
-
-// Formatting functions
-const formatCNPJ = (cnpj: string) => {
-  return cnpj.replace(
-    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-    "$1.$2.$3/$4-$5"
-  );
-};
-
-const formatPhone = (phone: string) => {
-  const nums = phone.replace(/\D/g, "");
-  if (nums.length === 11) {
-    return nums.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-  }
-  return nums.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3");
-};
-
-const formatCEP = (cep: string) => {
-  return cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
-};
+import { formatCNPJ, formatCEP, formatPhone } from "../../utils/masks";
 
 const FornecedorView = () => {
   const { cnpj } = useParams<{ cnpj: string }>();
@@ -39,6 +20,31 @@ const FornecedorView = () => {
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [loadingCep, setLoadingCep] = useState(false);
+  const [addressFromCep, setAddressFromCep] = useState<{
+    logradouro: string;
+    bairro: string;
+    localidade: string;
+    uf: string;
+  } | null>(null);
+
+  // Função para buscar endereço pelo CEP
+  const fetchAddressByCep = async (cep: string) => {
+    try {
+      setLoadingCep(true);
+      const endereco = await buscarEnderecoPorCep(cep);
+      setAddressFromCep({
+        logradouro: endereco.logradouro,
+        bairro: endereco.bairro,
+        localidade: endereco.localidade,
+        uf: endereco.uf,
+      });
+    } catch (err) {
+      console.error("Erro ao buscar endereço:", err);
+      setAddressFromCep(null);
+    } finally {
+      setLoadingCep(false);
+    }
+  };
 
   useEffect(() => {
     const carregarFornecedor = async () => {
@@ -51,28 +57,9 @@ const FornecedorView = () => {
         const response = await buscarFornecedor(cnpj);
         const fornecedorData = response.data;
 
-        // Se tiver CEP mas não tiver logradouro, busca o endereço
-        if (
-          fornecedorData.endereco?.cep &&
-          !fornecedorData.endereco.logradouro
-        ) {
-          setLoadingCep(true);
-          try {
-            const endereco = await buscarEnderecoPorCep(
-              fornecedorData.endereco.cep
-            );
-            fornecedorData.endereco = {
-              ...fornecedorData.endereco,
-              logradouro: endereco.logradouro,
-              bairro: endereco.bairro,
-              localidade: endereco.localidade,
-              uf: endereco.uf,
-            };
-          } catch (err) {
-            console.error("Erro ao buscar endereço:", err);
-          } finally {
-            setLoadingCep(false);
-          }
+        // Busca automática do endereço se tiver CEP
+        if (fornecedorData.endereco?.cep) {
+          await fetchAddressByCep(fornecedorData.endereco.cep);
         }
 
         setFornecedor(fornecedorData);
@@ -205,6 +192,7 @@ const FornecedorView = () => {
           {loadingCep ? (
             <div className="flex justify-center py-4">
               <LoadingSpinner size="md" />
+              <span className="ml-2">Buscando endereço...</span>
             </div>
           ) : (
             <>
@@ -216,10 +204,42 @@ const FornecedorView = () => {
                     : ""
                 }
               />
+
+              {/* Mostra os dados do endereço do fornecedor ou os buscados pelo CEP */}
               <DetailCard.Row
                 label="Logradouro"
-                value={fornecedor.endereco?.logradouro || "Não informado"}
+                value={
+                  addressFromCep?.logradouro ||
+                  fornecedor.endereco?.logradouro ||
+                  "Não informado"
+                }
               />
+              <DetailCard.Row
+                label="Bairro"
+                value={
+                  addressFromCep?.bairro ||
+                  fornecedor.endereco?.bairro ||
+                  "Não informado"
+                }
+              />
+              <DetailCard.Row
+                label="Cidade"
+                value={
+                  addressFromCep?.localidade ||
+                  fornecedor.endereco?.localidade ||
+                  "Não informado"
+                }
+              />
+              <DetailCard.Row
+                label="UF"
+                value={
+                  addressFromCep?.uf ||
+                  fornecedor.endereco?.uf ||
+                  "Não informado"
+                }
+              />
+
+              {/* Campos que não são preenchidos pelo CEP */}
               <DetailCard.Row
                 label="Número"
                 value={fornecedor.endereco?.numero || "Não informado"}
@@ -227,18 +247,6 @@ const FornecedorView = () => {
               <DetailCard.Row
                 label="Complemento"
                 value={fornecedor.endereco?.complemento || "Não informado"}
-              />
-              <DetailCard.Row
-                label="Bairro"
-                value={fornecedor.endereco?.bairro || "Não informado"}
-              />
-              <DetailCard.Row
-                label="Cidade"
-                value={fornecedor.endereco?.localidade || "Não informado"}
-              />
-              <DetailCard.Row
-                label="UF"
-                value={fornecedor.endereco?.uf || "Não informado"}
               />
             </>
           )}
