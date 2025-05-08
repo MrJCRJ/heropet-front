@@ -6,8 +6,8 @@ import {
   atualizarPedido,
 } from "../../api/pedidos";
 import { Link } from "react-router-dom";
-import Modal from "../../components/Modal";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import Modal from "../../components/ui/Modal";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 import { ParcelasView } from "./ParcelasView";
 import { ItensPedidoView } from "./ItensPedidoView";

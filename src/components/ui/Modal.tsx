@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
   isOpen: boolean;
@@ -6,6 +7,9 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   closeOnOverlayClick?: boolean;
+  closeOnEsc?: boolean;
+  size?: "sm" | "md" | "lg" | "xl";
+  className?: string;
 }
 
 const Modal = ({
@@ -14,10 +18,24 @@ const Modal = ({
   title,
   children,
   closeOnOverlayClick = true,
+  closeOnEsc = true,
+  size = "md",
+  className = "",
 }: ModalProps) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Tamanhos do modal
+  const sizeClasses = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+  };
+
+  // Fechar ao pressionar ESC
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && closeOnEsc) {
         onClose();
       }
     };
@@ -31,7 +49,14 @@ const Modal = ({
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "auto";
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, closeOnEsc]);
+
+  // Foco no modal quando aberto
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      modalRef.current.focus();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -41,25 +66,28 @@ const Modal = ({
     }
   };
 
-  return (
+  // Render usando portal para melhor semântica
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Overlay - CORREÇÃO AQUI: bg-opacity-50 para 50% de opacidade */}
+      {/* Overlay com animação */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
         onClick={handleOverlayClick}
         aria-hidden="true"
       />
 
-      {/* Modal container */}
+      {/* Modal container - adicionado foco e animação */}
       <div
-        className="relative bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
+        ref={modalRef}
+        className={`relative bg-white rounded-lg shadow-xl w-full max-h-[90vh] overflow-y-auto ${sizeClasses[size]} ${className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
         onClick={(e) => e.stopPropagation()}
+        tabIndex={-1}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
+        {/* Header com ícone personalizado */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
           {title && (
             <h2
               id="modal-title"
@@ -70,9 +98,9 @@ const Modal = ({
           )}
           <button
             type="button"
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="p-1 rounded-md text-gray-500 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={onClose}
-            aria-label="Close modal"
+            aria-label="Fechar modal"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +122,8 @@ const Modal = ({
         {/* Content */}
         <div className="p-4">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

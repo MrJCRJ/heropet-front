@@ -6,7 +6,7 @@ import {
   removerFornecedor,
   buscarEnderecoPorCep,
 } from "../../api/fornecedores";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { DetailCard } from "../../components/ui/DetailCard/DetailCard";

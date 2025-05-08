@@ -2,7 +2,7 @@ import { usePedidoList } from "./usePedidoList";
 import { PedidoHeader } from "./ListHeader";
 import { PedidoTable } from "./ListTable";
 
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import { Alert } from "../../../components/ui/Alert";
 
 export const PedidoList = () => {

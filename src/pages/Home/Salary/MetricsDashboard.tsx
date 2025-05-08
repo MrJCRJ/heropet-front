@@ -1,6 +1,6 @@
 // src/pages/Home/SalaryEvolution/MetricsDashboard.tsx
 import { MonthlySalaryData } from "./types";
-import Tooltip from "../../../components/Tooltip"; // Assumindo que você tem um componente Tooltip
+import Tooltip from "../../../components/ui/Tooltip"; // Assumindo que você tem um componente Tooltip
 
 const formatCurrency = (value: number) => {
   return value.toLocaleString("pt-BR", {

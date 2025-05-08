@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "./LoadingSpinner";
 
 type ButtonVariant = "primary" | "secondary" | "danger" | "ghost" | "link";
 type ButtonSize = "sm" | "md" | "lg";

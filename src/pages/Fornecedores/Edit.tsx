@@ -6,7 +6,7 @@ import {
   type Fornecedor,
 } from "../../api/fornecedores";
 import FornecedorForm from "../../components/FornecedorForm";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 
 const FornecedorEditPage = () => {

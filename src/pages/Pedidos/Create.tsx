@@ -4,8 +4,8 @@ import { criarPedido } from "../../api/pedidos";
 import { Pedido } from "../../pages/Home/types/pedidos";
 import PedidoForm from "../../components/PedidoForm";
 import { Alert } from "../../components/ui/Alert";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import Modal from "../../components/Modal";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import Modal from "../../components/ui/Modal";
 
 const PedidoCreate = () => {
   const navigate = useNavigate();

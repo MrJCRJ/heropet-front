@@ -5,7 +5,7 @@ import {
   removerFornecedor,
   type Fornecedor,
 } from "../../api/fornecedores";
-import FornecedorList from "../../components/FornecedorList";
+import FornecedorList from "../../components/fornecedores/FornecedorList";
 
 const FornecedorListPage = () => {
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
