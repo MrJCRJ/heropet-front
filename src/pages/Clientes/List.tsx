@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { listarClientes, excluirCliente, Cliente } from "../../api/clientes";
+import { Link, useNavigate } from "react-router-dom";
+import { listarClientes, Cliente } from "../../api/clientes";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
-import { Button } from "../../components/ui/Button"; // Importe o Button
-import { formatCPF, formatCNPJ, formatPhone } from "../../utils/masks"; // Importe as funções de formatação
+import { Button } from "../../components/ui/Button";
+import { formatCPF, formatCNPJ, formatPhone } from "../../utils/masks";
 
 const ClienteList = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -31,36 +31,20 @@ const ClienteList = () => {
     fetchClientes();
   }, []);
 
-  const handleDelete = async (cpfOuCnpj: string) => {
-    if (!window.confirm("Tem certeza que deseja excluir este cliente?")) {
-      return;
-    }
-
-    setDeleting(cpfOuCnpj);
-    try {
-      await excluirCliente(cpfOuCnpj);
-      setClientes(
-        clientes.filter((cliente) => cliente.cpfOuCnpj !== cpfOuCnpj)
-      );
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        alert(err.message);
-      } else {
-        alert("Erro desconhecido ao excluir cliente");
-      }
-    } finally {
-      setDeleting(null);
-    }
-  };
-
   const formatDocument = (doc: string) => {
     return doc.length <= 11 ? formatCPF(doc) : formatCNPJ(doc);
   };
 
-  if (loading) return <LoadingSpinner />;
+  if (loading && clientes.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Clientes</h1>
         <Link to="/clientes/novo">
@@ -83,45 +67,37 @@ const ClienteList = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Telefone
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Ações
-              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {clientes.map((cliente) => (
-              <tr key={cliente.cpfOuCnpj}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
-                  {formatDocument(cliente.cpfOuCnpj)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {cliente.nome}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
-                  {formatPhone(cliente.telefone || "")}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <Link to={`/clientes/${cliente.cpfOuCnpj}`}>
-                    <Button variant="ghost" size="sm">
-                      Ver
-                    </Button>
-                  </Link>
-                  <Link to={`/clientes/${cliente.cpfOuCnpj}/editar`}>
-                    <Button variant="ghost" size="sm">
-                      Editar
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDelete(cliente.cpfOuCnpj)}
-                    loading={deleting === cliente.cpfOuCnpj}
-                  >
-                    Excluir
-                  </Button>
+            {clientes.length > 0 ? (
+              clientes.map((cliente) => (
+                <tr
+                  key={cliente.cpfOuCnpj}
+                  className="hover:bg-gray-50 cursor-pointer"
+                  onClick={() => navigate(`/clientes/${cliente.cpfOuCnpj}`)}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                    {formatDocument(cliente.cpfOuCnpj)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {cliente.nome}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                    {formatPhone(cliente.telefone || "")}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={3}
+                  className="px-6 py-4 text-center text-sm text-gray-500"
+                >
+                  {clientes ? "Nenhum cliente encontrado" : "Carregando..."}
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
