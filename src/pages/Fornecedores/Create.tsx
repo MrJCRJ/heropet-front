@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { criarFornecedor } from "../../api/fornecedores";
-import FornecedorForm from "../../components/FornecedorForm";
-import type { FornecedorFormData } from "../../components/FornecedorForm/types";
+import FornecedorForm from "../../components/fornecedores/FornecedorForm";
+import type { FornecedorFormData } from "../../components/fornecedores/FornecedorForm/types";
 
 const FornecedorCreate = () => {
   const navigate = useNavigate();

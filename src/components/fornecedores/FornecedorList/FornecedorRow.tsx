@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { formatCNPJ, formatPhone } from "../../../utils/masks";
 import { type Fornecedor } from "../../../api/fornecedores";
+import { Button } from "../../ui/Button"; // Importe o componente Button
 
 interface FornecedorRowProps {
   fornecedor: Fornecedor;
@@ -70,42 +71,41 @@ const FornecedorRow = ({
 
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex gap-2">
-          <Link
-            to={`/fornecedores/${fornecedor.cnpj}`}
-            className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded transition-colors"
-            aria-label={`Ver detalhes de ${fornecedor.nome || fornecedor.cnpj}`}
-          >
-            Ver
+          <Link to={`/fornecedores/${fornecedor.cnpj}`}>
+            <Button
+              variant="primary"
+              size="sm"
+              className="text-xs"
+              aria-label={`Ver detalhes de ${
+                fornecedor.nome || fornecedor.cnpj
+              }`}
+            >
+              Ver
+            </Button>
           </Link>
 
-          <Link
-            to={`/fornecedores/${fornecedor.cnpj}/editar`}
-            className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded transition-colors"
-            aria-label={`Editar ${fornecedor.nome || fornecedor.cnpj}`}
-          >
-            Editar
+          <Link to={`/fornecedores/${fornecedor.cnpj}/editar`}>
+            <Button
+              variant="success"
+              size="sm"
+              className="text-xs"
+              aria-label={`Editar ${fornecedor.nome || fornecedor.cnpj}`}
+            >
+              Editar
+            </Button>
           </Link>
 
           {onDelete && (
-            <button
+            <Button
               onClick={handleDelete}
-              disabled={isDeleting}
-              className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
-                isDeleting
-                  ? "bg-red-300 cursor-not-allowed"
-                  : "bg-red-500 hover:bg-red-600 text-white"
-              }`}
+              variant="danger"
+              size="sm"
+              loading={isDeleting}
+              className="text-xs"
               aria-label={`Excluir ${fornecedor.nome || fornecedor.cnpj}`}
             >
-              {isDeleting ? (
-                <span className="flex items-center gap-1">
-                  <span className="animate-spin inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full"></span>
-                  Excluindo...
-                </span>
-              ) : (
-                "Excluir"
-              )}
-            </button>
+              {isDeleting ? "Excluindo..." : "Excluir"}
+            </Button>
           )}
         </div>
       </td>

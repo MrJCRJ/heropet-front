@@ -1,29 +1,32 @@
+import { Button } from "../ui/Button"; // Ajuste o caminho conforme necessário
+
 interface SubmitButtonProps {
   isSubmitting: boolean;
   isEdit: boolean;
+  className?: string;
 }
 
 export const SubmitButton: React.FC<SubmitButtonProps> = ({
   isSubmitting,
   isEdit,
+  className = "",
 }) => {
   return (
-    <div className="flex justify-end mt-6">
-      <button
-        type="submit" // Isso é crucial
+    <div className={`flex justify-end mt-6 ${className}`}>
+      <Button
+        type="submit"
+        variant="primary"
+        size="md"
+        loading={isSubmitting}
         disabled={isSubmitting}
-        className={`px-6 py-2 rounded-md text-white font-medium ${
-          isSubmitting
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700 transition-colors"
-        }`}
+        className="px-6 py-2 font-medium"
       >
         {isSubmitting
           ? "Salvando..."
           : isEdit
           ? "Atualizar Cliente"
           : "Cadastrar Cliente"}
-      </button>
+      </Button>
     </div>
   );
 };

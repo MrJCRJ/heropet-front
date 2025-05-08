@@ -1,7 +1,13 @@
 import { ReactNode } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
-type ButtonVariant = "primary" | "secondary" | "danger" | "ghost" | "link";
+type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "danger"
+  | "ghost"
+  | "link"
+  | "success";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps {
@@ -39,6 +45,7 @@ export const Button = ({
     ghost:
       "bg-transparent hover:bg-gray-100 text-gray-800 border border-gray-300 focus:ring-gray-300",
     link: "bg-transparent hover:underline text-blue-600 p-0 focus:ring-0",
+    success: "bg-green-600 hover:bg-green-700 text-white focus:ring-green-500", // Adicione esta linha
   };
 
   const sizes: Record<ButtonSize, string> = {

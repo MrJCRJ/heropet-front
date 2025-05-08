@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FornecedorFormData, EnderecoViaCep } from "./types";
 import { InputField } from "./InputField";
 import { CepField } from "./CepField";
-import { formatCNPJ, formatPhone } from "../../utils/masks";
+import { formatCNPJ, formatPhone } from "../../../utils/masks";
 
 interface FornecedorFormFieldsProps {
   formData: FornecedorFormData;

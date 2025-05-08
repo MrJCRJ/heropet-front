@@ -1,4 +1,4 @@
-import { Endereco } from "../../api/fornecedores";
+import { Endereco } from "../../../api/fornecedores";
 
 export interface FornecedorFormProps {
   initialData?: FornecedorFormData;

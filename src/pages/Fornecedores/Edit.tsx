@@ -5,7 +5,7 @@ import {
   atualizarFornecedor,
   type Fornecedor,
 } from "../../api/fornecedores";
-import FornecedorForm from "../../components/FornecedorForm";
+import FornecedorForm from "../../components/fornecedores/FornecedorForm";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 
