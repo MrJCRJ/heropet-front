@@ -22,3 +22,12 @@ export const formatPhone = (value: string): string => {
       .slice(0, 15);
   }
 };
+
+export const formatCPF = (value: string): string => {
+  return value
+    .replace(/\D/g, "") // Remove tudo que não é dígito
+    .replace(/(\d{3})(\d)/, "$1.$2") // Coloca ponto após os 3 primeiros dígitos
+    .replace(/(\d{3})(\d)/, "$1.$2") // Coloca ponto após os 3 próximos dígitos
+    .replace(/(\d{3})(\d{1,2})/, "$1-$2") // Coloca hífen antes dos 2 últimos dígitos
+    .slice(0, 14); // Limita o tamanho (14 caracteres: 999.999.999-99)
+};
