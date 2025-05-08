@@ -39,7 +39,7 @@ const ClienteList = () => {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-2">
         <LoadingSpinner size="lg" />
-        <p className="text-gray-600">Carregando lista de fornecedores...</p>
+        <p className="text-gray-600">Carregando lista de cliente...</p>
       </div>
     );
   }
