@@ -37,8 +37,9 @@ const ClienteList = () => {
 
   if (loading && clientes.length === 0) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner />
+      <div className="flex flex-col items-center justify-center py-12 gap-2">
+        <LoadingSpinner size="lg" />
+        <p className="text-gray-600">Carregando lista de fornecedores...</p>
       </div>
     );
   }
