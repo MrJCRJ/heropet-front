@@ -4,20 +4,18 @@ import FornecedorRow from "./FornecedorRow";
 
 interface FornecedorTableProps {
   fornecedores: Fornecedor[];
-  onDelete?: (cnpj: string) => Promise<void> | void;
-  deleting: string | null;
+  onRowClick: (cnpj: string) => void;
 }
 
 export const FornecedorTable = ({
   fornecedores,
-  onDelete,
-  deleting,
+  onRowClick,
 }: FornecedorTableProps) => {
   return (
     <table className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-50">
         <tr>
-          {["CNPJ", "Nome", "Nome Fantasia", "Email", "Telefone", "Ações"].map(
+          {["CNPJ", "Nome", "Nome Fantasia", "Email", "Telefone"].map(
             (header) => (
               <th
                 key={header}
@@ -35,8 +33,7 @@ export const FornecedorTable = ({
           <FornecedorRow
             key={fornecedor.cnpj}
             fornecedor={fornecedor}
-            onDelete={onDelete}
-            deleting={deleting}
+            onClick={() => onRowClick(fornecedor.cnpj)}
           />
         ))}
       </tbody>

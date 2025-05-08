@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  listarFornecedores,
-  removerFornecedor,
-  type Fornecedor,
-} from "../../api/fornecedores";
+import { Link, useNavigate } from "react-router-dom";
+import { listarFornecedores, type Fornecedor } from "../../api/fornecedores";
 import FornecedorList from "../../components/fornecedores/FornecedorList";
 
 const FornecedorListPage = () => {
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const carregarFornecedores = async () => {
@@ -28,21 +25,14 @@ const FornecedorListPage = () => {
     carregarFornecedores();
   }, []);
 
-  const handleDelete = async (cnpj: string) => {
-    if (window.confirm("Tem certeza que deseja excluir este fornecedor?")) {
-      try {
-        await removerFornecedor(cnpj);
-        setFornecedores(fornecedores.filter((f) => f.cnpj !== cnpj));
-      } catch (err) {
-        setError("Erro ao excluir fornecedor");
-        console.error(err);
-      }
-    }
+  const handleRowClick = (cnpj: string) => {
+    navigate(`/fornecedores/${cnpj}`);
   };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8 flex-wrap">
+        <h1 className="text-2xl font-bold text-gray-800">Fornecedores</h1>
         <div className="flex gap-3 flex-wrap justify-end">
           <Link
             to="/fornecedores/novo"
@@ -67,7 +57,7 @@ const FornecedorListPage = () => {
         fornecedores={fornecedores}
         isLoading={isLoading}
         error={error}
-        onDelete={handleDelete}
+        onRowClick={handleRowClick}
       />
     </div>
   );
