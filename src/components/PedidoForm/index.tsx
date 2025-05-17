@@ -13,7 +13,7 @@ interface PedidoFormProps {
   onSubmit: (pedido: Omit<Pedido, "_id">) => Promise<void>;
   onCancel: () => void;
   isEditing?: boolean;
-  isSubmitting?: boolean; // Adicionando a prop opcional
+  isSubmitting?: boolean;
 }
 
 const PedidoForm = ({
@@ -22,7 +22,7 @@ const PedidoForm = ({
   onCancel,
   isEditing = false,
 }: PedidoFormProps) => {
-  const [error, setError] = useState(""); // Adicionado estado para erros
+  const [error, setError] = useState("");
 
   const {
     formData,
@@ -51,20 +51,10 @@ const PedidoForm = ({
     return date.toISOString();
   };
 
-  const handleConfirmarParcelamento = () => {
-    const parcelas = calcularParcelas();
-    setFormData({
-      ...formData,
-      parcelas,
-      condicaoPagamento: "PARCELADO",
-    });
-    setShowParcelamento(false);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(""); // Limpa erros anteriores
+    setError("");
 
     if (formData.itens.length === 0) {
       setError("Adicione pelo menos um item ao pedido");
@@ -73,6 +63,13 @@ const PedidoForm = ({
     }
 
     try {
+      // Calcular parcelas se o parcelamento estiver ativado
+      if (showParcelamento) {
+        const parcelas = calcularParcelas();
+        formData.parcelas = parcelas;
+        formData.condicaoPagamento = "PARCELADO";
+      }
+
       const dataToSubmit = {
         ...formData,
         dataPedido: formatDateForBackend(formData.dataPedido),
@@ -98,7 +95,6 @@ const PedidoForm = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormHeader isEditing={isEditing} />
 
-        {/* Exibir mensagem de erro global */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             {error}
@@ -118,7 +114,9 @@ const PedidoForm = ({
           <FormItems
             formData={formData}
             setFormData={setFormData}
-            setError={setError} // Passando a prop setError
+            setError={setError}
+            hasParcelamento={showParcelamento}
+            setHasParcelamento={setShowParcelamento}
           />
         </div>
 
@@ -137,10 +135,6 @@ const PedidoForm = ({
           isSubmitting={isSubmitting}
           isEditing={isEditing}
           onCancel={onCancel}
-          showParcelamento={showParcelamento}
-          onConfirmParcelamento={handleConfirmarParcelamento}
-          setShowParcelamento={setShowParcelamento}
-          hasItems={formData.itens.length > 0}
         />
       </form>
     </div>

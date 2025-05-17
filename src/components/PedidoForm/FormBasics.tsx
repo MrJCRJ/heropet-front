@@ -5,8 +5,7 @@ import { LoadingErrorSection } from "./LoadingErrorSection";
 import { TipoStatusSection } from "./TipoStatusSection";
 import { DocumentoNomeSection } from "./DocumentoNomeSection";
 import { DateSection } from "./DateSection";
-import { PaymentDeliverySection } from "./PaymentDeliverySection";
-import { VendaSpecificSection } from "./VendaSpecificSection";
+
 import { NotaFiscalSection } from "./NotaFiscalSection";
 import { ObservacoesSection } from "./ObservacoesSection";
 
@@ -73,18 +72,6 @@ export const FormBasics = ({
         />
 
         <DateSection formData={formData} handleChange={handleChange} />
-
-        <PaymentDeliverySection
-          formData={formData}
-          handleChange={handleChange}
-        />
-
-        {formData.tipo === "VENDA" && (
-          <VendaSpecificSection
-            formData={formData}
-            handleChange={handleChange}
-          />
-        )}
 
         <NotaFiscalSection formData={formData} setFormData={setFormData} />
 

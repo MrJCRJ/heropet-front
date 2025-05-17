@@ -8,12 +8,16 @@ interface FormItemsProps {
   formData: Omit<Pedido, "_id">;
   setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
+  hasParcelamento: boolean;
+  setHasParcelamento: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const FormItems = ({
   formData,
   setFormData,
   setError,
+  hasParcelamento,
+  setHasParcelamento,
 }: FormItemsProps) => {
   const [estoque, setEstoque] = useState<EstoqueHistorico[]>([]);
   const [novoItem, setNovoItem] = useState<
@@ -257,6 +261,22 @@ export const FormItems = ({
             removerItem={removerItem}
             totalPedido={formData.totalPedido}
           />
+          {/* Adicionando a opção de parcelamento */}
+          <div className="flex items-center mt-4">
+            <input
+              type="checkbox"
+              id="parcelamento"
+              checked={hasParcelamento}
+              onChange={(e) => setHasParcelamento(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="parcelamento"
+              className="ml-2 block text-sm text-gray-900"
+            >
+              Este pedido terá parcelamento
+            </label>
+          </div>
         </div>
       )}
     </div>

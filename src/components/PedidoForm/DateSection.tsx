@@ -15,21 +15,5 @@ export const DateSection = ({
       onChange={handleChange}
       required
     />
-
-    <FormInput
-      type="date"
-      name="dataEntrega"
-      label="Data de Entrega"
-      value={formatDateForInput(formData.dataEntrega || "")}
-      onChange={handleChange}
-    />
-
-    <FormInput
-      type="date"
-      name="dataPagamento"
-      label="Data de Pagamento"
-      value={formatDateForInput(formData.dataPagamento || "")}
-      onChange={handleChange}
-    />
   </div>
 );
