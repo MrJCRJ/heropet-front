@@ -3,7 +3,7 @@ import {
   Pedido,
   FiltroPedido,
   FiltroStatus,
-} from "../pages/Home/types/pedidos";
+} from "../components/PedidoForm/pedidos";
 
 const OrdenacaoValues = ["data_asc", "data_desc"] as const;
 export type OrdenacaoPedido = (typeof OrdenacaoValues)[number];

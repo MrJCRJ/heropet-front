@@ -1,4 +1,4 @@
-import { ItemPedido } from "../../pages/Home/types/pedidos";
+import { ItemPedido } from "./pedidos";
 
 interface ItemsTableProps {
   items: ItemPedido[];

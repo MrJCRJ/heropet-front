@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { listarPedidos } from "../../../api/pedidos";
 import { FiltroPedido, FiltroStatus } from "../types";
 import { ListarPedidosParams } from "../../../api/pedidos";
-import { Pedido } from "../../Home/types/pedidos";
+import { Pedido } from "../../../components/PedidoForm/pedidos";
 import { OrdenacaoPedido } from "../types"; // Importando o tipo de ordenação
 
 // Definindo um tipo unificado para ordenação

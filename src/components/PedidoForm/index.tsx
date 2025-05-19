@@ -5,7 +5,7 @@ import { FormItems } from "./FormItems";
 import { FormActions } from "./FormActions";
 import { FormParcelamento } from "./FormParcelamento";
 import { usePedidoForm } from "./usePedidoForm";
-import { Pedido } from "../../pages/Home/types/pedidos";
+import { Pedido } from "./pedidos";
 import { useParcelamento } from "./useParcelamento";
 
 interface PedidoFormProps {
@@ -64,19 +64,30 @@ const PedidoForm = ({
 
     try {
       // Calcular parcelas se o parcelamento estiver ativado
-      if (showParcelamento) {
-        const parcelas = calcularParcelas();
-        formData.parcelas = parcelas;
-        formData.condicaoPagamento = "PARCELADO";
-      }
+      const parcelas = showParcelamento
+        ? calcularParcelas()
+        : formData.parcelas;
 
-      const dataToSubmit = {
-        ...formData,
+      // Criar objeto completo com todas as propriedades necessárias
+      const dataToSubmit: Omit<Pedido, "_id"> = {
+        tipo: formData.tipo,
+        status: formData.status,
+        documentoClienteFornecedor: formData.documentoClienteFornecedor,
+        nomeClienteFornecedor: formData.nomeClienteFornecedor,
         dataPedido: formatDateForBackend(formData.dataPedido),
         dataEntrega: formData.dataEntrega
           ? formatDateForBackend(formData.dataEntrega)
           : undefined,
+        itens: formData.itens,
+        totalPedido: formData.totalPedido,
+        temNotaFiscal: formData.temNotaFiscal,
+        observacoes: formData.observacoes,
+        parcelas: parcelas,
+        condicaoPagamento: showParcelamento
+          ? "PARCELADO"
+          : formData.condicaoPagamento,
       };
+
       await onSubmit(dataToSubmit);
     } catch (err) {
       const errorMessage =

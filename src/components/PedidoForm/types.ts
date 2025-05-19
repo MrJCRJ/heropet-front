@@ -1,4 +1,4 @@
-import { Pedido } from "../../pages/Home/types/pedidos";
+import { Pedido } from "./pedidos";
 
 export interface FormBasicsProps {
   formData: Omit<Pedido, "_id">;
