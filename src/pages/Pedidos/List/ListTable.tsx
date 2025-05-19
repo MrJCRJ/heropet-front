@@ -12,6 +12,9 @@ export const PedidoTable = ({
 }: PedidoTableProps) => {
   const [showTipoFilter, setShowTipoFilter] = useState(false);
   const [showStatusFilter, setShowStatusFilter] = useState(false);
+  const [showDateFilter, setShowDateFilter] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState<number | undefined>();
+  const [selectedYear, setSelectedYear] = useState<number | undefined>();
 
   const tipos = [
     { valor: "TODOS", label: "Todos" },
@@ -43,6 +46,17 @@ export const PedidoTable = ({
       ordenacao
     );
     setShowStatusFilter(false);
+  };
+
+  const handleMonthYearChange = (month?: number, year?: number) => {
+    onFilterChange(
+      filtroTipo === "TODOS" ? undefined : filtroTipo,
+      filtroStatus,
+      ordenacao,
+      month,
+      year
+    );
+    setShowDateFilter(false);
   };
 
   return (
@@ -96,15 +110,98 @@ export const PedidoTable = ({
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Cliente/Fornecedor
             </th>
-
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <button
-                onClick={onOrdenarClick}
-                className="flex items-center gap-1 hover:text-gray-700"
-              >
-                <span>Data</span>
-                <span>{ordenacao === "data_desc" ? "↓" : "↑"}</span>
-              </button>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={onOrdenarClick}
+                  className="flex items-center gap-1 hover:text-gray-700"
+                >
+                  <span>Data</span>
+                  <span>{ordenacao === "data_desc" ? "↓" : "↑"}</span>
+                </button>
+                <button
+                  onClick={() => setShowDateFilter(!showDateFilter)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {showDateFilter && (
+                <div className="absolute mt-2 z-10 bg-white shadow-lg rounded-md p-2 border border-gray-200 w-64">
+                  <div className="mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Mês
+                    </label>
+                    <select
+                      className="w-full p-2 border rounded"
+                      value={selectedMonth || ""}
+                      onChange={(e) =>
+                        setSelectedMonth(Number(e.target.value) || undefined)
+                      }
+                    >
+                      <option value="">Todos</option>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {new Date(0, i).toLocaleString("default", {
+                            month: "long",
+                          })}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Ano
+                    </label>
+                    <select
+                      className="w-full p-2 border rounded"
+                      value={selectedYear || ""}
+                      onChange={(e) =>
+                        setSelectedYear(Number(e.target.value) || undefined)
+                      }
+                    >
+                      <option value="">Todos</option>
+                      {Array.from({ length: 5 }, (_, i) => {
+                        const year = new Date().getFullYear() - i;
+                        return (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => setShowDateFilter(false)}
+                      className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleMonthYearChange(selectedMonth, selectedYear)
+                      }
+                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                      Aplicar
+                    </button>
+                  </div>
+                </div>
+              )}
             </th>
 
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

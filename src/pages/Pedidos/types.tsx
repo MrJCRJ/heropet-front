@@ -25,11 +25,15 @@ export type PedidoTableProps = {
   ordenacao: OrdenacaoPedido;
   filtroTipo: FiltroPedido;
   filtroStatus?: FiltroStatus;
+  selectedMonth?: number;
+  selectedYear?: number;
   onOrdenarClick: () => void;
   onFilterChange: (
     tipo?: FiltroPedido,
     status?: FiltroStatus,
-    ordem?: OrdenacaoPedido
+    ordem?: OrdenacaoPedido,
+    mes?: number,
+    ano?: number
   ) => void;
 };
 

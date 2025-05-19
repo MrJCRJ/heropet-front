@@ -5,7 +5,7 @@ import { PedidoTable } from "./ListTable";
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import { Alert } from "../../../components/ui/Alert";
 
-export const PedidoList = () => {
+const PedidoList = () => {
   const {
     pedidos = [],
     loading,
@@ -13,6 +13,8 @@ export const PedidoList = () => {
     filtroTipo,
     filtroStatus,
     ordenacao,
+    selectedMonth,
+    selectedYear,
     handleFilterChange,
     toggleOrdenacao,
   } = usePedidoList();
@@ -43,6 +45,8 @@ export const PedidoList = () => {
           ordenacao={ordenacao}
           filtroTipo={filtroTipo}
           filtroStatus={filtroStatus}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
           onOrdenarClick={toggleOrdenacao}
           onFilterChange={handleFilterChange}
         />
