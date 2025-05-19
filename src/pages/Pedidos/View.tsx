@@ -89,6 +89,23 @@ export const PedidoView = () => {
     }
   };
 
+  const handleRemoveTodasParcelas = async () => {
+    if (!pedido || !pedido.parcelas) return;
+
+    try {
+      const pedidoAtualizado = { ...pedido, parcelas: [] };
+
+      await atualizarPedido(pedido._id!, {
+        parcelas: [],
+      });
+
+      setPedido(pedidoAtualizado);
+    } catch (err) {
+      setError("Erro ao remover parcelas. Tente novamente.");
+      console.error("Erro ao remover parcelas:", err);
+    }
+  };
+
   if (loading) return <LoadingSpinner />;
 
   if (error) {
@@ -225,8 +242,11 @@ export const PedidoView = () => {
         {/* Parcelas */}
         {pedido.parcelas && pedido.parcelas.length > 0 && (
           <ParcelasView
-            parcelas={pedido.parcelas}
+            parcelas={pedido.parcelas || []}
             onTogglePago={handleTogglePago}
+            onRemoveTodasParcelas={
+              isEditing ? handleRemoveTodasParcelas : undefined
+            }
             isEditing={isEditing}
           />
         )}

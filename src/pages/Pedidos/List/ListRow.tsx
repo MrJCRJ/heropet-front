@@ -2,9 +2,11 @@ import { PedidoRowProps } from "../types";
 import { formatarData, formatarMoeda, getStatusColor } from "../pedidoUtils";
 
 export const PedidoRow = ({ pedido }: PedidoRowProps) => {
-  // Calcular o total pago
-  const totalPago = pedido.parcelas
-    ? pedido.parcelas
+  // Verificação segura das parcelas
+  const parcelas = pedido.parcelas ?? [];
+  const temParcelas = parcelas.length > 0;
+  const totalPago = temParcelas
+    ? parcelas
         .filter((p) => p.pago)
         .reduce((sum, parcela) => sum + parcela.valor, 0)
     : 0;
@@ -31,7 +33,11 @@ export const PedidoRow = ({ pedido }: PedidoRowProps) => {
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
         <div>
           <div>Total: {formatarMoeda(pedido.totalPedido)}</div>
-          <div className="text-green-600">Pago: {formatarMoeda(totalPago)}</div>
+          {temParcelas && (
+            <div className="text-green-600">
+              Pago: {formatarMoeda(totalPago)}
+            </div>
+          )}
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">

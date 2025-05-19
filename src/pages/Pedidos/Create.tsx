@@ -22,6 +22,16 @@ const PedidoCreate = () => {
         throw new Error("Adicione pelo menos um item ao pedido");
       }
 
+      // Verifica se tem parcelas e se estão válidas
+      if (pedidoData.parcelas && pedidoData.parcelas.length > 0) {
+        const parcelasInvalidas = pedidoData.parcelas.some(
+          (p) => !p.dataVencimento || p.valor <= 0
+        );
+        if (parcelasInvalidas) {
+          throw new Error("Parcelas inválidas. Verifique datas e valores");
+        }
+      }
+
       const response = await criarPedido(pedidoData);
 
       navigate("/pedidos", {
