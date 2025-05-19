@@ -1,5 +1,5 @@
 import { SubmitButton } from "./SubmitButton";
-import { CancelButton } from "./CancelButton";
+import { Button } from "../ui/Button";
 
 interface FormActionsProps {
   isSubmitting: boolean;
@@ -16,11 +16,14 @@ export const FormActions = ({
     <div className="flex justify-end gap-4 mt-8">
       <SubmitButton isSubmitting={isSubmitting} isEditing={isEditing} />
 
-      <CancelButton
-        isSubmitting={isSubmitting}
+      <Button
+        variant="secondary"
         onClick={onCancel}
-        label="Cancelar"
-      />
+        disabled={isSubmitting}
+        type="button"
+      >
+        Cancelar
+      </Button>
     </div>
   );
 };
