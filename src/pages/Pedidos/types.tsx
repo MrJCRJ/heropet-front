@@ -62,7 +62,7 @@ export interface Parcela {
 export interface Pedido {
   _id?: string;
   tipo: "VENDA" | "COMPRA";
-  status: PedidoStatus;
+  status: PedidoStatus; // Alterado de string para PedidoStatus
   documentoClienteFornecedor: string;
   nomeClienteFornecedor: string;
   dataPedido: string;
@@ -72,6 +72,7 @@ export interface Pedido {
   temNotaFiscal: boolean;
   observacoes?: string;
   parcelas?: Parcela[];
+  condicaoPagamento?: string;
 }
 
 export interface ItensPedidoViewProps {
