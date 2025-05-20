@@ -4,6 +4,7 @@ import { PedidoTable } from "./ListTable";
 
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import { Alert } from "../../../components/ui/Alert";
+import { PedidoSummary } from "../PedidoSummary";
 
 const PedidoList = () => {
   const {
@@ -40,6 +41,7 @@ const PedidoList = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PedidoHeader />
       <div className="mt-6">
+        <PedidoSummary pedidos={pedidos} filtroTipo={filtroTipo} />
         <PedidoTable
           pedidos={pedidos}
           ordenacao={ordenacao}
