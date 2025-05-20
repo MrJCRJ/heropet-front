@@ -5,20 +5,86 @@ import { ListarPedidosParams } from "../../../api/pedidos";
 import { Pedido } from "../types";
 import { OrdenacaoPedido } from "../types";
 
+// Chaves para armazenamento local
+const STORAGE_KEYS = {
+  FILTER_TYPE: "pedidoFilterType",
+  FILTER_STATUS: "pedidoFilterStatus",
+  SORT: "pedidoSort",
+  MONTH: "pedidoMonth",
+  YEAR: "pedidoYear",
+};
+
 export const usePedidoList = () => {
-  // Estados para filtros
+  // Função segura para carregar do localStorage
+  const loadFromStorage = <T>(key: string, defaultValue: T): T => {
+    if (typeof window === "undefined") return defaultValue;
+    try {
+      const stored = localStorage.getItem(key);
+      return stored !== null ? JSON.parse(stored) : defaultValue;
+    } catch (error) {
+      console.error(`Error parsing stored ${key}:`, error);
+      return defaultValue;
+    }
+  };
+
+  // Estados para filtros com valores iniciais do localStorage
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Estados para filtros
-  const [filtroTipo, setFiltroTipo] = useState<FiltroPedido>("TODOS");
-  const [filtroStatus, setFiltroStatus] = useState<FiltroStatus | undefined>();
-  const [ordenacao, setOrdenacao] = useState<OrdenacaoPedido>("data_desc");
-  const [selectedMonth, setSelectedMonth] = useState<number | undefined>();
-  const [selectedYear, setSelectedYear] = useState<number | undefined>();
+  const [filtroTipo, setFiltroTipo] = useState<FiltroPedido>(
+    loadFromStorage(STORAGE_KEYS.FILTER_TYPE, "TODOS")
+  );
+  const [filtroStatus, setFiltroStatus] = useState<FiltroStatus | undefined>(
+    loadFromStorage(STORAGE_KEYS.FILTER_STATUS, undefined)
+  );
+  const [ordenacao, setOrdenacao] = useState<OrdenacaoPedido>(
+    loadFromStorage(STORAGE_KEYS.SORT, "data_desc")
+  );
+  const [selectedMonth, setSelectedMonth] = useState<number | undefined>(
+    loadFromStorage(STORAGE_KEYS.MONTH, undefined)
+  );
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(
+    loadFromStorage(STORAGE_KEYS.YEAR, undefined)
+  );
 
-  // Função para carregar pedidos
+  // Salva no localStorage sempre que os filtros mudam
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.FILTER_TYPE, JSON.stringify(filtroTipo));
+  }, [filtroTipo]);
+
+  useEffect(() => {
+    if (filtroStatus !== undefined) {
+      localStorage.setItem(
+        STORAGE_KEYS.FILTER_STATUS,
+        JSON.stringify(filtroStatus)
+      );
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.FILTER_STATUS);
+    }
+  }, [filtroStatus]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.SORT, JSON.stringify(ordenacao));
+  }, [ordenacao]);
+
+  useEffect(() => {
+    if (selectedMonth !== undefined) {
+      localStorage.setItem(STORAGE_KEYS.MONTH, JSON.stringify(selectedMonth));
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.MONTH);
+    }
+  }, [selectedMonth]);
+
+  useEffect(() => {
+    if (selectedYear !== undefined) {
+      localStorage.setItem(STORAGE_KEYS.YEAR, JSON.stringify(selectedYear));
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.YEAR);
+    }
+  }, [selectedYear]);
+
+  // Restante do seu código...
   const carregarPedidos = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -31,7 +97,6 @@ export const usePedidoList = () => {
         ano: selectedYear,
       };
 
-      console.log("Enviando para API:", params); // Adicione este log
       const response = await listarPedidos(params);
       setPedidos(response);
     } catch (err) {
@@ -42,7 +107,6 @@ export const usePedidoList = () => {
     }
   }, [filtroTipo, filtroStatus, ordenacao, selectedMonth, selectedYear]);
 
-  // Efeito para carregar pedidos quando os filtros mudam
   useEffect(() => {
     carregarPedidos();
   }, [carregarPedidos]);
