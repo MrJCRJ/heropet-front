@@ -1,52 +1,32 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { PedidoRow } from "./ListRow";
-import { FiltroPedido, FiltroStatus, PedidoTableProps } from "../types";
+import { PedidoTableProps, FiltroStatus } from "../types";
+import { DateFilter } from "./FilterComponents/DateFilter";
+import { TypeFilter } from "./FilterComponents/TypeFilter";
+import { StatusFilter } from "./FilterComponents/StatusFilter";
 
-export const PedidoTable = ({
+// Definindo os status aqui ou importe de um arquivo de constantes
+const statusOptions = [
+  { valor: "PAGO", label: "Pagos" },
+  { valor: "PENDENTE", label: "Pendentes" },
+  { valor: "CANCELADO", label: "Cancelados" },
+  { valor: "PROCESSANDO", label: "Processando" },
+  { valor: "ATRASADO", label: "Atrasados" },
+] as const;
+
+export const PedidoTable: React.FC<PedidoTableProps> = ({
   pedidos,
   ordenacao,
   filtroTipo,
   filtroStatus,
   onOrdenarClick,
   onFilterChange,
-}: PedidoTableProps) => {
+}) => {
   const [showTipoFilter, setShowTipoFilter] = useState(false);
   const [showStatusFilter, setShowStatusFilter] = useState(false);
   const [showDateFilter, setShowDateFilter] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<number | undefined>();
   const [selectedYear, setSelectedYear] = useState<number | undefined>();
-
-  const tipos = [
-    { valor: "TODOS", label: "Todos" },
-    { valor: "VENDA", label: "Vendas" },
-    { valor: "COMPRA", label: "Compras" },
-  ] as const;
-
-  const status = [
-    { valor: "PAGO", label: "Pagos" },
-    { valor: "PENDENTE", label: "Pendentes" },
-    { valor: "CANCELADO", label: "Cancelados" },
-    { valor: "PROCESSANDO", label: "Processando" },
-    { valor: "ATRASADO", label: "Atrasados" },
-  ] as const;
-
-  const handleTipoChange = (tipo: FiltroPedido) => {
-    onFilterChange(
-      tipo === "TODOS" ? undefined : tipo,
-      filtroStatus,
-      ordenacao
-    );
-    setShowTipoFilter(false);
-  };
-
-  const handleStatusChange = (status?: FiltroStatus) => {
-    onFilterChange(
-      filtroTipo === "TODOS" ? undefined : filtroTipo,
-      status,
-      ordenacao
-    );
-    setShowStatusFilter(false);
-  };
 
   const handleMonthYearChange = (month?: number, year?: number) => {
     onFilterChange(
@@ -59,6 +39,23 @@ export const PedidoTable = ({
     setShowDateFilter(false);
   };
 
+  const getFilterLabel = () => {
+    if (selectedMonth && selectedYear) {
+      const monthName = new Date(0, selectedMonth - 1).toLocaleString(
+        "default",
+        { month: "short" }
+      );
+      return `${monthName} ${selectedYear}`;
+    }
+    if (selectedMonth) {
+      return new Date(0, selectedMonth - 1).toLocaleString("default", {
+        month: "short",
+      });
+    }
+    if (selectedYear) return selectedYear.toString();
+    return null;
+  };
+
   return (
     <div className="overflow-x-auto shadow-sm rounded-lg border border-gray-200">
       <table className="min-w-full divide-y divide-gray-200">
@@ -69,7 +66,7 @@ export const PedidoTable = ({
                 <span>Tipo</span>
                 <button
                   onClick={() => setShowTipoFilter(!showTipoFilter)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 flex items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -85,31 +82,31 @@ export const PedidoTable = ({
                       d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                     />
                   </svg>
+                  {filtroTipo && filtroTipo !== "TODOS" && (
+                    <span className="ml-1 text-xs text-gray-600">
+                      {filtroTipo === "VENDA" ? "Vendas" : "Compras"}
+                    </span>
+                  )}
                 </button>
               </div>
-              {showTipoFilter && (
-                <div className="absolute mt-2 z-10 bg-white shadow-lg rounded-md p-2 border border-gray-200">
-                  {tipos.map((tipo) => (
-                    <button
-                      key={tipo.valor}
-                      onClick={() => handleTipoChange(tipo.valor)}
-                      className={`block w-full text-left px-3 py-1 text-sm rounded-md font-medium transition-colors ${
-                        (tipo.valor === "TODOS" && !filtroTipo) ||
-                        filtroTipo === tipo.valor
-                          ? "bg-blue-600 text-white"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {tipo.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <TypeFilter
+                show={showTipoFilter}
+                currentFilter={filtroTipo}
+                onFilterChange={(tipo) =>
+                  onFilterChange(
+                    tipo === "TODOS" ? undefined : tipo,
+                    filtroStatus,
+                    ordenacao
+                  )
+                }
+                onClose={() => setShowTipoFilter(false)}
+              />
             </th>
 
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Cliente/Fornecedor
             </th>
+
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">
               <div className="flex items-center gap-1">
                 <button
@@ -121,7 +118,7 @@ export const PedidoTable = ({
                 </button>
                 <button
                   onClick={() => setShowDateFilter(!showDateFilter)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 flex items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -137,71 +134,24 @@ export const PedidoTable = ({
                       d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                     />
                   </svg>
+                  {getFilterLabel() && (
+                    <span className="ml-1 text-xs text-gray-600">
+                      {getFilterLabel()}
+                    </span>
+                  )}
                 </button>
               </div>
-              {showDateFilter && (
-                <div className="absolute mt-2 z-10 bg-white shadow-lg rounded-md p-2 border border-gray-200 w-64">
-                  <div className="mb-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Mês
-                    </label>
-                    <select
-                      className="w-full p-2 border rounded"
-                      value={selectedMonth || ""}
-                      onChange={(e) =>
-                        setSelectedMonth(Number(e.target.value) || undefined)
-                      }
-                    >
-                      <option value="">Todos</option>
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {new Date(0, i).toLocaleString("default", {
-                            month: "long",
-                          })}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Ano
-                    </label>
-                    <select
-                      className="w-full p-2 border rounded"
-                      value={selectedYear || ""}
-                      onChange={(e) =>
-                        setSelectedYear(Number(e.target.value) || undefined)
-                      }
-                    >
-                      <option value="">Todos</option>
-                      {Array.from({ length: 5 }, (_, i) => {
-                        const year = new Date().getFullYear() - i;
-                        return (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => setShowDateFilter(false)}
-                      className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleMonthYearChange(selectedMonth, selectedYear)
-                      }
-                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                      Aplicar
-                    </button>
-                  </div>
-                </div>
-              )}
+              <DateFilter
+                show={showDateFilter}
+                selectedMonth={selectedMonth}
+                selectedYear={selectedYear}
+                onMonthChange={setSelectedMonth}
+                onYearChange={setSelectedYear}
+                onApply={() =>
+                  handleMonthYearChange(selectedMonth, selectedYear)
+                }
+                onClose={() => setShowDateFilter(false)}
+              />
             </th>
 
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -213,7 +163,7 @@ export const PedidoTable = ({
                 <span>Status</span>
                 <button
                   onClick={() => setShowStatusFilter(!showStatusFilter)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 flex items-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -229,35 +179,30 @@ export const PedidoTable = ({
                       d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                     />
                   </svg>
+                  {filtroStatus && (
+                    <span className="ml-1 text-xs text-gray-600">
+                      {
+                        statusOptions.find(
+                          (s: { valor: FiltroStatus }) =>
+                            s.valor === filtroStatus
+                        )?.label
+                      }
+                    </span>
+                  )}
                 </button>
               </div>
-              {showStatusFilter && (
-                <div className="absolute mt-2 right-0 z-10 bg-white shadow-lg rounded-md p-2 border border-gray-200">
-                  <button
-                    onClick={() => handleStatusChange(undefined)}
-                    className={`block w-full text-left px-3 py-1 text-sm rounded-md font-medium transition-colors ${
-                      !filtroStatus
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    Todos
-                  </button>
-                  {status.map((stat) => (
-                    <button
-                      key={stat.valor}
-                      onClick={() => handleStatusChange(stat.valor)}
-                      className={`block w-full text-left px-3 py-1 text-sm rounded-md font-medium transition-colors ${
-                        filtroStatus === stat.valor
-                          ? "bg-blue-600 text-white"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {stat.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <StatusFilter
+                show={showStatusFilter}
+                currentFilter={filtroStatus}
+                onFilterChange={(status) =>
+                  onFilterChange(
+                    filtroTipo === "TODOS" ? undefined : filtroTipo,
+                    status,
+                    ordenacao
+                  )
+                }
+                onClose={() => setShowStatusFilter(false)}
+              />
             </th>
           </tr>
         </thead>
