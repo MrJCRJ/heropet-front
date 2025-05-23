@@ -1,10 +1,12 @@
+// pages/Pedidos/List/index.tsx
 import { usePedidoList } from "./usePedidoList";
 import { PedidoHeader } from "./ListHeader";
 import { PedidoTable } from "./ListTable";
+import { EstoqueSummary } from "./Summary/EstoqueSummary";
+import { PedidoSummary } from "./Summary/PedidoSummary";
 
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import { Alert } from "../../../components/ui/Alert";
-import { PedidoSummary } from "../PedidoSummary";
 
 const PedidoList = () => {
   const {
@@ -24,7 +26,7 @@ const PedidoList = () => {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-2">
         <LoadingSpinner size="lg" />
-        <p className="text-gray-600">Carregando lista de pedido...</p>
+        <p className="text-gray-600">Carregando dados...</p>
       </div>
     );
   }
@@ -42,6 +44,7 @@ const PedidoList = () => {
       <PedidoHeader />
       <div className="mt-6">
         <PedidoSummary pedidos={pedidos} filtroTipo={filtroTipo} />
+        <EstoqueSummary pedidos={pedidos} />
         <PedidoTable
           pedidos={pedidos}
           ordenacao={ordenacao}

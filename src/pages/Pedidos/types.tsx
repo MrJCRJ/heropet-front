@@ -18,6 +18,18 @@ export type PedidoListProps = {
   onFilterChange: (tipo?: FiltroPedido) => void;
 };
 
+// types.ts
+export interface Produto {
+  id: string;
+  nome: string;
+  preco: number;
+  quantidade: number;
+  precoUnitario: number;
+  estoqueMinimo: number;
+  codigoBarras?: string;
+  categoria?: string;
+}
+
 export type OrdenacaoPedido = "data_asc" | "data_desc";
 
 export type PedidoTableProps = {

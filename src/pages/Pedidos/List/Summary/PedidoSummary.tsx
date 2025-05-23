@@ -1,6 +1,6 @@
 // components/PedidoSummary.tsx
-import { formatarMoeda } from "./pedidoUtils";
-import { Pedido } from "./types";
+import { formatarMoeda } from "../../pedidoUtils";
+import { Pedido } from "../../types";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
 
 interface PedidoSummaryProps {
@@ -10,39 +10,48 @@ interface PedidoSummaryProps {
 
 export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
   // Calcula totais baseados no tipo
-  const { total, totalAPagar, totalAReceber } = pedidos.reduce(
-    (acc, pedido) => {
-      const valorPedido = pedido.totalPedido;
-      const parcelas = pedido.parcelas || [];
-      const isPago = pedido.status === "PAGO";
+  const { total, totalAPagar, totalAReceber, totalVendas, totalCompras } =
+    pedidos.reduce(
+      (acc, pedido) => {
+        const valorPedido = pedido.totalPedido;
+        const parcelas = pedido.parcelas || [];
+        const isPago = pedido.status === "PAGO";
 
-      if (pedido.tipo === "COMPRA") {
-        acc.total -= valorPedido;
+        if (pedido.tipo === "COMPRA") {
+          acc.total -= valorPedido;
+          acc.totalCompras += valorPedido;
 
-        if (!isPago) {
-          const totalPago = parcelas
-            .filter((p) => p.pago)
-            .reduce((sum, p) => sum + p.valor, 0);
-          const pendente = valorPedido - totalPago;
-          if (pendente > 0) acc.totalAPagar += pendente;
+          if (!isPago) {
+            const totalPago = parcelas
+              .filter((p) => p.pago)
+              .reduce((sum, p) => sum + p.valor, 0);
+            const pendente = valorPedido - totalPago;
+            if (pendente > 0) acc.totalAPagar += pendente;
+          }
+        } else {
+          // VENDA
+          acc.total += valorPedido;
+          acc.totalVendas += valorPedido;
+
+          if (!isPago) {
+            const totalRecebido = parcelas
+              .filter((p) => p.pago)
+              .reduce((sum, p) => sum + p.valor, 0);
+            const pendente = valorPedido - totalRecebido;
+            if (pendente > 0) acc.totalAReceber += pendente;
+          }
         }
-      } else {
-        // VENDA
-        acc.total += valorPedido;
 
-        if (!isPago) {
-          const totalRecebido = parcelas
-            .filter((p) => p.pago)
-            .reduce((sum, p) => sum + p.valor, 0);
-          const pendente = valorPedido - totalRecebido;
-          if (pendente > 0) acc.totalAReceber += pendente;
-        }
+        return acc;
+      },
+      {
+        total: 0,
+        totalAPagar: 0,
+        totalAReceber: 0,
+        totalVendas: 0,
+        totalCompras: 0,
       }
-
-      return acc;
-    },
-    { total: 0, totalAPagar: 0, totalAReceber: 0 }
-  );
+    );
 
   // Formata valores grandes de forma compacta
   const formatarValorCompacto = (valor: number) => {
@@ -85,8 +94,16 @@ export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
               </span>
             )}
           </div>
-          <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10 mt-1">
-            Valor exato: {formatarMoeda(Math.abs(total))}
+          <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10 mt-1 w-64">
+            <p>Valor exato: {formatarMoeda(Math.abs(total))}</p>
+            <div className="border-t border-gray-600 my-1 pt-1">
+              <p>Total Vendas: {formatarMoeda(totalVendas)}</p>
+              <p>Total Compras: {formatarMoeda(totalCompras)}</p>
+            </div>
+            <p className="mt-1">
+              Cálculo: Vendas ({formatarMoeda(totalVendas)}) - Compras (
+              {formatarMoeda(totalCompras)}) = {formatarMoeda(total)}
+            </p>
           </div>
         </div>
 
