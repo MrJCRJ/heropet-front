@@ -28,17 +28,6 @@ export const PedidoTable: React.FC<PedidoTableProps> = ({
   const [selectedMonth, setSelectedMonth] = useState<number | undefined>();
   const [selectedYear, setSelectedYear] = useState<number | undefined>();
 
-  const handleMonthYearChange = (month?: number, year?: number) => {
-    onFilterChange(
-      filtroTipo === "TODOS" ? undefined : filtroTipo,
-      filtroStatus,
-      ordenacao,
-      month,
-      year
-    );
-    setShowDateFilter(false);
-  };
-
   const getFilterLabel = () => {
     if (selectedMonth && selectedYear) {
       const monthName = new Date(0, selectedMonth - 1).toLocaleString(
@@ -96,7 +85,9 @@ export const PedidoTable: React.FC<PedidoTableProps> = ({
                   onFilterChange(
                     tipo === "TODOS" ? undefined : tipo,
                     filtroStatus,
-                    ordenacao
+                    ordenacao,
+                    selectedMonth, // Mantém o mês selecionado
+                    selectedYear // Mantém o ano selecionado
                   )
                 }
                 onClose={() => setShowTipoFilter(false)}
@@ -145,11 +136,17 @@ export const PedidoTable: React.FC<PedidoTableProps> = ({
                 show={showDateFilter}
                 selectedMonth={selectedMonth}
                 selectedYear={selectedYear}
-                onMonthChange={setSelectedMonth}
-                onYearChange={setSelectedYear}
-                onApply={() =>
-                  handleMonthYearChange(selectedMonth, selectedYear)
-                }
+                onFilterChange={(month, year) => {
+                  setSelectedMonth(month);
+                  setSelectedYear(year);
+                  onFilterChange(
+                    filtroTipo === "TODOS" ? undefined : filtroTipo,
+                    filtroStatus,
+                    ordenacao,
+                    month,
+                    year
+                  );
+                }}
                 onClose={() => setShowDateFilter(false)}
               />
             </th>
@@ -198,7 +195,9 @@ export const PedidoTable: React.FC<PedidoTableProps> = ({
                   onFilterChange(
                     filtroTipo === "TODOS" ? undefined : filtroTipo,
                     status,
-                    ordenacao
+                    ordenacao,
+                    selectedMonth, // Mantém o mês selecionado
+                    selectedYear // Mantém o ano selecionado
                   )
                 }
                 onClose={() => setShowStatusFilter(false)}

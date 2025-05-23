@@ -12,9 +12,7 @@ export type DateFilterProps = {
   show: boolean;
   selectedMonth?: number;
   selectedYear?: number;
-  onMonthChange: (month?: number) => void;
-  onYearChange: (year?: number) => void;
-  onApply: () => void;
+  onFilterChange: (month?: number, year?: number) => void;
   onClose: () => void;
 };
 
