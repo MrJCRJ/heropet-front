@@ -7,6 +7,7 @@ import { PedidoSummary } from "./Summary/PedidoSummary";
 
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import { Alert } from "../../../components/ui/Alert";
+import { ClientesSummary } from "../../../components/Summary/Clientes";
 
 const PedidoList = () => {
   const {
@@ -45,6 +46,7 @@ const PedidoList = () => {
       <div className="mt-6">
         <PedidoSummary pedidos={pedidos} filtroTipo={filtroTipo} />
         <EstoqueSummary pedidos={pedidos} />
+        <ClientesSummary pedidos={pedidos} />
         <PedidoTable
           pedidos={pedidos}
           ordenacao={ordenacao}
