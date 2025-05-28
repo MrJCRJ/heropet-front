@@ -30,6 +30,7 @@ export const EstoqueSummary = ({ pedidos }: EstoqueSummaryProps) => {
           valor={valorTotalEstoque}
           cor="blue"
           icone="cube"
+          isMonetary
           tooltip={
             <>
               <p>Valor exato: {formatarMoeda(valorTotalEstoque)}</p>
@@ -48,6 +49,7 @@ export const EstoqueSummary = ({ pedidos }: EstoqueSummaryProps) => {
             <TooltipEstoqueCompleto
               produtos={produtosArray}
               quantidadeTotal={quantidadeTotal}
+              maxItems={15}
             />
           }
           conteudoAdicional={

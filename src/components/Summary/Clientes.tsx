@@ -2,6 +2,7 @@
 import { Pedido } from "../../pages/Pedidos/types";
 import { formatarMoeda } from "../../pages/Pedidos/pedidoUtils";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { TooltipGenerico } from "../TooltipGenerico";
 
 interface ClienteResumo {
   nome: string;
@@ -102,36 +103,43 @@ export const ClientesSummary = ({ pedidos }: ClientesSummaryProps) => {
               const topRacoes = getTopRacoes(cliente.racoes);
               return (
                 <tr key={cliente.nome} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 whitespace-nowrap group relative">
-                    <div className="flex items-center">
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {cliente.nome}
-                        </p>
-                        {cliente.documento && (
-                          <p className="text-xs text-gray-500">
-                            {cliente.documento}
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <TooltipGenerico
+                      conteudo={
+                        <>
+                          <p className="font-semibold mb-1">
+                            Rações mais compradas:
                           </p>
-                        )}
+                          <ul className="space-y-1">
+                            {topRacoes.map(([racao, dados]) => (
+                              <li key={racao} className="flex justify-between">
+                                <span className="truncate">{racao}</span>
+                                <span>
+                                  {dados.quantidade} un (
+                                  {formatarMoeda(dados.total)})
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      }
+                      icone={false}
+                      className="w-full"
+                    >
+                      <div className="flex items-center">
+                        <div>
+                          <p className="font-medium text-gray-900">
+                            {cliente.nome}
+                          </p>
+                          {cliente.documento && (
+                            <p className="text-xs text-gray-500">
+                              {cliente.documento}
+                            </p>
+                          )}
+                        </div>
+                        <InformationCircleIcon className="ml-2 h-4 w-4 text-gray-400 group-hover:text-blue-500" />
                       </div>
-                      <InformationCircleIcon className="ml-2 h-4 w-4 text-gray-400 group-hover:text-blue-500" />
-                    </div>
-                    <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10 mt-1 w-64">
-                      <p className="font-semibold mb-1">
-                        Rações mais compradas:
-                      </p>
-                      <ul className="space-y-1">
-                        {topRacoes.map(([racao, dados]) => (
-                          <li key={racao} className="flex justify-between">
-                            <span className="truncate">{racao}</span>
-                            <span>
-                              {dados.quantidade} un (
-                              {formatarMoeda(dados.total)})
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    </TooltipGenerico>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-green-600">
                     {formatarMoeda(cliente.totalGasto)}

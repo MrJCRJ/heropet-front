@@ -1,7 +1,6 @@
-// components/EstoqueSummary/ResumoCard.tsx
 import { CubeIcon, ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { ReactNode } from "react";
-import { formatarValorCompacto } from "./Utils"; // Adicione esta linha
+import { formatarValorCompacto } from "./Utils";
 
 interface ResumoCardProps {
   titulo: string;
@@ -10,7 +9,7 @@ interface ResumoCardProps {
   icone: "cube" | "warning";
   tooltip: ReactNode;
   conteudoAdicional?: ReactNode;
-  isMonetary?: boolean; // Adicionamos esta prop
+  isMonetary?: boolean;
 }
 
 export const ResumoCard = ({
@@ -20,7 +19,7 @@ export const ResumoCard = ({
   icone,
   tooltip,
   conteudoAdicional,
-  isMonetary = false, // Valor padrão false
+  isMonetary = false,
 }: ResumoCardProps) => {
   const cores = {
     blue: { text: "text-blue-600", icon: "text-blue-600" },
@@ -33,19 +32,20 @@ export const ResumoCard = ({
 
   return (
     <div className="border-r border-gray-200 pr-4 group relative">
-      <p className="text-sm text-gray-500">{titulo}</p>
-      <div className="flex items-center">
-        <p className={`text-xl font-semibold ${cores[cor].text}`}>
-          {formatarValorCompacto(valor, isMonetary)}
-        </p>
-        <Icone className={`h-5 w-5 ${cores[cor].icon} ml-2`} />
+      <div className="cursor-default">
+        <p className="text-sm text-gray-500">{titulo}</p>
+        <div className="flex items-center">
+          <p className={`text-xl font-semibold ${cores[cor].text}`}>
+            {formatarValorCompacto(valor, isMonetary)}
+          </p>
+          <Icone className={`h-5 w-5 ${cores[cor].icon} ml-2`} />
+        </div>
+        {conteudoAdicional && (
+          <div className="mt-2 space-y-1">{conteudoAdicional}</div>
+        )}
       </div>
 
-      {conteudoAdicional && (
-        <div className="mt-2 space-y-1">{conteudoAdicional}</div>
-      )}
-
-      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10 mt-1 w-80 max-h-96 overflow-y-auto">
+      <div className="absolute z-50 invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded mt-1 w-[300px] max-h-[70vh] overflow-y-auto shadow-xl">
         {tooltip}
       </div>
     </div>

@@ -2,6 +2,7 @@
 import { formatarMoeda } from "../../pedidoUtils";
 import { Pedido } from "../../types";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
+import { TooltipGenerico } from "../../../../components/TooltipGenerico";
 
 interface PedidoSummaryProps {
   pedidos: Pedido[];
@@ -9,7 +10,7 @@ interface PedidoSummaryProps {
 }
 
 export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
-  // Calcula totais baseados no tipo
+  // Calcula totais baseados no tipo (código mantido igual)
   const { total, totalAPagar, totalAReceber, totalVendas, totalCompras } =
     pedidos.reduce(
       (acc, pedido) => {
@@ -53,14 +54,14 @@ export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
       }
     );
 
-  // Formata valores grandes de forma compacta
+  // Formata valores grandes de forma compacta (código mantido igual)
   const formatarValorCompacto = (valor: number) => {
     if (valor >= 1000000) return `${(valor / 1000000).toFixed(1)}M`;
     if (valor >= 1000) return `${(valor / 1000).toFixed(1)}K`;
     return formatarMoeda(valor);
   };
 
-  // Determina quais resumos mostrar
+  // Determina quais resumos mostrar (código mantido igual)
   const mostrar = {
     venda:
       (filtroTipo === "TODOS" || filtroTipo === "VENDA") && totalAReceber > 0,
@@ -74,70 +75,88 @@ export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Total Geral */}
-        <div className="border-r border-gray-200 pr-4 group relative">
+        <div className="border-r border-gray-200 pr-4">
           <p className="text-sm text-gray-500">Total Geral</p>
-          <div className="flex items-center">
-            <p
-              className={`text-xl font-semibold transition-all duration-300 ${
-                total < 0 ? "text-red-600" : "text-green-600"
-              }`}
-            >
-              {formatarValorCompacto(Math.abs(total))}
-            </p>
-            {total !== 0 && (
-              <span className="ml-2">
-                {total < 0 ? (
-                  <ArrowDownIcon className="h-5 w-5 text-red-600" />
-                ) : (
-                  <ArrowUpIcon className="h-5 w-5 text-green-600" />
-                )}
-              </span>
-            )}
-          </div>
-          <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10 mt-1 w-64">
-            <p>Valor exato: {formatarMoeda(Math.abs(total))}</p>
-            <div className="border-t border-gray-600 my-1 pt-1">
-              <p>Total Vendas: {formatarMoeda(totalVendas)}</p>
-              <p>Total Compras: {formatarMoeda(totalCompras)}</p>
+          <TooltipGenerico
+            conteudo={
+              <>
+                <p>Valor exato: {formatarMoeda(Math.abs(total))}</p>
+                <div className="border-t border-gray-600 my-1 pt-1">
+                  <p>Total Vendas: {formatarMoeda(totalVendas)}</p>
+                  <p>Total Compras: {formatarMoeda(totalCompras)}</p>
+                </div>
+                <p className="mt-1">
+                  Cálculo: Vendas ({formatarMoeda(totalVendas)}) - Compras (
+                  {formatarMoeda(totalCompras)}) = {formatarMoeda(total)}
+                </p>
+              </>
+            }
+            icone={false}
+          >
+            <div className="flex items-center">
+              <p
+                className={`text-xl font-semibold transition-all duration-300 ${
+                  total < 0 ? "text-red-600" : "text-green-600"
+                }`}
+              >
+                {formatarValorCompacto(Math.abs(total))}
+              </p>
+              {total !== 0 && (
+                <span className="ml-2">
+                  {total < 0 ? (
+                    <ArrowDownIcon className="h-5 w-5 text-red-600" />
+                  ) : (
+                    <ArrowUpIcon className="h-5 w-5 text-green-600" />
+                  )}
+                </span>
+              )}
             </div>
-            <p className="mt-1">
-              Cálculo: Vendas ({formatarMoeda(totalVendas)}) - Compras (
-              {formatarMoeda(totalCompras)}) = {formatarMoeda(total)}
-            </p>
-          </div>
+          </TooltipGenerico>
         </div>
 
         {/* Resumo Vendas */}
         {mostrar.venda && (
-          <div className="border-r border-gray-200 pr-4 group relative">
+          <div className="border-r border-gray-200 pr-4">
             <p className="text-sm text-gray-500">A Receber (Vendas)</p>
-            <div className="flex items-center">
-              <p className="text-xl font-semibold text-red-600 transition-all duration-300">
-                {formatarValorCompacto(totalAReceber)}
-              </p>
-              <ArrowUpIcon className="h-5 w-5 text-red-600 ml-2" />
-            </div>
-            <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10 mt-1">
-              <p>Valor exato: {formatarMoeda(totalAReceber)}</p>
-              <p>Total de vendas com parcelas pendentes</p>
-            </div>
+            <TooltipGenerico
+              conteudo={
+                <>
+                  <p>Valor exato: {formatarMoeda(totalAReceber)}</p>
+                  <p>Total de vendas com parcelas pendentes</p>
+                </>
+              }
+              icone={false}
+            >
+              <div className="flex items-center">
+                <p className="text-xl font-semibold text-red-600 transition-all duration-300">
+                  {formatarValorCompacto(totalAReceber)}
+                </p>
+                <ArrowUpIcon className="h-5 w-5 text-red-600 ml-2" />
+              </div>
+            </TooltipGenerico>
           </div>
         )}
 
         {/* Resumo Compras */}
         {mostrar.compra && (
-          <div className="group relative">
+          <div>
             <p className="text-sm text-gray-500">A Pagar (Compras)</p>
-            <div className="flex items-center">
-              <p className="text-xl font-semibold text-red-600 transition-all duration-300">
-                {formatarValorCompacto(totalAPagar)}
-              </p>
-              <ArrowDownIcon className="h-5 w-5 text-red-600 ml-2" />
-            </div>
-            <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs p-2 rounded z-10 mt-1">
-              <p>Valor exato: {formatarMoeda(totalAPagar)}</p>
-              <p>Total de compras com parcelas pendentes</p>
-            </div>
+            <TooltipGenerico
+              conteudo={
+                <>
+                  <p>Valor exato: {formatarMoeda(totalAPagar)}</p>
+                  <p>Total de compras com parcelas pendentes</p>
+                </>
+              }
+              icone={false}
+            >
+              <div className="flex items-center">
+                <p className="text-xl font-semibold text-red-600 transition-all duration-300">
+                  {formatarValorCompacto(totalAPagar)}
+                </p>
+                <ArrowDownIcon className="h-5 w-5 text-red-600 ml-2" />
+              </div>
+            </TooltipGenerico>
           </div>
         )}
       </div>
