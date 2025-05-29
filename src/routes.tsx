@@ -13,6 +13,8 @@ import ClienteList from "./pages/Clientes/List";
 import ClienteCreate from "./pages/Clientes/Create";
 import ClienteEdit from "./pages/Clientes/Edit";
 import ClienteView from "./pages/Clientes/View";
+import { FinancaCreate } from "./pages/Financas/Create";
+import { FinancaView } from "./pages/Financas/View";
 import NotFound from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -85,6 +87,19 @@ export const router = createBrowserRouter([
           {
             path: ":id/editar",
             element: <PedidoEdit />,
+          },
+        ],
+      },
+      {
+        path: "financas",
+        children: [
+          {
+            path: "novo",
+            element: <FinancaCreate />,
+          },
+          {
+            path: ":id",
+            element: <FinancaView />,
           },
         ],
       },

@@ -1,9 +1,9 @@
-// pages/Pedidos/List/index.tsx
 import { usePedidoList } from "./usePedidoList";
 import { PedidoHeader } from "./ListHeader";
 import { PedidoTable } from "./ListTable";
 import { EstoqueSummary } from "./Summary/EstoqueSummary";
 import { PedidoSummary } from "./Summary/PedidoSummary";
+import { FinancaSummary } from "../../../components/Summary/FinancaSummary";
 
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import { Alert } from "../../../components/ui/Alert";
@@ -45,6 +45,7 @@ const PedidoList = () => {
       <PedidoHeader />
       <div className="mt-6">
         <PedidoSummary pedidos={pedidos} filtroTipo={filtroTipo} />
+        <FinancaSummary /> {/* Novo componente adicionado */}
         <EstoqueSummary pedidos={pedidos} />
         <ParceirosSummary pedidos={pedidos} />
         <PedidoTable
