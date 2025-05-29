@@ -4,9 +4,12 @@ export let isServerOnline = false;
 export let lastConnectionCheck = 0;
 export const checkConnection = async () => {
   try {
-    // Remova a atribuição desnecessária da response
     await axios.get(import.meta.env.VITE_API_URL || "http://localhost:3000", {
       timeout: 3000,
+      validateStatus: function (status) {
+        // Considera qualquer status menor que 500 como sucesso
+        return status < 500;
+      },
     });
     isServerOnline = true;
     lastConnectionCheck = Date.now();
