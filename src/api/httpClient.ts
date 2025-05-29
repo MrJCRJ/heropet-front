@@ -1,14 +1,31 @@
 import axios from "axios";
 
+export let isServerOnline = false;
+export let lastConnectionCheck = 0;
+export const checkConnection = async () => {
+  try {
+    // Remova a atribuição desnecessária da response
+    await axios.get(import.meta.env.VITE_API_URL || "http://localhost:3000", {
+      timeout: 3000,
+    });
+    isServerOnline = true;
+    lastConnectionCheck = Date.now();
+    return true;
+  } catch {
+    isServerOnline = false;
+    lastConnectionCheck = Date.now();
+    return false;
+  }
+};
+
 const httpClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
-  timeout: 5000, // Timeout de 5 segundos
-
+  timeout: 5000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
-  withCredentials: false, // Adicione esta linha
+  withCredentials: false,
 });
 
 // Interceptor para tratamento global de erros
@@ -30,7 +47,8 @@ httpClient.interceptors.response.use(
         )
       );
     }
-    return Promise.reject(error);
+    // Adicione um tratamento padrão para outros tipos de erro
+    return Promise.reject(new Error("Ocorreu um erro desconhecido"));
   }
 );
 

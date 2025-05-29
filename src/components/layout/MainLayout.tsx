@@ -1,6 +1,8 @@
 // src/components/layout/MainLayout.tsx
 import { Outlet, Link, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.png";
+import { useConnectionStatus } from "./hooks/useConnectionStatus";
+import { useEffect, useState } from "react";
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -37,10 +39,47 @@ const MainLayout = ({
     text: `© ${new Date().getFullYear()} HeroPet - Todos os direitos reservados`,
   };
 
+  const { isOnline, timeElapsed } = useConnectionStatus();
+  const [showConnectionAlert, setShowConnectionAlert] = useState(!isOnline);
+
+  useEffect(() => {
+    setShowConnectionAlert(!isOnline);
+  }, [isOnline]);
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Header Atualizado */}
       <header className="bg-white shadow-sm">
+        {showConnectionAlert && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <div
+              className={`p-4 rounded-lg shadow-lg flex items-center gap-3 ${
+                isOnline
+                  ? "bg-green-100 text-green-800 border border-green-200"
+                  : "bg-red-100 text-red-800 border border-red-200"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`h-3 w-3 rounded-full ${
+                    isOnline ? "bg-green-500" : "bg-red-500"
+                  }`}
+                ></span>
+                <span className="font-medium">
+                  {isOnline
+                    ? "Conectado ao servidor"
+                    : `Tentando conectar... (${timeElapsed}s)`}
+                </span>
+              </div>
+              <button
+                onClick={() => setShowConnectionAlert(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
         <div className="max-w-7xl mx-auto w-full px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
