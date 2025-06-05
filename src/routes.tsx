@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "./components/layout/RootLayout";
-import Home from "./pages/Home";
 import FornecedorList from "./pages/Fornecedores/List";
 import FornecedorCreate from "./pages/Fornecedores/Create";
 import FornecedorEdit from "./pages/Fornecedores/Edit";
@@ -23,10 +22,6 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <NotFound />,
     children: [
-      {
-        index: true,
-        element: <Home />,
-      },
       {
         path: "fornecedores",
         children: [

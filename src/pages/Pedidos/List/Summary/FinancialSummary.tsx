@@ -1,16 +1,20 @@
-// components/PedidoSummary.tsx
+// components/FinancialSummary.tsx
 import { formatarMoeda } from "../../pedidoUtils";
 import { Pedido } from "../../types";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
 import { TooltipGenerico } from "../../../../components/TooltipGenerico";
+import { useFinancaList } from "../../../Financas/List/useFinancaList";
 
-interface PedidoSummaryProps {
+interface FinancialSummaryProps {
   pedidos: Pedido[];
   filtroTipo: "TODOS" | "VENDA" | "COMPRA";
 }
 
-export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
-  // Calcula totais baseados no tipo (código mantido igual)
+export const FinancialSummary = ({
+  pedidos,
+  filtroTipo,
+}: FinancialSummaryProps) => {
+  // Calculations from PedidoSummary
   const { total, totalAPagar, totalAReceber, totalVendas, totalCompras } =
     pedidos.reduce(
       (acc, pedido) => {
@@ -54,14 +58,24 @@ export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
       }
     );
 
-  // Formata valores grandes de forma compacta (código mantido igual)
+  // Calculations from FinancaSummary
+  const { financas } = useFinancaList();
+  const totalInvestimentos = financas
+    .filter((f) => f.tipo === "Investimento")
+    .reduce((sum, f) => sum + f.valor, 0);
+  const totalDespesas = financas
+    .filter((f) => f.tipo === "Despesa")
+    .reduce((sum, f) => sum + f.valor, 0);
+  const saldoFinancas = totalInvestimentos - totalDespesas;
+
+  // Formatting function
   const formatarValorCompacto = (valor: number) => {
     if (valor >= 1000000) return `${(valor / 1000000).toFixed(1)}M`;
     if (valor >= 1000) return `${(valor / 1000).toFixed(1)}K`;
     return formatarMoeda(valor);
   };
 
-  // Determina quais resumos mostrar (código mantido igual)
+  // Determine which summaries to show
   const mostrar = {
     venda:
       (filtroTipo === "TODOS" || filtroTipo === "VENDA") && totalAReceber > 0,
@@ -71,12 +85,48 @@ export const PedidoSummary = ({ pedidos, filtroTipo }: PedidoSummaryProps) => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
-      <h3 className="text-lg font-medium mb-3">Resumo Financeiro</h3>
+      <h3 className="text-lg font-medium mb-3">Resumo Financeiro Completo</h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {/* Finances Summary */}
+        <div className="bg-green-50 p-4 rounded-lg">
+          <h3 className="text-sm font-medium text-green-800">Investimentos</h3>
+          <p className="text-2xl font-semibold text-green-600">
+            {formatarMoeda(totalInvestimentos)}
+          </p>
+        </div>
+        <div className="bg-red-50 p-4 rounded-lg">
+          <h3 className="text-sm font-medium text-red-800">Despesas</h3>
+          <p className="text-2xl font-semibold text-red-600">
+            {formatarMoeda(totalDespesas)}
+          </p>
+        </div>
+        <div
+          className={`p-4 rounded-lg ${
+            saldoFinancas >= 0 ? "bg-blue-50" : "bg-orange-50"
+          }`}
+        >
+          <h3
+            className={`text-sm font-medium ${
+              saldoFinancas >= 0 ? "text-blue-800" : "text-orange-800"
+            }`}
+          >
+            Saldo Finanças
+          </h3>
+          <p
+            className={`text-2xl font-semibold ${
+              saldoFinancas >= 0 ? "text-blue-600" : "text-orange-600"
+            }`}
+          >
+            {formatarMoeda(saldoFinancas)}
+          </p>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Total Geral */}
+        {/* Orders Summary */}
         <div className="border-r border-gray-200 pr-4">
-          <p className="text-sm text-gray-500">Total Geral</p>
+          <p className="text-sm text-gray-500">Total Geral Pedidos</p>
           <TooltipGenerico
             conteudo={
               <>

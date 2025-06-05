@@ -4,6 +4,7 @@ import { PedidoTableProps } from "../types";
 import { DateFilter } from "./FilterComponents/DateFilter";
 import { TypeFilter } from "./FilterComponents/TypeFilter";
 import { StatusFilter } from "./FilterComponents/StatusFilter";
+import { FiltroPedido, FiltroStatus, Pedido } from "../types"; // Make sure these types are imported
 
 // Definindo os status aqui ou importe de um arquivo de constantes
 const statusOptions = [
@@ -38,15 +39,15 @@ const TableHeader = ({
   showDateFilter: boolean;
   setShowDateFilter: React.Dispatch<React.SetStateAction<boolean>>;
   onOrdenarClick: () => void;
-  filtroTipo: string;
-  filtroStatus?: string;
+  filtroTipo: FiltroPedido;
+  filtroStatus?: FiltroStatus;
   ordenacao: string;
   selectedMonth?: number;
   selectedYear?: number;
   getFilterLabel: () => string | null;
   onFilterChange: (
-    tipo?: string,
-    status?: string,
+    tipo?: FiltroPedido,
+    status?: FiltroStatus,
     mes?: number,
     ano?: number
   ) => void;
@@ -140,7 +141,7 @@ const TableHeader = ({
 );
 
 // Componente para o corpo da tabela com scroll
-const TableBody = ({ pedidos }: { pedidos: any[] }) => (
+const TableBody = ({ pedidos }: { pedidos: Pedido[] }) => (
   <tbody className="bg-white divide-y divide-gray-200">
     {pedidos && pedidos.length > 0 ? (
       pedidos.map((pedido) => (
@@ -252,7 +253,12 @@ export const PedidoTable: React.FC<PedidoTableProps> = ({
   }, [selectedMonth, selectedYear]);
 
   const handleFilterChange = useCallback(
-    (tipo?: string, status?: string, mes?: number, ano?: number) => {
+    (
+      tipo?: FiltroPedido,
+      status?: FiltroStatus,
+      mes?: number,
+      ano?: number
+    ) => {
       setSelectedMonth(mes);
       setSelectedYear(ano);
       onFilterChange(tipo, status, ordenacao, mes, ano);

@@ -2,12 +2,11 @@ import { usePedidoList } from "./usePedidoList";
 import { PedidoHeader } from "./ListHeader";
 import { PedidoTable } from "./ListTable";
 import { EstoqueSummary } from "./Summary/EstoqueSummary";
-import { PedidoSummary } from "./Summary/PedidoSummary";
-import { FinancaSummary } from "../../../components/Summary/FinancaSummary";
+import { FinancialSummary } from "./Summary/FinancialSummary";
+import { ParceirosSummary } from "./Summary/Parceiros";
 
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 import { Alert } from "../../../components/ui/Alert";
-import { ParceirosSummary } from "../../../components/Summary/Parceiros";
 
 const PedidoList = () => {
   const {
@@ -44,8 +43,7 @@ const PedidoList = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PedidoHeader />
       <div className="mt-6">
-        <PedidoSummary pedidos={pedidos} filtroTipo={filtroTipo} />
-        <FinancaSummary /> {/* Novo componente adicionado */}
+        <FinancialSummary pedidos={pedidos} filtroTipo={filtroTipo} />
         <EstoqueSummary pedidos={pedidos} />
         <ParceirosSummary pedidos={pedidos} />
         <PedidoTable

@@ -11,7 +11,6 @@ interface LayoutProps {
 }
 
 const NAV_LINKS = [
-  { to: "/", label: "Home" },
   { to: "/fornecedores", label: "Fornecedores" },
   { to: "/clientes", label: "Clientes" },
   { to: "/pedidos", label: "Pedidos" },

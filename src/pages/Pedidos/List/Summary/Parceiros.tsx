@@ -1,8 +1,8 @@
 // components/ParceirosSummary.tsx
-import { Pedido } from "../../pages/Pedidos/types";
-import { formatarMoeda } from "../../pages/Pedidos/pedidoUtils";
+import { Pedido } from "../../types";
+import { formatarMoeda } from "../../pedidoUtils";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { TooltipGenerico } from "../TooltipGenerico";
+import { TooltipGenerico } from "../../../../components/TooltipGenerico";
 
 interface ParceiroResumo {
   nome: string;
