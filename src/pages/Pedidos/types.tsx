@@ -95,3 +95,35 @@ export interface ItensPedidoViewProps {
   itens: ItemPedido[];
   totalPedido: number;
 }
+
+export interface Financa {
+  id: string;
+  tipo: "Investimento" | "Despesa";
+  valor: number;
+  data: string;
+  descricao: string;
+  // ... outros campos conforme necessário
+}
+
+// Tipos para o hook de cálculos financeiros
+export interface FinancialCalculationsResult {
+  total: number;
+  totalAPagar: number;
+  totalAReceber: number;
+  totalVendas: number;
+  totalCompras: number;
+  totalInvestimentos: number;
+  totalDespesas: number;
+  saldoOperacoes: number;
+  saldoCustos: number;
+  saldoGeral: number;
+}
+
+export interface FinancaData {
+  _id: string; // Ou qualquer campo que seja o ID na API
+  tipo: string;
+  valor: number;
+  data: string;
+  descricao?: string;
+  // Outros campos da API
+}
