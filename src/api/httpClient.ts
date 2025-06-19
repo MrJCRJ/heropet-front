@@ -2,19 +2,29 @@ import axios from "axios";
 
 export let isServerOnline = false;
 export let lastConnectionCheck = 0;
+let connectionActive = true;
 
 export const checkConnection = async () => {
+  if (!connectionActive) return false;
+
   try {
-    const response = await axios.get(
+    await axios.get(
       import.meta.env.VITE_API_URL || "http://localhost:3000/health",
       {
         timeout: 3000,
+        validateStatus: (status) => {
+          if (status === 404) {
+            connectionActive = false;
+            return false; // Considera 404 como erro
+          }
+          return true;
+        },
       }
     );
 
-    isServerOnline = response.status !== 404;
+    isServerOnline = true;
     lastConnectionCheck = Date.now();
-    return isServerOnline;
+    return true;
   } catch {
     isServerOnline = false;
     lastConnectionCheck = Date.now();
@@ -32,12 +42,10 @@ const httpClient = axios.create({
   withCredentials: false,
 });
 
-// Interceptor para tratamento global de erros
 httpClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      // Erros 4xx/5xx
       console.error("Erro na resposta:", error.response.data);
       return Promise.reject({
         message: error.response.data.message || "Erro na requisição",
@@ -51,7 +59,6 @@ httpClient.interceptors.response.use(
         )
       );
     }
-    // Adicione um tratamento padrão para outros tipos de erro
     return Promise.reject(new Error("Ocorreu um erro desconhecido"));
   }
 );

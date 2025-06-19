@@ -1,4 +1,3 @@
-// src/hooks/useConnectionStatus.ts
 import { useEffect, useState } from "react";
 import { checkConnection, lastConnectionCheck } from "../../../api/httpClient";
 
@@ -7,36 +6,28 @@ export const useConnectionStatus = () => {
   const [shouldReload, setShouldReload] = useState(false);
 
   useEffect(() => {
-    const checkInterval = 5000; // 5 segundos
+    if (shouldReload) {
+      window.location.reload();
+      return; // Não continua após recarregar
+    }
 
     const checkServer = async () => {
       const status = await checkConnection();
 
       if (status !== isOnline) {
         setIsOnline(status);
-
-        // Recarrega apenas quando volta a ficar online
-        if (status) {
-          setShouldReload(true);
-        }
+        if (!status) setShouldReload(true); // Recarrega quando cai a conexão
       }
     };
 
     // Verificação imediata
     checkServer();
 
-    // Verificação periódica
-    const intervalId = setInterval(checkServer, checkInterval);
+    // Verificação periódica apenas se ainda ativo
+    const intervalId = setInterval(checkServer, 5000);
 
     return () => clearInterval(intervalId);
-  }, [isOnline]);
-
-  // Efeito para recarregar a página
-  useEffect(() => {
-    if (shouldReload) {
-      window.location.reload();
-    }
-  }, [shouldReload]);
+  }, [isOnline, shouldReload]);
 
   return {
     isOnline,
