@@ -2,18 +2,19 @@ import axios from "axios";
 
 export let isServerOnline = false;
 export let lastConnectionCheck = 0;
+
 export const checkConnection = async () => {
   try {
-    await axios.get(import.meta.env.VITE_API_URL || "http://localhost:3000", {
-      timeout: 3000,
-      validateStatus: function (status) {
-        // Considera qualquer status menor que 500 como sucesso
-        return status < 500;
-      },
-    });
-    isServerOnline = true;
+    const response = await axios.get(
+      import.meta.env.VITE_API_URL || "http://localhost:3000/health",
+      {
+        timeout: 3000,
+      }
+    );
+
+    isServerOnline = response.status !== 404;
     lastConnectionCheck = Date.now();
-    return true;
+    return isServerOnline;
   } catch {
     isServerOnline = false;
     lastConnectionCheck = Date.now();

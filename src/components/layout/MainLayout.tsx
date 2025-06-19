@@ -38,7 +38,8 @@ const MainLayout = ({
   cardShadow = true,
 }: LayoutProps) => {
   const { pathname } = useLocation();
-  const { isOnline, formattedTime } = useConnectionStatus();
+  // No MainLayout.tsx
+  const { isOnline } = useConnectionStatus(); // Simples assim
   const [showConnectionAlert, setShowConnectionAlert] = useState(!isOnline);
 
   useEffect(() => {
@@ -47,40 +48,9 @@ const MainLayout = ({
 
   const currentYear = new Date().getFullYear();
 
-  // Componentes reutilizáveis
-  const ConnectionAlert = () => (
-    <div className="fixed bottom-4 right-4 z-50 animate-fade-in">
-      <div
-        className={`p-4 rounded-lg shadow-lg flex items-center gap-3 ${
-          isOnline ? CLASSES.onlineAlert : CLASSES.offlineAlert
-        }`}
-      >
-        <div className="flex items-center gap-2">
-          <span
-            className={`h-3 w-3 rounded-full ${
-              isOnline ? CLASSES.onlineDot : CLASSES.offlineDot
-            }`}
-          ></span>
-          <span className="font-medium">
-            {isOnline
-              ? "✓ Conectado ao servidor"
-              : `⌛ Tentando conectar... (${formattedTime})`}
-          </span>
-        </div>
-        <button
-          onClick={() => setShowConnectionAlert(false)}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
-          aria-label="Fechar alerta"
-        >
-          ×
-        </button>
-      </div>
-    </div>
-  );
-
   const Header = () => (
     <header className="bg-white shadow-sm">
-      {showConnectionAlert && <ConnectionAlert />}
+      {showConnectionAlert}
       <div className="max-w-7xl mx-auto w-full px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
