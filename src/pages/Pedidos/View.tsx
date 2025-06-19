@@ -12,7 +12,8 @@ import { Alert } from "../../components/ui/Alert";
 import { ParcelasView } from "./ParcelasView";
 import { ItensPedidoView } from "./ItensPedidoView";
 import { Pedido, PedidoStatus } from "./types";
-import { formatarData, getStatusColor } from "../../utils/pedidoUtils";
+import { formatarData } from "../../utils/date";
+import { getStatusColor } from "../../utils/status";
 
 export const PedidoView = () => {
   const { id } = useParams<{ id: string }>();

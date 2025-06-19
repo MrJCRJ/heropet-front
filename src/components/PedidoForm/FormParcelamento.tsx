@@ -1,4 +1,4 @@
-import { formatDateForInput } from "../../utils";
+import { formatDateForInput } from "../../utils/date";
 import { ParcelamentoControls } from "./ParcelamentoControls";
 import { ParcelaPreview } from "./ParcelaPreview";
 

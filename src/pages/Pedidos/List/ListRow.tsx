@@ -1,9 +1,7 @@
 import { PedidoRowProps } from "../types";
-import {
-  formatarData,
-  formatarMoeda,
-  getStatusColor,
-} from "../../../utils/pedidoUtils";
+import { formatarData } from "../../../utils/date";
+import { formatarMoeda } from "../../../utils/currency";
+import { getStatusColor } from "../../../utils/status";
 
 export const PedidoRow = ({ pedido }: PedidoRowProps) => {
   // Verificação segura das parcelas

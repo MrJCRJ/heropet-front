@@ -2,7 +2,7 @@ import { TooltipGenerico } from "./TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ArrowDownIcon } from "@heroicons/react/24/solid";
 import { PendingPayablesProps } from "../pages/Pedidos/List/Summary/FinancialSummary/types";
-import { formatarMoeda } from "../utils/pedidoUtils";
+import { formatarMoeda } from "../utils/currency";
 
 export const PendingPayables = ({ totalAPagar }: PendingPayablesProps) => (
   <div>

@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { formatarData } from "../utils/pedidoUtils";
+import { formatarData } from "../utils/date";
 
 interface FinancaFormData {
   tipo: "Investimento" | "Despesa";

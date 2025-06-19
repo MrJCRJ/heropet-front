@@ -1,5 +1,5 @@
 import { FormBasicsProps } from "./types";
-import { formatDateForInput } from "../../utils";
+import { formatDateForInput } from "../../utils/date";
 import { FormInput } from "./FormInput";
 
 export const DateSection = ({

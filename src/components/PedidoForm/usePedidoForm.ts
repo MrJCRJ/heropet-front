@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pedido } from "../../pages/Pedidos/types";
-import { formatDateForInput } from "../../utils";
+import { formatDateForInput } from "../../utils/date";
 
 export const usePedidoForm = (initialData?: Omit<Pedido, "_id">) => {
   const [formData, setFormData] = useState<Omit<Pedido, "_id">>(

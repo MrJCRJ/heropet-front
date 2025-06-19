@@ -3,7 +3,7 @@ import { TooltipGenerico } from "./TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { PendingReceivablesProps } from "../pages/Pedidos/List/Summary/FinancialSummary/types";
-import { formatarMoeda } from "../utils/pedidoUtils";
+import { formatarMoeda } from "../utils/currency";
 
 export const PendingReceivables = ({
   totalAReceber,

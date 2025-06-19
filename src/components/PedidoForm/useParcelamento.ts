@@ -1,4 +1,4 @@
-import { formatDateForInput } from "../../utils";
+import { formatDateForInput } from "../../utils/date";
 
 export const useParcelamento = (
   totalPedido: number,

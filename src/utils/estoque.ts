@@ -1,22 +1,5 @@
 import { Pedido } from "../pages/Pedidos/types";
 import { ProdutoResumo } from "../pages/Pedidos/List/Summary/EstoqueSummary/types";
-import { formatarMoeda } from "./pedidoUtils";
-
-export const formatarValorCompacto = (
-  valor: number,
-  isMonetary: boolean = true
-) => {
-  if (isMonetary) {
-    if (valor >= 1000000) return `${formatarMoeda(valor / 1000000)}M`;
-    if (valor >= 1000) return `${formatarMoeda(valor / 1000)}K`;
-    return formatarMoeda(valor);
-  } else {
-    // Para quantidades (não monetárias)
-    if (valor >= 1000000) return `${(valor / 1000000).toFixed(1)}M`;
-    if (valor >= 1000) return `${(valor / 1000).toFixed(1)}K`;
-    return valor.toString();
-  }
-};
 
 export const getQuantidadeColor = (quantidade: number) => {
   if (quantidade <= 0) return "text-red-600";

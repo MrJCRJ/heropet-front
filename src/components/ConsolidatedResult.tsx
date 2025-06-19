@@ -2,7 +2,7 @@ import { TooltipGenerico } from "./TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ConsolidatedResultTooltip } from "./ConsolidatedResultTooltip";
 import { ConsolidatedResultProps } from "../pages/Pedidos/List/Summary/FinancialSummary/types";
-import { formatarMoeda } from "../utils/pedidoUtils";
+import { formatarMoeda } from "../utils/currency";
 
 export const ConsolidatedResult = ({
   saldoGeral,

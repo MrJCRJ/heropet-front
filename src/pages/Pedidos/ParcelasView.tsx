@@ -1,5 +1,6 @@
 import { Parcela } from "./types";
-import { formatarData, formatarMoeda } from "../../utils/pedidoUtils";
+import { formatarData } from "../../utils/date";
+import { formatarMoeda } from "../../utils/currency";
 
 interface ParcelasViewProps {
   parcelas: Parcela[];
