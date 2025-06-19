@@ -1,6 +1,6 @@
 // src/components/layout/RootLayout.tsx
 import { Outlet } from "react-router-dom";
-import MainLayout from "./MainLayout";
+import { MainLayout } from "../MainLayout";
 
 interface RootLayoutProps {
   cardClassName?: string;

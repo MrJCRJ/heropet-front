@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { checkConnection } from "../../../api/httpClient";
+import { checkConnection } from "../api/httpClient";
 
 interface ConnectionStatus {
   isOnline: boolean;
