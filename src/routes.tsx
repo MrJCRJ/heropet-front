@@ -23,6 +23,10 @@ export const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       {
+        index: true, // Esta é a rota raiz que mostrará o PedidoList
+        element: <PedidoList />,
+      },
+      {
         path: "fornecedores",
         children: [
           {

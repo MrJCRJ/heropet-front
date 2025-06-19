@@ -1,7 +1,6 @@
 export const NAV_LINKS = [
   { to: "/fornecedores", label: "Fornecedores" },
   { to: "/clientes", label: "Clientes" },
-  { to: "/pedidos", label: "Pedidos" },
 ];
 
 export const FOOTER_LINKS = [
