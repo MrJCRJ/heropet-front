@@ -1,36 +1,43 @@
 import { useEffect, useState } from "react";
-import { checkConnection, lastConnectionCheck } from "../../../api/httpClient";
+import { checkConnection } from "../../../api/httpClient";
 
-export const useConnectionStatus = () => {
-  const [isOnline, setIsOnline] = useState(false);
-  const [shouldReload, setShouldReload] = useState(false);
+interface ConnectionStatus {
+  isOnline: boolean;
+  isLoading: boolean;
+  lastCheck: Date | null;
+}
+
+export const useConnectionStatus = (): ConnectionStatus => {
+  const [status, setStatus] = useState<ConnectionStatus>({
+    isOnline: false,
+    isLoading: true,
+    lastCheck: null,
+  });
 
   useEffect(() => {
-    if (shouldReload) {
-      window.location.reload();
-      return; // Não continua após recarregar
-    }
-
     const checkServer = async () => {
-      const status = await checkConnection();
-
-      if (status !== isOnline) {
-        setIsOnline(status);
-        if (!status) setShouldReload(true); // Recarrega quando cai a conexão
+      try {
+        const isConnected = await checkConnection();
+        setStatus({
+          isOnline: isConnected,
+          isLoading: false,
+          lastCheck: new Date(),
+        });
+      } catch {
+        // Considera online mesmo com erro 404, pois o servidor respondeu
+        setStatus({
+          isOnline: true,
+          isLoading: false,
+          lastCheck: new Date(),
+        });
       }
     };
 
-    // Verificação imediata
     checkServer();
-
-    // Verificação periódica apenas se ainda ativo
     const intervalId = setInterval(checkServer, 5000);
 
     return () => clearInterval(intervalId);
-  }, [isOnline, shouldReload]);
+  }, []);
 
-  return {
-    isOnline,
-    lastCheck: lastConnectionCheck,
-  };
+  return status;
 };

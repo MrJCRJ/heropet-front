@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import logo from "@/assets/logo.png";
 import { useConnectionStatus } from "./hooks/useConnectionStatus";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 // Tipos e constantes
 interface LayoutProps {
@@ -38,8 +39,7 @@ const MainLayout = ({
   cardShadow = true,
 }: LayoutProps) => {
   const { pathname } = useLocation();
-  // No MainLayout.tsx
-  const { isOnline } = useConnectionStatus(); // Simples assim
+  const { isOnline, isLoading } = useConnectionStatus();
   const [showConnectionAlert, setShowConnectionAlert] = useState(!isOnline);
 
   useEffect(() => {
@@ -112,13 +112,19 @@ const MainLayout = ({
       <Header />
 
       <main className="flex-1 p-4 sm:p-6">
-        <div
-          className={`max-w-7xl mx-auto p-8 rounded-xl border border-gray-200 ${
-            cardShadow ? "shadow-md" : ""
-          } ${cardClassName}`}
-        >
-          {children || <Outlet />}
-        </div>
+        {isLoading ? (
+          <div className="max-w-7xl mx-auto flex items-center justify-center h-64">
+            <LoadingSpinner size="lg" variant="primary" />
+          </div>
+        ) : (
+          <div
+            className={`max-w-7xl mx-auto p-8 rounded-xl border border-gray-200 ${
+              cardShadow ? "shadow-md" : ""
+            } ${cardClassName}`}
+          >
+            {children || <Outlet />}
+          </div>
+        )}
       </main>
 
       <Footer />
