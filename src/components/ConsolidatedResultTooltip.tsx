@@ -1,5 +1,5 @@
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
-import { formatarMoeda } from "../../../../pedidoUtils";
+import { formatarMoeda } from "../utils/pedidoUtils";
 
 interface ConsolidatedResultTooltipProps {
   totalVendas: number;

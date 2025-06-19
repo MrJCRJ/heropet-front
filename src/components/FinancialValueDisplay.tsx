@@ -1,5 +1,5 @@
-import { formatarValorCompacto } from "../../EstoqueSummary/Utils";
-import { formatarMoeda } from "../../../../pedidoUtils";
+import { formatarValorCompacto } from "../utils/Utils";
+import { formatarMoeda } from "../utils/pedidoUtils";
 
 type FinancialValueDisplayProps = {
   label: string;

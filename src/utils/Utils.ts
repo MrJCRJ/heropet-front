@@ -1,6 +1,6 @@
-import { Pedido } from "../../../types";
-import { ProdutoResumo } from "./types";
-import { formatarMoeda } from "../../../pedidoUtils";
+import { Pedido } from "../pages/Pedidos/types";
+import { ProdutoResumo } from "../pages/Pedidos/List/Summary/EstoqueSummary/types";
+import { formatarMoeda } from "./pedidoUtils";
 
 export const formatarValorCompacto = (
   valor: number,

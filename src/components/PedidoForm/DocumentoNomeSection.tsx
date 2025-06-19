@@ -1,5 +1,5 @@
 import { FormBasicsProps } from "./types";
-import { formatDocumento } from "./utils";
+import { formatDocumento } from "../../utils";
 import { FormInput } from "./FormInput";
 import { ClienteFornecedorSelect } from "./ClienteFornecedorSelect";
 

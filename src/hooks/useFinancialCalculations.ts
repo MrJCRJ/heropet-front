@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { Pedido, FinancialCalculationsResult } from "../../../../types";
-import { FinancaData } from "../../../../../../api/financas";
+import { Pedido, FinancialCalculationsResult } from "../pages/Pedidos/types";
+import { FinancaData } from "../api/financas";
 
 export const useFinancialCalculations = (
   pedidos: Pedido[],

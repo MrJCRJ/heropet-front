@@ -1,5 +1,5 @@
 // utils/pedidoUtils.ts
-import { PedidoStatus } from "./types";
+import { PedidoStatus } from "../pages/Pedidos/types";
 
 export const formatarData = (dateString: string | undefined): string => {
   if (!dateString) return "-";

@@ -1,9 +1,9 @@
 import { useFinancaList } from "../../../../Financas/List/useFinancaList";
-import { useFinancialCalculations } from "./hooks/useFinancialCalculations";
-import { ConsolidatedResult } from "./components/ConsolidatedResult";
-import { OrderBalance } from "./components/OrderBalance";
-import { PendingReceivables } from "./components/PendingReceivables";
-import { PendingPayables } from "./components/PendingPayables";
+import { useFinancialCalculations } from "../../../../../hooks/useFinancialCalculations";
+import { ConsolidatedResult } from "../../../../../components/ConsolidatedResult";
+import { OrderBalance } from "../../../../../components/OrderBalance";
+import { PendingReceivables } from "../../../../../components/PendingReceivables";
+import { PendingPayables } from "../../../../../components/PendingPayables";
 import { FinancialSummaryProps } from "./types";
 
 export const FinancialSummary = ({

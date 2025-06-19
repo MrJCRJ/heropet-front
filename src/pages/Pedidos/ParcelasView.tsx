@@ -1,5 +1,5 @@
 import { Parcela } from "./types";
-import { formatarData, formatarMoeda } from "./pedidoUtils";
+import { formatarData, formatarMoeda } from "../../utils/pedidoUtils";
 
 interface ParcelasViewProps {
   parcelas: Parcela[];

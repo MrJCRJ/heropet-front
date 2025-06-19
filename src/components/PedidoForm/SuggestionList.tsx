@@ -1,4 +1,4 @@
-import { formatDocumento } from "./utils";
+import { formatDocumento } from "../../utils";
 
 interface SuggestionItem {
   nome?: string;

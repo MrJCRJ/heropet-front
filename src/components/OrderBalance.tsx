@@ -1,8 +1,8 @@
-import { TooltipGenerico } from "../../../../../../components/TooltipGenerico";
+import { TooltipGenerico } from "./TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
-import { OrderBalanceProps } from "../types";
-import { formatarMoeda } from "../../../../pedidoUtils";
+import { OrderBalanceProps } from "../pages/Pedidos/List/Summary/FinancialSummary/types";
+import { formatarMoeda } from "../utils/pedidoUtils";
 
 export const OrderBalance = ({
   total,
