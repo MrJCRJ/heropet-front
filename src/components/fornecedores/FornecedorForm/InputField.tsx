@@ -1,4 +1,4 @@
-import { InputFieldProps } from "./types";
+import { InputFieldProps } from "../../../types/fornecedores";
 
 export const InputField = ({
   label,

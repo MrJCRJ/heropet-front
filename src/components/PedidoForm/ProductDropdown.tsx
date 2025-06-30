@@ -1,5 +1,5 @@
 import React from "react";
-import { EstoqueHistorico } from "../../api/estoque";
+import { EstoqueHistorico } from "../../types/estoque";
 
 interface ProductDropdownProps {
   mostrarDropdown: boolean;

@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { FornecedorFormFieldsProps, EnderecoViaCep } from "./types";
+import {
+  FornecedorFormFieldsProps,
+  EnderecoViaCep,
+} from "../../../types/fornecedores";
 import { InputField } from "./InputField";
 import { CepField } from "../../CepField";
 import { formatCNPJ, formatPhone } from "../../../utils/masks";
@@ -14,6 +17,7 @@ export const FornecedorFormFields = ({
   const [address, setAddress] = useState<
     Omit<EnderecoViaCep, "complemento" | "numero">
   >({
+    cep: formData.endereco?.cep || "",
     logradouro: formData.endereco?.logradouro || "",
     bairro: formData.endereco?.bairro || "",
     localidade: formData.endereco?.localidade || "",
@@ -51,6 +55,7 @@ export const FornecedorFormFields = ({
 
   const handleAddressFetched = (data: Omit<EnderecoViaCep, "cep">) => {
     setAddress({
+      cep: formData.endereco?.cep || "",
       logradouro: data.logradouro,
       bairro: data.bairro,
       localidade: data.localidade,
@@ -153,6 +158,7 @@ export const FornecedorFormFields = ({
             handleChange("endereco.cep", value);
             if (value.length < 9) {
               setAddress({
+                cep: "",
                 logradouro: "",
                 bairro: "",
                 localidade: "",

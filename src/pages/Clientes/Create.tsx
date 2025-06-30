@@ -3,7 +3,7 @@ import ClienteForm from "../../components/ClienteForm";
 import { criarCliente } from "../../api/clientes";
 import { Alert } from "../../components/ui/Alert";
 import { useState } from "react";
-import { ClienteFormValues } from "../../components/ClienteForm/types";
+import { ClienteFormValues } from "../../types/cliente";
 
 const ClienteCreate = () => {
   const navigate = useNavigate();

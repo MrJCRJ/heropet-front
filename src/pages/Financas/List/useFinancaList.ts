@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { listarFinancas } from "../../../api/financas";
-import { FinancaData } from "../../../api/financas";
+import { FinancaData } from "../../../types/financas";
 
 interface UseFinancaListReturn {
   financas: FinancaData[];

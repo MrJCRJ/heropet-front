@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { buscarCliente, atualizarCliente } from "../../api/clientes";
 import ClienteForm from "../../components/ClienteForm";
-import type { ClienteFormValues } from "../../components/ClienteForm/types";
+import type { ClienteFormValues } from "../../types/cliente";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 

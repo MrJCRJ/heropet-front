@@ -1,33 +1,11 @@
 import httpClient from "./httpClient";
 import { Pedido } from "../pages/Pedidos/types";
-
-const OrdenacaoValues = ["data_asc", "data_desc"] as const;
-export type OrdenacaoPedido = (typeof OrdenacaoValues)[number];
-
-export const FiltroStatusValues = [
-  "PENDENTE",
-  "PROCESSANDO",
-  "PAGO",
-  "CANCELADO",
-  "ATRASADO",
-] as const;
-export type FiltroStatus = (typeof FiltroStatusValues)[number];
-
-export interface ListarPedidosParams {
-  tipo?: "VENDA" | "COMPRA" | "TODOS";
-  status?: FiltroStatus;
-  ordenacao?: OrdenacaoPedido;
-  mes?: number;
-  ano?: number;
-  page?: number;
-  limit?: number;
-}
-
-export interface PeriodFilter {
-  type: "month" | "year";
-  month?: number;
-  year: number;
-}
+import {
+  FiltroStatus,
+  FiltroStatusValues,
+  ListarPedidosParams,
+  OrdenacaoValues,
+} from "../types/pedidos";
 
 export const criarPedido = (pedido: Omit<Pedido, "_id">) => {
   return httpClient.post("/pedidos", pedido);

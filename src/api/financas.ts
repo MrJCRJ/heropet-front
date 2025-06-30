@@ -1,15 +1,7 @@
 import axios from "axios";
+import { FinancaData } from "../types/financas";
 
 const API_URL = import.meta.env.VITE_API_URL;
-
-export interface FinancaData {
-  tipo: "Investimento" | "Despesa";
-  origem: string;
-  descricao: string;
-  data: string;
-  status: "Pago" | "Pendente";
-  valor: number;
-}
 
 export const criarFinanca = async (financaData: FinancaData) => {
   const response = await axios.post(`${API_URL}/financas`, financaData);

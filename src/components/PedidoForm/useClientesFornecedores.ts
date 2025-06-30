@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { listarFornecedores, Fornecedor } from "../../api/fornecedores";
+import { listarFornecedores } from "../../api/fornecedores";
+import { Fornecedor } from "../../types/fornecedores";
+
 import { listarClientes, Cliente } from "../../api/clientes";
 
 export const useClientesFornecedores = (tipo: string) => {

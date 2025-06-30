@@ -1,5 +1,5 @@
 // src/components/fornecedores/FornecedorList/FornecedorTable.tsx
-import { type Fornecedor } from "../../../api/fornecedores";
+import { Fornecedor } from "../../../types/fornecedores";
 import FornecedorRow from "./FornecedorRow";
 
 interface FornecedorTableProps {

@@ -4,7 +4,7 @@ import {
   FornecedorFormData,
   SafeFornecedorFormData,
   Endereco,
-} from "./types";
+} from "../../../types/fornecedores";
 import { FornecedorFormFields } from "./FornecedorFormFields";
 import { SubmitButton } from "./SubmitButton";
 import { Alert } from "../../ui/Alert";

@@ -1,5 +1,5 @@
 // src/components/fornecedores/FornecedorList/FornecedorRow.tsx
-import { type Fornecedor } from "../../../api/fornecedores";
+import { Fornecedor } from "../../../types/fornecedores";
 import { formatCNPJ, formatPhone } from "../../../utils/masks";
 
 interface FornecedorRowProps {

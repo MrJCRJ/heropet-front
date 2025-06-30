@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { listarPedidos } from "../api/pedidos";
 import { FiltroPedido, FiltroStatus } from "../pages/Pedidos/types";
-import { ListarPedidosParams } from "../api/pedidos";
+import { ListarPedidosParams } from "../types/pedidos";
 import { Pedido } from "../pages/Pedidos/types";
 import { OrdenacaoPedido } from "../pages/Pedidos/types";
 

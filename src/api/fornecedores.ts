@@ -1,32 +1,5 @@
 import httpClient from "./httpClient";
-
-export interface EnderecoViaCep {
-  cep: string;
-  logradouro: string;
-  complemento: string;
-  bairro: string;
-  localidade: string;
-  uf: string;
-}
-
-export interface Endereco {
-  cep?: string;
-  logradouro?: string;
-  numero?: string;
-  complemento?: string;
-  bairro?: string;
-  localidade?: string;
-  uf?: string;
-}
-
-export interface Fornecedor {
-  cnpj: string;
-  nome?: string;
-  nomeFantasia?: string;
-  email?: string;
-  telefone?: string;
-  endereco?: Endereco;
-}
+import { Fornecedor, EnderecoViaCep } from "../types/fornecedores";
 
 export const criarFornecedor = (
   fornecedor: Omit<Fornecedor, "cnpj"> & { cnpj: string }

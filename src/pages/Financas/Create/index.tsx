@@ -2,7 +2,8 @@ import { FinancaForm } from "../../../components/FinancaForm";
 import { Alert } from "../../../components/ui/Alert";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { criarFinanca, FinancaData } from "../../../api/financas";
+import { criarFinanca } from "../../../api/financas";
+import type { FinancaData } from "../../../types/financas";
 
 export const FinancaCreate = () => {
   const [error, setError] = useState<string>("");

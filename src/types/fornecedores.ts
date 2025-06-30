@@ -91,3 +91,38 @@ export interface Endereco {
   localidade?: string;
   uf?: string;
 }
+
+export interface EnderecoViaCep {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+}
+
+export interface Endereco {
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  localidade?: string;
+  uf?: string;
+}
+
+export interface Fornecedor {
+  cnpj: string;
+  nome?: string;
+  nomeFantasia?: string;
+  email?: string;
+  telefone?: string;
+  endereco?: Endereco;
+}
+
+export interface FornecedorListProps {
+  fornecedores: Fornecedor[];
+  isLoading: boolean;
+  error: string | null;
+  onRowClick: (cnpj: string) => void; // Adicione esta linha
+}

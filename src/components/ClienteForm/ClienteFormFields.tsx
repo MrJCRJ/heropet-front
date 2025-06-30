@@ -2,7 +2,7 @@ import { Field, useFormikContext } from "formik";
 import { InputField } from "./InputField";
 import { CepField } from "./CepField";
 import { AddressFields } from "./AddressFields";
-import { ClienteFormValues } from "./types";
+import { ClienteFormValues } from "../../types/cliente";
 
 interface ClienteFormFieldsProps {
   isEdit: boolean;

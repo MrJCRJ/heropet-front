@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { listarFornecedores, type Fornecedor } from "../../api/fornecedores";
+import { listarFornecedores } from "../../api/fornecedores";
+import type { Fornecedor } from "../../types/fornecedores";
 import FornecedorList from "../../components/fornecedores/FornecedorList";
 
 const FornecedorListPage = () => {

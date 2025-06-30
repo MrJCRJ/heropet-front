@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   buscarFornecedor,
-  Fornecedor,
   removerFornecedor,
   buscarEnderecoPorCep,
 } from "../../api/fornecedores";
@@ -11,6 +10,7 @@ import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
 import { DetailCard } from "../../components/ui/DetailCard/DetailCard";
 import { formatCNPJ, formatCEP, formatPhone } from "../../utils/masks";
+import { Fornecedor } from "../../types/fornecedores";
 
 const FornecedorView = () => {
   const { cnpj } = useParams<{ cnpj: string }>();

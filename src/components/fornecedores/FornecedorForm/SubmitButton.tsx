@@ -1,5 +1,5 @@
 import { Button } from "../../ui/Button"; // Importe seu componente Button existente
-import { SubmitButtonProps } from "./types";
+import { SubmitButtonProps } from "../../../types/fornecedores";
 
 export const SubmitButton = ({
   isLoading = false,

@@ -1,14 +1,5 @@
 import httpClient from "./httpClient";
-
-interface Cliente {
-  _id?: string;
-  cpfOuCnpj: string;
-  nome: string;
-  telefone: string;
-  cep: string;
-  numero: string;
-  complemento?: string;
-}
+import { Cliente } from "../types/cliente";
 
 export const listarClientes = async (): Promise<Cliente[]> => {
   const response = await httpClient.get("/clientes");

@@ -1,6 +1,6 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { ClienteFormValues } from "./types";
+import { ClienteFormValues } from "../../types/cliente";
 import ClienteFormFields from "./ClienteFormFields";
 import { SubmitButton } from "./SubmitButton";
 import axios from "axios";
@@ -8,7 +8,7 @@ import httpClient from "../../api/httpClient";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Alert } from "../ui/Alert";
-import { ClienteFormProps } from "./types";
+import { ClienteFormProps } from "../../types/cliente";
 
 const ClienteForm = ({ initialValues, isEdit = false }: ClienteFormProps) => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { AddressFieldsProps } from "./types";
+import { AddressFieldsProps } from "../../../types/fornecedores";
 
 export const AddressFields = ({
   address,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FieldProps } from "formik";
 import axios from "axios";
-import { EnderecoViaCep } from "./types";
+import { EnderecoViaCep } from "../../types/fornecedores"; // Ajuste o caminho conforme necessário
 
 interface CepFieldProps extends FieldProps {
   label: string;

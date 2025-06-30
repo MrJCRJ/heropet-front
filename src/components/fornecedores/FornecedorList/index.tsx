@@ -3,7 +3,7 @@ import { FornecedorTable } from "./FornecedorTable";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import ErrorState from "./ErrorState";
 import { EmptyState } from "./EmptyState";
-import type { FornecedorListProps } from "./types";
+import type { FornecedorListProps } from "../../../types/fornecedores";
 
 const FornecedorList = ({
   fornecedores,

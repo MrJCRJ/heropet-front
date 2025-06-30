@@ -1,4 +1,12 @@
-// File src/components/ClienteForm/types.ts
+export interface Cliente {
+  _id?: string;
+  cpfOuCnpj: string;
+  nome: string;
+  telefone: string;
+  cep: string;
+  numero: string;
+  complemento?: string;
+}
 
 export interface ClienteFormValues {
   cpfOuCnpj: string;

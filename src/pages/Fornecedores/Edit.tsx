@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  buscarFornecedor,
-  atualizarFornecedor,
-  type Fornecedor,
-} from "../../api/fornecedores";
+import { buscarFornecedor, atualizarFornecedor } from "../../api/fornecedores";
 import FornecedorForm from "../../components/fornecedores/FornecedorForm";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
+import type { Fornecedor } from "../../types/fornecedores";
 
 const FornecedorEditPage = () => {
   const { cnpj } = useParams<{ cnpj: string }>();
