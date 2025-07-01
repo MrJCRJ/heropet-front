@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Pedido, FinancialCalculationsResult } from "../pages/Pedidos/types";
+import { Pedido, FinancialCalculationsResult } from "../types/pedidos";
 import { FinancaData } from "../types/financas";
 
 export const useFinancialCalculations = (

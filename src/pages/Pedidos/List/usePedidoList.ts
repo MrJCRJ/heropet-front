@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { listarPedidos } from "../../../api/pedidos";
-import { FiltroPedido, FiltroStatus } from "../types";
+import { FiltroPedido, FiltroStatus } from "../../../types/pedidos";
 import { ListarPedidosParams } from "../../../types/pedidos";
-import { Pedido } from "../types";
-import { OrdenacaoPedido } from "../types";
+import { Pedido } from "../../../types/pedidos";
+import { OrdenacaoPedido } from "../../../types/pedidos";
 
 // Chaves para armazenamento local
 const STORAGE_KEYS = {

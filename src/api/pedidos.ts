@@ -1,5 +1,5 @@
 import httpClient from "./httpClient";
-import { Pedido } from "../pages/Pedidos/types";
+import { Pedido } from "../types/pedidos";
 import {
   FiltroStatus,
   FiltroStatusValues,

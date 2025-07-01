@@ -1,5 +1,5 @@
 // components/ParceirosSummary.tsx
-import { Pedido } from "../../types";
+import { Pedido } from "../../../../types/pedidos";
 import { formatarMoeda } from "../../../../utils/currency";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { TooltipGenerico } from "../../../../components/TooltipGenerico";

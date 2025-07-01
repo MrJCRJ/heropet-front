@@ -1,6 +1,6 @@
 import { ResumoCard } from "./ResumoCard";
 import { useResumoEstoque } from "../../../../../utils/estoque";
-import { EstoqueSummaryProps } from "./types";
+import { EstoqueSummaryProps } from "../../../../../types/pedidos";
 import { formatarMoeda } from "../../../../../utils/currency";
 import {
   TooltipEstoqueCompleto,

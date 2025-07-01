@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Pedido, ItemPedido } from "../../pages/Pedidos/types";
+import { Pedido, ItemPedido } from "../../types/pedidos";
 import { EstoqueHistorico } from "../../types/estoque";
 import { getHistoricoEstoque } from "../../api/estoque";
 import { ProductDropdown } from "./ProductDropdown";

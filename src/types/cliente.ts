@@ -1,4 +1,5 @@
 import { FieldProps } from "formik";
+import { Pedido } from "./pedidos";
 
 export interface Cliente {
   _id?: string;
@@ -83,4 +84,40 @@ export interface SubmitButtonProps {
   isSubmitting: boolean;
   isEdit: boolean;
   className?: string;
+}
+
+export interface ClienteFornecedorSelectProps {
+  tipo: string;
+  value: string;
+  onChange: (value: string) => void;
+  onSelect: (nome: string, documento: string) => void;
+  disabled?: boolean;
+  items: Array<{ nome?: string; documento: string }>;
+  loading?: boolean;
+}
+
+export interface DocumentoNomeSectionProps
+  extends Pick<
+    FormBasicsProps,
+    "formData" | "isEditing" | "setFormData" | "handleChange"
+  > {
+  items: Array<{ nome: string; documento: string }>;
+  loading: boolean;
+  onSelect: (nome: string, documento: string) => void;
+}
+
+export interface FormBasicsProps {
+  formData: Omit<Pedido, "_id">;
+  isEditing: boolean;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
+  setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
+}
+
+export interface ClienteFornecedorItem {
+  nome: string;
+  documento: string;
 }

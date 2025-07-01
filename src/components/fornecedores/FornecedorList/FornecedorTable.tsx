@@ -1,11 +1,6 @@
 // src/components/fornecedores/FornecedorList/FornecedorTable.tsx
-import { Fornecedor } from "../../../types/fornecedores";
 import FornecedorRow from "./FornecedorRow";
-
-interface FornecedorTableProps {
-  fornecedores: Fornecedor[];
-  onRowClick: (cnpj: string) => void;
-}
+import { FornecedorTableProps } from "../../../types/fornecedores";
 
 export const FornecedorTable = ({
   fornecedores,

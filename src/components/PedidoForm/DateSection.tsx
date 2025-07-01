@@ -1,4 +1,4 @@
-import { FormBasicsProps } from "./types";
+import { FormBasicsProps } from "../../types/cliente";
 import { formatDateForInput } from "../../utils/date";
 import { FormInput } from "./FormInput";
 

@@ -1,4 +1,4 @@
-import { PedidoStatus } from "../pages/Pedidos/types";
+import { PedidoStatus } from "../types/pedidos";
 
 export const getStatusColor = (status?: PedidoStatus): string => {
   if (!status) return "bg-gray-100 text-gray-800";

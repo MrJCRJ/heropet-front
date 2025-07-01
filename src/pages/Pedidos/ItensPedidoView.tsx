@@ -1,5 +1,5 @@
 // components/ItensPedidoView.tsx
-import { ItensPedidoViewProps } from "./types";
+import { ItensPedidoViewProps } from "../../types/pedidos";
 import { formatarMoeda } from "../../utils/currency";
 
 export const ItensPedidoView = ({

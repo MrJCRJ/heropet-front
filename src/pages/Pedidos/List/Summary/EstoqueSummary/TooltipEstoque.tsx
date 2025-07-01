@@ -1,4 +1,4 @@
-import { ProdutoResumo } from "./types";
+import { ProdutoResumo } from "../../../../../types/pedidos";
 import { getQuantidadeColor } from "../../../../../utils/estoque";
 
 interface TooltipEstoqueCompletoProps {

@@ -1,5 +1,5 @@
 import React from "react";
-import { StatusFilterProps } from "./types";
+import { StatusFilterProps } from "../../../../types/pedidos";
 
 const status = [
   { valor: "PAGO", label: "Pagos" },

@@ -126,3 +126,17 @@ export interface FornecedorListProps {
   error: string | null;
   onRowClick: (cnpj: string) => void; // Adicione esta linha
 }
+
+export interface ErrorStateProps {
+  error: string;
+}
+
+export interface FornecedorRowProps {
+  fornecedor: Fornecedor;
+  onClick: () => void;
+}
+
+export interface FornecedorTableProps {
+  fornecedores: Fornecedor[];
+  onRowClick: (cnpj: string) => void;
+}

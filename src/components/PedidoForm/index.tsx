@@ -5,7 +5,7 @@ import { FormItems } from "./FormItems";
 import { FormActions } from "./FormActions";
 import { FormParcelamento } from "./FormParcelamento";
 import { usePedidoForm } from "./usePedidoForm";
-import { Pedido } from "../../pages/Pedidos/types";
+import { Pedido } from "../../types/pedidos";
 import { useParcelamento } from "./useParcelamento";
 
 interface PedidoFormProps {

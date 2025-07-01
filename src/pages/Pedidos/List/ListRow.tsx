@@ -1,4 +1,4 @@
-import { PedidoRowProps } from "../types";
+import { PedidoRowProps } from "../../../types/pedidos";
 import { formatarData } from "../../../utils/date";
 import { formatarMoeda } from "../../../utils/currency";
 import { getStatusColor } from "../../../utils/status";

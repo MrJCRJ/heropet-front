@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from "react";
 import { PedidoRow } from "./ListRow";
-import { PedidoTableProps } from "../types";
+import { PedidoTableProps } from "../../../types/pedidos";
 import { DateFilter } from "./FilterComponents/DateFilter";
 import { TypeFilter } from "./FilterComponents/TypeFilter";
 import { StatusFilter } from "./FilterComponents/StatusFilter";
-import { FiltroPedido, FiltroStatus, Pedido } from "../types"; // Make sure these types are imported
+import { FiltroPedido, FiltroStatus, Pedido } from "../../../types/pedidos";
 
 // Definindo os status aqui ou importe de um arquivo de constantes
 const statusOptions = [

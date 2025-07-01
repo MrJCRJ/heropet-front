@@ -11,7 +11,7 @@ import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 import { ParcelasView } from "./ParcelasView";
 import { ItensPedidoView } from "./ItensPedidoView";
-import { Pedido, PedidoStatus } from "./types";
+import { Pedido, PedidoStatus } from "../../types/pedidos";
 import { formatarData } from "../../utils/date";
 import { getStatusColor } from "../../utils/status";
 

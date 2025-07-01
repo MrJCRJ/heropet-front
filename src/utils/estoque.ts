@@ -1,5 +1,5 @@
-import { Pedido } from "../pages/Pedidos/types";
-import { ProdutoResumo } from "../pages/Pedidos/List/Summary/EstoqueSummary/types";
+import { Pedido } from "../types/pedidos";
+import { ProdutoResumo } from "../types/pedidos";
 
 export const getQuantidadeColor = (quantidade: number) => {
   if (quantidade <= 0) return "text-red-600";

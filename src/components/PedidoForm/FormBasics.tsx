@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { FormBasicsProps } from "./types";
+import { FormBasicsProps } from "../../types/cliente";
 import { useClientesFornecedores } from "./useClientesFornecedores";
 import { LoadingErrorSection } from "./LoadingErrorSection";
 import { TipoStatusSection } from "./TipoStatusSection";

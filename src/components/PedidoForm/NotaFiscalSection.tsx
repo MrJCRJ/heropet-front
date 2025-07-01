@@ -1,4 +1,4 @@
-import { FormBasicsProps } from "./types";
+import { FormBasicsProps } from "../../types/cliente";
 
 export const NotaFiscalSection = ({
   formData,

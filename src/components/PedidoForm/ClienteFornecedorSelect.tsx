@@ -2,16 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DropdownButton } from "./DropdownButton";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { SuggestionList } from "./SuggestionList";
-
-interface ClienteFornecedorSelectProps {
-  tipo: string;
-  value: string;
-  onChange: (value: string) => void;
-  onSelect: (nome: string, documento: string) => void;
-  disabled?: boolean;
-  items: Array<{ nome?: string; documento: string }>;
-  loading?: boolean;
-}
+import { ClienteFornecedorSelectProps } from "../../types/cliente";
 
 export const ClienteFornecedorSelect = ({
   tipo,

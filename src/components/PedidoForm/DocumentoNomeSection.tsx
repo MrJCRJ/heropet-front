@@ -1,17 +1,7 @@
-import { FormBasicsProps } from "./types";
+import { DocumentoNomeSectionProps } from "../../types/cliente";
 import { formatDocumento } from "../../utils/masks";
 import { FormInput } from "./FormInput";
 import { ClienteFornecedorSelect } from "./ClienteFornecedorSelect";
-
-interface DocumentoNomeSectionProps
-  extends Pick<
-    FormBasicsProps,
-    "formData" | "isEditing" | "setFormData" | "handleChange"
-  > {
-  items: Array<{ nome: string; documento: string }>;
-  loading: boolean;
-  onSelect: (nome: string, documento: string) => void;
-}
 
 export const DocumentoNomeSection = ({
   formData,

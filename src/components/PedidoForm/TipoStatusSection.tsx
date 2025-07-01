@@ -1,5 +1,5 @@
 import React from "react";
-import { FormBasicsProps } from "./types";
+import { FormBasicsProps } from "../../types/cliente";
 import { FormSelect } from "./FormSelect";
 
 export const TipoStatusSection = ({

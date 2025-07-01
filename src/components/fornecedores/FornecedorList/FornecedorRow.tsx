@@ -1,11 +1,6 @@
 // src/components/fornecedores/FornecedorList/FornecedorRow.tsx
-import { Fornecedor } from "../../../types/fornecedores";
+import { FornecedorRowProps } from "../../../types/fornecedores";
 import { formatCNPJ, formatPhone } from "../../../utils/masks";
-
-interface FornecedorRowProps {
-  fornecedor: Fornecedor;
-  onClick: () => void;
-}
 
 const FornecedorRow = ({ fornecedor, onClick }: FornecedorRowProps) => {
   const cnpjFormatado = formatCNPJ(fornecedor.cnpj);

@@ -1,13 +1,6 @@
-import { Parcela } from "./types";
 import { formatarData } from "../../utils/date";
 import { formatarMoeda } from "../../utils/currency";
-
-interface ParcelasViewProps {
-  parcelas: Parcela[];
-  onTogglePago: (numero: number) => void;
-  onRemoveTodasParcelas?: () => void; // Nova prop para remover todas
-  isEditing?: boolean;
-}
+import { ParcelasViewProps } from "../../types/pedidos";
 
 export const ParcelasView = ({
   parcelas,
