@@ -3,10 +3,7 @@ import { InputField } from "./InputField";
 import { CepField } from "./CepField";
 import { AddressFields } from "./AddressFields";
 import { ClienteFormValues } from "../../types/cliente";
-
-interface ClienteFormFieldsProps {
-  isEdit: boolean;
-}
+import { ClienteFormFieldsProps } from "../../types/cliente";
 
 const ClienteFormFields = ({ isEdit }: ClienteFormFieldsProps) => {
   const { values, setFieldValue } = useFormikContext<ClienteFormValues>();

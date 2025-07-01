@@ -1,24 +1,4 @@
-import React from "react";
-
-interface InputFieldProps {
-  field: {
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-  };
-  form: {
-    errors: Record<string, string>;
-    touched: Record<string, boolean>;
-  };
-  label: string;
-  type?: string;
-  required?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
-  className?: string;
-  optional?: boolean;
-}
+import { InputFieldProps } from "../../types/cliente";
 
 export const InputField = ({
   field,

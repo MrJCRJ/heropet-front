@@ -1,10 +1,5 @@
 import { Button } from "../ui/Button"; // Ajuste o caminho conforme necessário
-
-interface SubmitButtonProps {
-  isSubmitting: boolean;
-  isEdit: boolean;
-  className?: string;
-}
+import { SubmitButtonProps } from "../../types/cliente";
 
 export const SubmitButton: React.FC<SubmitButtonProps> = ({
   isSubmitting,

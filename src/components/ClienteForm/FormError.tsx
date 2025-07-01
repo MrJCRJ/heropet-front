@@ -1,6 +1,4 @@
-interface FormErrorProps {
-  error: string | null;
-}
+import { FormErrorProps } from "../../types/cliente";
 
 export const FormError = ({ error }: FormErrorProps) => {
   if (!error) return null;
