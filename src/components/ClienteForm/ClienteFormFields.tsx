@@ -3,9 +3,9 @@ import { InputField } from "./InputField";
 import { CepField } from "./CepField";
 import { AddressFields } from "./AddressFields";
 import { ClienteFormValues } from "../../types/cliente";
-import { ClienteFormFieldsProps } from "../../types/cliente";
+import { ClienteFormProps } from "../../types/cliente";
 
-const ClienteFormFields = ({ isEdit }: ClienteFormFieldsProps) => {
+const ClienteFormFields = ({ isEdit }: ClienteFormProps) => {
   const { values, setFieldValue } = useFormikContext<ClienteFormValues>();
 
   const handleNumeroChange = (e: React.ChangeEvent<HTMLInputElement>) => {

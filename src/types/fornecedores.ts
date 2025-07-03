@@ -1,21 +1,11 @@
 import { AxiosError } from "axios";
+import { ReactNode } from "react";
 
-export interface FornecedorFormProps {
-  initialData?: FornecedorFormData;
-  onSubmit: (data: FornecedorFormData) => void;
-  isEditing?: boolean;
-  isLoading?: boolean;
-  error?: string | null;
-}
+// ======================================
+// Seção 1: Tipos de Entidades Principais
+// ======================================
 
-export interface EnderecoViaCep {
-  logradouro: string;
-  bairro: string;
-  localidade: string;
-  uf: string;
-}
-
-export interface FornecedorFormData {
+export interface Fornecedor {
   cnpj: string;
   nome?: string;
   nomeFantasia?: string;
@@ -23,64 +13,6 @@ export interface FornecedorFormData {
   telefone?: string;
   endereco?: Endereco;
 }
-
-export interface SubmitButtonProps {
-  isLoading?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-}
-
-export interface InputFieldProps {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
-  required?: boolean;
-  disabled?: boolean;
-  error?: string;
-  placeholder?: string;
-  className?: string;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void; // Adicione esta linha
-}
-
-export interface FornecedorFormFieldsProps {
-  formData: FornecedorFormData;
-  isLoading: boolean;
-  isEditing: boolean;
-  onChange: (name: string, value: string) => void;
-}
-
-export interface CepFieldProps {
-  value: string;
-  onChange: (cep: string) => void;
-  disabled?: boolean;
-  onAddressFound?: (address: Omit<EnderecoViaCep, "cep">) => void; // Corrigido o nome para onAddressFound
-  onFetchError?: (error: Error | AxiosError) => void;
-  error?: string;
-  label?: string;
-  required?: boolean;
-  className?: string;
-  debounceTime?: number;
-}
-
-export interface AddressFieldsProps {
-  address: {
-    logradouro?: string;
-    bairro?: string;
-    localidade?: string;
-    uf?: string;
-    numero?: string;
-    complemento?: string;
-  };
-  onComplementoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNumeroChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled: boolean;
-}
-
-export type SafeFornecedorFormData = Omit<FornecedorFormData, "endereco"> & {
-  endereco: Endereco;
-};
 
 export interface Endereco {
   cep?: string;
@@ -101,17 +33,11 @@ export interface EnderecoViaCep {
   uf: string;
 }
 
-export interface Endereco {
-  cep?: string;
-  logradouro?: string;
-  numero?: string;
-  complemento?: string;
-  bairro?: string;
-  localidade?: string;
-  uf?: string;
-}
+// ======================================
+// Seção 2: Tipos para Formulários
+// ======================================
 
-export interface Fornecedor {
+export interface FornecedorFormData {
   cnpj: string;
   nome?: string;
   nomeFantasia?: string;
@@ -120,15 +46,83 @@ export interface Fornecedor {
   endereco?: Endereco;
 }
 
+export type SafeFornecedorFormData = Omit<FornecedorFormData, "endereco"> & {
+  endereco: Endereco;
+};
+
+export interface FornecedorFormProps {
+  initialData?: FornecedorFormData;
+  onSubmit: (data: FornecedorFormData) => void;
+  isEditing?: boolean;
+  isLoading?: boolean;
+  error?: string | null;
+}
+
+// ======================================
+// Seção 3: Tipos para Componentes de Formulário
+// ======================================
+
+export interface InputFieldProps {
+  label: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
+  required?: boolean;
+  disabled?: boolean;
+  error?: string;
+  placeholder?: string;
+  className?: string;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+}
+
+export interface CepFieldProps {
+  value: string;
+  onChange: (cep: string) => void;
+  disabled?: boolean;
+  onAddressFound?: (address: Omit<EnderecoViaCep, "cep">) => void;
+  onFetchError?: (error: Error | AxiosError) => void;
+  error?: string;
+  label?: string;
+  required?: boolean;
+  className?: string;
+  debounceTime?: number;
+}
+
+export interface AddressFieldsProps {
+  address: Endereco;
+  onComplementoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNumeroChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled: boolean;
+}
+
+export interface SubmitButtonProps {
+  isLoading?: boolean;
+  children?: ReactNode;
+  className?: string;
+}
+
+export interface FornecedorFormFieldsProps {
+  formData: FornecedorFormData;
+  isLoading: boolean;
+  isEditing: boolean;
+  onChange: (name: string, value: string) => void;
+}
+
+// ======================================
+// Seção 4: Tipos para Listagem e Tabelas
+// ======================================
+
 export interface FornecedorListProps {
   fornecedores: Fornecedor[];
   isLoading: boolean;
   error: string | null;
-  onRowClick: (cnpj: string) => void; // Adicione esta linha
+  onRowClick: (cnpj: string) => void;
 }
 
-export interface ErrorStateProps {
-  error: string;
+export interface FornecedorTableProps {
+  fornecedores: Fornecedor[];
+  onRowClick: (cnpj: string) => void;
 }
 
 export interface FornecedorRowProps {
@@ -136,7 +130,10 @@ export interface FornecedorRowProps {
   onClick: () => void;
 }
 
-export interface FornecedorTableProps {
-  fornecedores: Fornecedor[];
-  onRowClick: (cnpj: string) => void;
+// ======================================
+// Seção 5: Tipos para Estado e Erros
+// ======================================
+
+export interface ErrorStateProps {
+  error: string;
 }

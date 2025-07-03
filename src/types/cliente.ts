@@ -1,6 +1,10 @@
 import { FieldProps } from "formik";
 import { Pedido } from "./pedidos";
 
+// ======================================
+// Seção 1: Tipos de Entidades Principais
+// ======================================
+
 export interface Cliente {
   _id?: string;
   cpfOuCnpj: string;
@@ -11,13 +15,9 @@ export interface Cliente {
   complemento?: string;
 }
 
-export interface ClienteFormValues {
-  cpfOuCnpj: string;
+export interface ClienteFornecedorItem {
   nome: string;
-  telefone: string;
-  cep: string;
-  numero: string;
-  complemento?: string;
+  documento: string;
 }
 
 export interface EnderecoViaCep {
@@ -27,38 +27,32 @@ export interface EnderecoViaCep {
   uf?: string;
 }
 
+// ======================================
+// Seção 2: Tipos para Formulários
+// ======================================
+
+export type ClienteFormValues = Omit<Cliente, "_id">;
+
 export interface ClienteFormProps {
   initialValues?: ClienteFormValues;
   isEdit?: boolean;
   onSubmit?: (values: ClienteFormValues) => Promise<void> | void;
 }
 
-export interface AddressFieldsProps {
-  address: {
-    logradouro?: string;
-    bairro?: string;
-    localidade?: string;
-    uf?: string;
-    numero?: string;
-    complemento?: string;
-  };
-  onComplementoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNumeroChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled: boolean;
+export interface FormBasicsProps {
+  formData: Omit<Pedido, "_id">;
+  isEditing: boolean;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
+  setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
 }
 
-export interface CepFieldProps extends FieldProps {
-  label: string;
-  disabled?: boolean;
-}
-
-export interface ClienteFormFieldsProps {
-  isEdit: boolean;
-}
-
-export interface FormErrorProps {
-  error: string | null;
-}
+// ======================================
+// Seção 3: Tipos para Componentes de Formulário
+// ======================================
 
 export interface InputFieldProps {
   field: {
@@ -80,10 +74,33 @@ export interface InputFieldProps {
   optional?: boolean;
 }
 
+export interface CepFieldProps extends FieldProps {
+  label: string;
+  disabled?: boolean;
+}
+
 export interface SubmitButtonProps {
   isSubmitting: boolean;
   isEdit: boolean;
   className?: string;
+}
+
+export interface FormErrorProps {
+  error: string | null;
+}
+
+// ======================================
+// Seção 4: Tipos para Componentes Específicos
+// ======================================
+
+export interface AddressFieldsProps {
+  address: EnderecoViaCep & {
+    numero?: string;
+    complemento?: string;
+  };
+  onComplementoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNumeroChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled: boolean;
 }
 
 export interface ClienteFornecedorSelectProps {
@@ -92,7 +109,7 @@ export interface ClienteFornecedorSelectProps {
   onChange: (value: string) => void;
   onSelect: (nome: string, documento: string) => void;
   disabled?: boolean;
-  items: Array<{ nome?: string; documento: string }>;
+  items: ClienteFornecedorItem[];
   loading?: boolean;
 }
 
@@ -101,23 +118,7 @@ export interface DocumentoNomeSectionProps
     FormBasicsProps,
     "formData" | "isEditing" | "setFormData" | "handleChange"
   > {
-  items: Array<{ nome: string; documento: string }>;
+  items: ClienteFornecedorItem[];
   loading: boolean;
   onSelect: (nome: string, documento: string) => void;
-}
-
-export interface FormBasicsProps {
-  formData: Omit<Pedido, "_id">;
-  isEditing: boolean;
-  handleChange: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
-  setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
-}
-
-export interface ClienteFornecedorItem {
-  nome: string;
-  documento: string;
 }
