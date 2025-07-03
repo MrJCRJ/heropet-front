@@ -1,22 +1,11 @@
 // components/ParceirosSummary.tsx
-import { Pedido } from "../../../../types/pedidos";
+import {
+  ParceirosSummaryProps,
+  ParceiroResumo,
+} from "../../../../types/pedidos";
 import { formatarMoeda } from "../../../../utils/currency";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { TooltipGenerico } from "../../../../components/TooltipGenerico";
-
-interface ParceiroResumo {
-  nome: string;
-  documento: string;
-  totalTransacionado: number;
-  quantidadeTotal: number;
-  pedidosCount: number;
-  produtos: Record<string, { quantidade: number; total: number }>;
-  tipo: "CLIENTE" | "FORNECEDOR";
-}
-
-interface ParceirosSummaryProps {
-  pedidos: Pedido[];
-}
 
 export const ParceirosSummary = ({ pedidos }: ParceirosSummaryProps) => {
   // Processa os pedidos para obter dados de clientes e fornecedores

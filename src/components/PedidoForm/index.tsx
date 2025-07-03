@@ -7,14 +7,7 @@ import { FormParcelamento } from "./FormParcelamento";
 import { usePedidoForm } from "./usePedidoForm";
 import { Pedido } from "../../types/pedidos";
 import { useParcelamento } from "./useParcelamento";
-
-interface PedidoFormProps {
-  initialData?: Omit<Pedido, "_id">;
-  onSubmit: (pedido: Omit<Pedido, "_id">) => Promise<void>;
-  onCancel: () => void;
-  isEditing?: boolean;
-  isSubmitting?: boolean;
-}
+import { PedidoFormProps } from "../../types/pedidos";
 
 const PedidoForm = ({
   initialData,

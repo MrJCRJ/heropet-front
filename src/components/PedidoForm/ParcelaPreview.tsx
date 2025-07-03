@@ -1,12 +1,4 @@
-interface Parcela {
-  numero: number;
-  dataVencimento: string;
-  valor: number;
-}
-
-interface ParcelaPreviewProps {
-  parcelas: Parcela[];
-}
+import { ParcelaPreviewProps } from "../../types/pedidos";
 
 export const ParcelaPreview = ({ parcelas }: ParcelaPreviewProps) => (
   <div className="space-y-2">

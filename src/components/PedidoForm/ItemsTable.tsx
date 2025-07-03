@@ -1,10 +1,4 @@
-import { ItemPedido } from "../../types/pedidos";
-
-interface ItemsTableProps {
-  items: ItemPedido[];
-  removerItem: (index: number) => void;
-  totalPedido: number;
-}
+import { ItemsTableProps } from "../../types/pedidos";
 
 const formatarMoeda = (valor: number) => {
   return valor.toLocaleString("pt-BR", {

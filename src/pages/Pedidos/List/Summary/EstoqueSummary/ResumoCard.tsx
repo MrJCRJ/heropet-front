@@ -1,16 +1,6 @@
 import { CubeIcon, ExclamationTriangleIcon } from "@heroicons/react/24/solid";
-import { ReactNode } from "react";
 import { formatarValorCompacto } from "../../../../../utils/currency";
-
-interface ResumoCardProps {
-  titulo: string;
-  valor: number;
-  cor: "blue" | "gray" | "red" | "yellow";
-  icone: "cube" | "warning";
-  tooltip: ReactNode;
-  conteudoAdicional?: ReactNode;
-  isMonetary?: boolean;
-}
+import { ResumoCardProps } from "../../../../../types/pedidos";
 
 export const ResumoCard = ({
   titulo,

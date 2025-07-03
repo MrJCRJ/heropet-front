@@ -1,16 +1,4 @@
-import React from "react";
-import { EstoqueHistorico } from "../../types/estoque";
-
-interface ProductDropdownProps {
-  mostrarDropdown: boolean;
-  termoBusca: string;
-  estoqueFiltrado: EstoqueHistorico[];
-  produtoNaoEncontrado: boolean;
-  toggleDropdown: () => void;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  selecionarProduto: (produto: EstoqueHistorico) => void;
-  usarProdutoDigitado: () => void;
-}
+import { ProductDropdownProps } from "../../types/pedidos";
 
 export const ProductDropdown = ({
   mostrarDropdown,

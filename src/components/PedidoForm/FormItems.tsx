@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Pedido, ItemPedido } from "../../types/pedidos";
+import { ItemPedido } from "../../types/pedidos";
 import { EstoqueHistorico } from "../../types/estoque";
 import { getHistoricoEstoque } from "../../api/estoque";
 import { ProductDropdown } from "./ProductDropdown";
 import { ItemsTable } from "./ItemsTable";
-
-interface FormItemsProps {
-  formData: Omit<Pedido, "_id">;
-  setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-  hasParcelamento: boolean;
-  setHasParcelamento: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { FormItemsProps } from "../../types/pedidos";
 
 export const FormItems = ({
   formData,

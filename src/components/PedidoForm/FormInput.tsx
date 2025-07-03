@@ -1,18 +1,4 @@
-import React from "react";
-
-interface FormInputProps {
-  type: string;
-  name: string;
-  label: string;
-  value: string | number | readonly string[] | undefined;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
-  disabled?: boolean;
-  min?: string | number;
-  max?: string | number;
-  step?: string | number;
-  placeholder?: string;
-}
+import { FormInputProps } from "../../types/pedidos";
 
 export const FormInput = ({
   type,

@@ -1,15 +1,7 @@
 import { formatDateForInput } from "../../utils/date";
 import { ParcelamentoControls } from "./ParcelamentoControls";
 import { ParcelaPreview } from "./ParcelaPreview";
-
-interface FormParcelamentoProps {
-  totalPedido: number;
-  dataPedido: string;
-  quantidadeParcelas: number;
-  setQuantidadeParcelas: (value: number) => void;
-  parcelamentoSemanal: boolean;
-  setParcelamentoSemanal: (value: boolean) => void;
-}
+import { FormParcelamentoProps } from "../../types/pedidos";
 
 export const FormParcelamento = ({
   totalPedido,
@@ -40,6 +32,7 @@ export const FormParcelamento = ({
           i === quantidadeParcelas
             ? totalPedido - valorParcela * (quantidadeParcelas - 1)
             : valorParcela,
+        pago: false,
       });
     }
 

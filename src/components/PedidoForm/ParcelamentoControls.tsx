@@ -1,9 +1,4 @@
-interface ParcelamentoControlsProps {
-  quantidadeParcelas: number;
-  setQuantidadeParcelas: (value: number) => void;
-  parcelamentoSemanal: boolean;
-  setParcelamentoSemanal: (value: boolean) => void;
-}
+import { ParcelamentoControlsProps } from "../../types/pedidos";
 
 export const ParcelamentoControls = ({
   quantidadeParcelas,

@@ -1,15 +1,5 @@
 import { formatDocumento } from "../../utils/masks";
-
-interface SuggestionItem {
-  nome?: string;
-  documento: string;
-}
-
-interface SuggestionListProps {
-  suggestions: SuggestionItem[];
-  onSelect: (item: SuggestionItem) => void;
-  visible: boolean;
-}
+import { SuggestionListProps } from "../../types/pedidos";
 
 export const SuggestionList = ({
   suggestions,

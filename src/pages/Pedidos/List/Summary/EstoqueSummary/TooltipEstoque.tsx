@@ -1,11 +1,8 @@
-import { ProdutoResumo } from "../../../../../types/pedidos";
+import {
+  ProdutoResumo,
+  TooltipEstoqueCompletoProps,
+} from "../../../../../types/pedidos";
 import { getQuantidadeColor } from "../../../../../utils/estoque";
-
-interface TooltipEstoqueCompletoProps {
-  produtos: ProdutoResumo[];
-  quantidadeTotal: number;
-  maxItems?: number;
-}
 
 export const TooltipEstoqueCompleto = ({
   produtos,

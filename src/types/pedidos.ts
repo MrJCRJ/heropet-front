@@ -1,4 +1,7 @@
 // pedidos.types.ts
+import { EstoqueHistorico } from "./estoque";
+import { ReactNode } from "react";
+
 export const OrdenacaoValues = ["data_asc", "data_desc"] as const;
 export type OrdenacaoPedido = (typeof OrdenacaoValues)[number];
 
@@ -235,3 +238,131 @@ export type StatusFilterProps = {
   onFilterChange: (status?: FiltroStatus) => void;
   onClose: () => void;
 };
+
+export interface FormInputProps {
+  type: string;
+  name: string;
+  label: string;
+  value: string | number | readonly string[] | undefined;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  disabled?: boolean;
+  min?: string | number;
+  max?: string | number;
+  step?: string | number;
+  placeholder?: string;
+}
+
+export interface FormItemsProps {
+  formData: Omit<Pedido, "_id">;
+  setFormData: React.Dispatch<React.SetStateAction<Omit<Pedido, "_id">>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  hasParcelamento: boolean;
+  setHasParcelamento: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface FormParcelamentoProps {
+  totalPedido: number;
+  dataPedido: string;
+  quantidadeParcelas: number;
+  setQuantidadeParcelas: (value: number) => void;
+  parcelamentoSemanal: boolean;
+  setParcelamentoSemanal: (value: boolean) => void;
+}
+
+export interface FormSelectOption {
+  value: string;
+  label: string;
+}
+
+export interface FormSelectProps {
+  name: string;
+  label: string;
+  value: string | number | readonly string[] | undefined;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: FormSelectOption[];
+  disabled?: boolean;
+}
+
+export interface PedidoFormProps {
+  initialData?: Omit<Pedido, "_id">;
+  onSubmit: (pedido: Omit<Pedido, "_id">) => Promise<void>;
+  onCancel: () => void;
+  isEditing?: boolean;
+  isSubmitting?: boolean;
+}
+
+export interface ItemsTableProps {
+  items: ItemPedido[];
+  removerItem: (index: number) => void;
+  totalPedido: number;
+}
+
+export interface ParcelamentoControlsProps {
+  quantidadeParcelas: number;
+  setQuantidadeParcelas: (value: number) => void;
+  parcelamentoSemanal: boolean;
+  setParcelamentoSemanal: (value: boolean) => void;
+}
+
+export interface Parcela {
+  numero: number;
+  dataVencimento: string;
+  valor: number;
+}
+
+export interface ParcelaPreviewProps {
+  parcelas: Parcela[];
+}
+
+export interface ProductDropdownProps {
+  mostrarDropdown: boolean;
+  termoBusca: string;
+  estoqueFiltrado: EstoqueHistorico[];
+  produtoNaoEncontrado: boolean;
+  toggleDropdown: () => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selecionarProduto: (produto: EstoqueHistorico) => void;
+  usarProdutoDigitado: () => void;
+}
+
+export interface SuggestionItem {
+  nome?: string;
+  documento: string;
+}
+
+export interface SuggestionListProps {
+  suggestions: SuggestionItem[];
+  onSelect: (item: SuggestionItem) => void;
+  visible: boolean;
+}
+
+export interface ParceiroResumo {
+  nome: string;
+  documento: string;
+  totalTransacionado: number;
+  quantidadeTotal: number;
+  pedidosCount: number;
+  produtos: Record<string, { quantidade: number; total: number }>;
+  tipo: "CLIENTE" | "FORNECEDOR";
+}
+
+export interface ParceirosSummaryProps {
+  pedidos: Pedido[];
+}
+
+export interface TooltipEstoqueCompletoProps {
+  produtos: ProdutoResumo[];
+  quantidadeTotal: number;
+  maxItems?: number;
+}
+
+export interface ResumoCardProps {
+  titulo: string;
+  valor: number;
+  cor: "blue" | "gray" | "red" | "yellow";
+  icone: "cube" | "warning";
+  tooltip: ReactNode;
+  conteudoAdicional?: ReactNode;
+  isMonetary?: boolean;
+}

@@ -1,18 +1,4 @@
-import React from "react";
-
-interface FormSelectOption {
-  value: string;
-  label: string;
-}
-
-interface FormSelectProps {
-  name: string;
-  label: string;
-  value: string | number | readonly string[] | undefined;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: FormSelectOption[];
-  disabled?: boolean;
-}
+import { FormSelectProps } from "../../types/pedidos";
 
 export const FormSelect = ({
   name,
