@@ -1,13 +1,13 @@
 import React from "react";
-import { StatusFilterProps } from "../../../../types/pedidos";
+import { StatusFilterProps, PedidoStatus } from "../../../../types/pedidos";
 
 const status = [
-  { valor: "PAGO", label: "Pagos" },
-  { valor: "PENDENTE", label: "Pendentes" },
-  { valor: "CANCELADO", label: "Cancelados" },
-  { valor: "PROCESSANDO", label: "Processando" },
-  { valor: "ATRASADO", label: "Atrasados" },
-] as const;
+  { valor: PedidoStatus.PAGO, label: "Pagos" },
+  { valor: PedidoStatus.PENDENTE, label: "Pendentes" },
+  { valor: PedidoStatus.CANCELADO, label: "Cancelados" },
+  { valor: PedidoStatus.PROCESSANDO, label: "Processando" },
+  { valor: PedidoStatus.ATRASADO, label: "Atrasados" },
+];
 
 export const StatusFilter: React.FC<StatusFilterProps> = ({
   show,

@@ -1,89 +1,30 @@
-// pedidos.types.ts
+// pedidos.ts
 import { EstoqueHistorico } from "./estoque";
 import { ReactNode } from "react";
+
+// ======================================
+// Seção 1: Tipos Básicos e Enums
+// ======================================
+
+export enum PedidoStatus {
+  PENDENTE = "PENDENTE",
+  PROCESSANDO = "PROCESSANDO",
+  PAGO = "PAGO",
+  CANCELADO = "CANCELADO",
+  ATRASADO = "ATRASADO",
+}
+
+export type FiltroPedido = "TODOS" | "VENDA" | "COMPRA";
 
 export const OrdenacaoValues = ["data_asc", "data_desc"] as const;
 export type OrdenacaoPedido = (typeof OrdenacaoValues)[number];
 
-export const FiltroStatusValues = [
-  "PENDENTE",
-  "PROCESSANDO",
-  "PAGO",
-  "CANCELADO",
-  "ATRASADO",
-] as const;
-export type FiltroStatus = (typeof FiltroStatusValues)[number];
+export const FiltroStatusValues = Object.values(PedidoStatus);
+export type FiltroStatus = PedidoStatus;
 
-export interface ListarPedidosParams {
-  tipo?: "VENDA" | "COMPRA" | "TODOS";
-  status?: FiltroStatus;
-  ordenacao?: OrdenacaoPedido;
-  mes?: number;
-  ano?: number;
-  page?: number;
-  limit?: number;
-}
-
-export interface PeriodFilter {
-  type: "month" | "year";
-  month?: number;
-  year: number;
-}
-
-// types.ts
-export type FiltroPedido = "TODOS" | "VENDA" | "COMPRA";
-
-export type PedidoListProps = {
-  pedidos: Pedido[];
-  loading: boolean;
-  error: string;
-  pedidoParaExcluir: string | null;
-  isDeleting: boolean;
-  filtroAtivo: FiltroPedido;
-  onDeleteClick: (pedidoId: string) => void;
-  onFilterChange: (tipo?: FiltroPedido) => void;
-};
-
-// types.ts
-export interface Produto {
-  id: string;
-  nome: string;
-  preco: number;
-  quantidade: number;
-  precoUnitario: number;
-  estoqueMinimo: number;
-  codigoBarras?: string;
-  categoria?: string;
-}
-
-export type PedidoTableProps = {
-  pedidos: Pedido[];
-  ordenacao: OrdenacaoPedido;
-  filtroTipo: FiltroPedido;
-  filtroStatus?: FiltroStatus;
-  selectedMonth?: number;
-  selectedYear?: number;
-  onOrdenarClick: () => void;
-  onFilterChange: (
-    tipo?: FiltroPedido,
-    status?: FiltroStatus,
-    ordem?: OrdenacaoPedido,
-    mes?: number,
-    ano?: number
-  ) => void;
-};
-
-export type PedidoRowProps = {
-  pedido: Pedido;
-};
-
-// types/pedidoTypes.ts
-export type PedidoStatus =
-  | "PENDENTE"
-  | "PROCESSANDO"
-  | "PAGO"
-  | "CANCELADO"
-  | "ATRASADO";
+// ======================================
+// Seção 2: Interfaces Principais
+// ======================================
 
 export interface ItemPedido {
   produto: string;
@@ -102,7 +43,7 @@ export interface Parcela {
 export interface Pedido {
   _id?: string;
   tipo: "VENDA" | "COMPRA";
-  status: PedidoStatus; // Alterado de string para PedidoStatus
+  status: PedidoStatus;
   documentoClienteFornecedor: string;
   nomeClienteFornecedor: string;
   dataPedido: string;
@@ -115,129 +56,83 @@ export interface Pedido {
   condicaoPagamento?: string;
 }
 
+export interface Financa {
+  id: string;
+  tipo: "Investimento" | "Despesa";
+  valor: number;
+  data: string;
+  descricao: string;
+}
+
+// ======================================
+// Seção 3: Tipos para Filtros e Parâmetros
+// ======================================
+
+export interface ListarPedidosParams {
+  tipo?: "VENDA" | "COMPRA" | "TODOS";
+  status?: FiltroStatus;
+  ordenacao?: OrdenacaoPedido;
+  mes?: number;
+  ano?: number;
+  page?: number;
+  limit?: number;
+}
+
+export interface PeriodFilter {
+  type: "month" | "year";
+  month?: number;
+  year: number;
+}
+
+// ======================================
+// Seção 4: Tipos para Componentes
+// ======================================
+
+export interface PedidoListProps {
+  pedidos: Pedido[];
+  loading: boolean;
+  error: string;
+  pedidoParaExcluir: string | null;
+  isDeleting: boolean;
+  filtroAtivo: FiltroPedido;
+  onDeleteClick: (pedidoId: string) => void;
+  onFilterChange: (tipo?: FiltroPedido) => void;
+}
+
+export interface PedidoTableProps {
+  pedidos: Pedido[];
+  ordenacao: OrdenacaoPedido;
+  filtroTipo: FiltroPedido;
+  filtroStatus?: FiltroStatus;
+  selectedMonth?: number;
+  selectedYear?: number;
+  onOrdenarClick: () => void;
+  onFilterChange: FilterChangeHandler;
+}
+
+export interface PedidoRowProps {
+  pedido: Pedido;
+}
+
+export interface ParcelaPreviewProps {
+  parcelas: Parcela[];
+}
+
 export interface ItensPedidoViewProps {
   itens: ItemPedido[];
   totalPedido: number;
 }
 
-export interface Financa {
-  id: string;
-  tipo: "Investimento" | "Despesa";
-  valor: number;
-  data: string;
-  descricao: string;
-  // ... outros campos conforme necessário
-}
-
-// Tipos para o hook de cálculos financeiros
-export interface FinancialCalculationsResult {
-  total: number;
-  totalAPagar: number;
-  totalAReceber: number;
-  totalVendas: number;
-  totalCompras: number;
-  totalInvestimentos: number;
-  totalDespesas: number;
-  saldoOperacoes: number;
-  saldoCustos: number;
-  saldoGeral: number;
-}
-
-export interface FinancaData {
-  _id: string; // Ou qualquer campo que seja o ID na API
-  tipo: string;
-  valor: number;
-  data: string;
-  descricao?: string;
-  // Outros campos da API
-}
-
 export interface ParcelasViewProps {
   parcelas: Parcela[];
   onTogglePago: (numero: number) => void;
-  onRemoveTodasParcelas?: () => void; // Nova prop para remover todas
+  onRemoveTodasParcelas?: () => void;
   isEditing?: boolean;
 }
 
-export interface FinancialSummaryProps {
-  pedidos: Pedido[];
-  filtroTipo: FiltroPedido;
-}
-
-export interface ConsolidatedResultProps {
-  saldoGeral: number;
-  saldoOperacoes: number;
-  saldoCustos: number;
-  totalVendas: number;
-  totalInvestimentos: number;
-  totalCompras: number;
-  totalDespesas: number;
-}
-
-export interface OrderBalanceProps {
-  total: number;
-  totalVendas: number;
-  totalCompras: number;
-}
-
-export interface PendingReceivablesProps {
-  totalAReceber: number;
-}
-
-export interface PendingPayablesProps {
-  totalAPagar: number;
-}
-
-export interface Financa {
-  id: string;
-  tipo: "Investimento" | "Despesa";
-  valor: number;
-  data: string;
-  descricao: string;
-  // ... outros campos conforme necessário
-}
-
-export interface EstoqueSummaryProps {
-  pedidos: Pedido[];
-}
-
-export interface ProdutoResumo {
-  nome: string;
-  quantidade: number;
-  precoUnitario: number;
-  valorTotal: number;
-  vendas: number;
-}
-
-export type FilterChangeHandler = (
-  tipo?: FiltroPedido,
-  status?: FiltroStatus,
-  ordem?: OrdenacaoPedido,
-  mes?: number,
-  ano?: number
-) => void;
-
-export type DateFilterProps = {
-  show: boolean;
-  selectedMonth?: number;
-  selectedYear?: number;
-  onFilterChange: (month?: number, year?: number) => void;
-  onClose: () => void;
-};
-
-export type TypeFilterProps = {
-  show: boolean;
-  currentFilter?: FiltroPedido;
-  onFilterChange: (tipo: FiltroPedido) => void;
-  onClose: () => void;
-};
-
-export type StatusFilterProps = {
-  show: boolean;
-  currentFilter?: FiltroStatus;
-  onFilterChange: (status?: FiltroStatus) => void;
-  onClose: () => void;
-};
+// ======================================
+// Seção 5: Tipos para Formulários
+// ======================================
 
 export interface FormInputProps {
   type: string;
@@ -259,6 +154,27 @@ export interface FormItemsProps {
   setError: React.Dispatch<React.SetStateAction<string>>;
   hasParcelamento: boolean;
   setHasParcelamento: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface PedidoFormProps {
+  initialData?: Omit<Pedido, "_id">;
+  onSubmit: (pedido: Omit<Pedido, "_id">) => Promise<void>;
+  onCancel: () => void;
+  isEditing?: boolean;
+  isSubmitting?: boolean;
+}
+
+export interface ItemsTableProps {
+  items: ItemPedido[];
+  removerItem: (index: number) => void;
+  totalPedido: number;
+}
+
+export interface ParcelamentoControlsProps {
+  quantidadeParcelas: number;
+  setQuantidadeParcelas: (value: number) => void;
+  parcelamentoSemanal: boolean;
+  setParcelamentoSemanal: (value: boolean) => void;
 }
 
 export interface FormParcelamentoProps {
@@ -284,36 +200,55 @@ export interface FormSelectProps {
   disabled?: boolean;
 }
 
-export interface PedidoFormProps {
-  initialData?: Omit<Pedido, "_id">;
-  onSubmit: (pedido: Omit<Pedido, "_id">) => Promise<void>;
-  onCancel: () => void;
-  isEditing?: boolean;
-  isSubmitting?: boolean;
+// ======================================
+// Seção 6: Tipos para Resumos Financeiros
+// ======================================
+
+export interface FinancialCalculationsResult {
+  total: number;
+  totalAPagar: number;
+  totalAReceber: number;
+  totalVendas: number;
+  totalCompras: number;
+  totalInvestimentos: number;
+  totalDespesas: number;
+  saldoOperacoes: number;
+  saldoCustos: number;
+  saldoGeral: number;
 }
 
-export interface ItemsTableProps {
-  items: ItemPedido[];
-  removerItem: (index: number) => void;
-  totalPedido: number;
+export interface BalanceSummaryProps {
+  total: number;
+  totalVendas: number;
+  totalCompras: number;
 }
 
-export interface ParcelamentoControlsProps {
-  quantidadeParcelas: number;
-  setQuantidadeParcelas: (value: number) => void;
-  parcelamentoSemanal: boolean;
-  setParcelamentoSemanal: (value: boolean) => void;
+export interface FinancialSummaryProps {
+  pedidos: Pedido[];
+  filtroTipo: FiltroPedido;
 }
 
-export interface Parcela {
-  numero: number;
-  dataVencimento: string;
-  valor: number;
+export interface ConsolidatedResultProps {
+  saldoGeral: number;
+  saldoOperacoes: number;
+  saldoCustos: number;
+  totalVendas: number;
+  totalInvestimentos: number;
+  totalCompras: number;
+  totalDespesas: number;
 }
 
-export interface ParcelaPreviewProps {
-  parcelas: Parcela[];
+export interface PendingPayablesProps {
+  totalAPagar: number;
 }
+
+export interface PendingReceivablesProps {
+  totalAReceber: number;
+}
+
+// ======================================
+// Seção 7: Tipos para Autocomplete e UI
+// ======================================
 
 export interface ProductDropdownProps {
   mostrarDropdown: boolean;
@@ -337,6 +272,44 @@ export interface SuggestionListProps {
   visible: boolean;
 }
 
+// ======================================
+// Seção 8: Tipos para Handlers e Utilitários
+// ======================================
+
+export type FilterChangeHandler = (
+  tipo?: FiltroPedido,
+  status?: FiltroStatus,
+  ordem?: OrdenacaoPedido,
+  mes?: number,
+  ano?: number
+) => void;
+
+export interface DateFilterProps {
+  show: boolean;
+  selectedMonth?: number;
+  selectedYear?: number;
+  onFilterChange: (month?: number, year?: number) => void;
+  onClose: () => void;
+}
+
+export interface TypeFilterProps {
+  show: boolean;
+  currentFilter?: FiltroPedido;
+  onFilterChange: (tipo: FiltroPedido) => void;
+  onClose: () => void;
+}
+
+export interface StatusFilterProps {
+  show: boolean;
+  currentFilter?: FiltroStatus;
+  onFilterChange: (status?: FiltroStatus) => void;
+  onClose: () => void;
+}
+
+// ======================================
+// Seção 9: Tipos para Resumos de Parceiros
+// ======================================
+
 export interface ParceiroResumo {
   nome: string;
   documento: string;
@@ -350,6 +323,10 @@ export interface ParceiroResumo {
 export interface ParceirosSummaryProps {
   pedidos: Pedido[];
 }
+
+// ======================================
+// Seção 10: Tipos para Componentes de UI
+// ======================================
 
 export interface TooltipEstoqueCompletoProps {
   produtos: ProdutoResumo[];
@@ -365,4 +342,16 @@ export interface ResumoCardProps {
   tooltip: ReactNode;
   conteudoAdicional?: ReactNode;
   isMonetary?: boolean;
+}
+
+export interface ProdutoResumo {
+  nome: string;
+  quantidade: number;
+  precoUnitario: number;
+  valorTotal: number;
+  vendas: number;
+}
+
+export interface EstoqueSummaryProps {
+  pedidos: Pedido[];
 }

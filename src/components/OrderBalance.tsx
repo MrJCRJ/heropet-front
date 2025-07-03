@@ -1,14 +1,14 @@
 import { TooltipGenerico } from "./TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
-import { OrderBalanceProps } from "../types/pedidos";
+import { BalanceSummaryProps } from "../types/pedidos";
 import { formatarMoeda } from "../utils/currency";
 
 export const OrderBalance = ({
   total,
   totalVendas,
   totalCompras,
-}: OrderBalanceProps) => (
+}: BalanceSummaryProps) => (
   <div className="border-r border-gray-200 pr-4">
     <p className="text-sm text-gray-500">Saldo de Pedidos</p>
     <TooltipGenerico
