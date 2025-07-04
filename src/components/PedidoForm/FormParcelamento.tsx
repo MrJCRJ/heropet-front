@@ -1,46 +1,13 @@
-import { formatDateForInput } from "../../utils/date";
 import { ParcelamentoControls } from "./ParcelamentoControls";
 import { ParcelaPreview } from "./ParcelaPreview";
 import { FormParcelamentoProps } from "../../types/pedidos";
 
 export const FormParcelamento = ({
-  totalPedido,
-  dataPedido,
   quantidadeParcelas,
   setQuantidadeParcelas,
-  parcelamentoSemanal,
-  setParcelamentoSemanal,
+  parcelas,
+  onDateChange,
 }: FormParcelamentoProps) => {
-  const calcularParcelas = () => {
-    const valorParcela = totalPedido / quantidadeParcelas;
-    const parcelas = [];
-    const dataBase = new Date(dataPedido);
-
-    for (let i = 1; i <= quantidadeParcelas; i++) {
-      const dataVencimento = new Date(dataBase);
-
-      if (parcelamentoSemanal) {
-        dataVencimento.setDate(dataBase.getDate() + i * 7);
-      } else {
-        dataVencimento.setDate(dataBase.getDate() + i * 30);
-      }
-
-      parcelas.push({
-        numero: i,
-        dataVencimento: formatDateForInput(dataVencimento.toISOString()),
-        valor:
-          i === quantidadeParcelas
-            ? totalPedido - valorParcela * (quantidadeParcelas - 1)
-            : valorParcela,
-        pago: false,
-      });
-    }
-
-    return parcelas;
-  };
-
-  const parcelas = calcularParcelas();
-
   return (
     <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
       <h3 className="text-lg font-medium text-gray-900">Parcelamento</h3>
@@ -49,11 +16,11 @@ export const FormParcelamento = ({
         <ParcelamentoControls
           quantidadeParcelas={quantidadeParcelas}
           setQuantidadeParcelas={setQuantidadeParcelas}
-          parcelamentoSemanal={parcelamentoSemanal}
-          setParcelamentoSemanal={setParcelamentoSemanal}
         />
 
-        {quantidadeParcelas > 1 && <ParcelaPreview parcelas={parcelas} />}
+        {quantidadeParcelas > 1 && (
+          <ParcelaPreview parcelas={parcelas} onDateChange={onDateChange} />
+        )}
       </div>
     </div>
   );

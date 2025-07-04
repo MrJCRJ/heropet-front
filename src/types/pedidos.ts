@@ -116,6 +116,7 @@ export interface PedidoRowProps {
 
 export interface ParcelaPreviewProps {
   parcelas: Parcela[];
+  onDateChange: (parcelaNumero: number, newDate: string) => void;
 }
 
 export interface ItensPedidoViewProps {
@@ -173,17 +174,13 @@ export interface ItemsTableProps {
 export interface ParcelamentoControlsProps {
   quantidadeParcelas: number;
   setQuantidadeParcelas: (value: number) => void;
-  parcelamentoSemanal: boolean;
-  setParcelamentoSemanal: (value: boolean) => void;
 }
 
 export interface FormParcelamentoProps {
-  totalPedido: number;
-  dataPedido: string;
   quantidadeParcelas: number;
   setQuantidadeParcelas: (value: number) => void;
-  parcelamentoSemanal: boolean;
-  setParcelamentoSemanal: (value: boolean) => void;
+  parcelas: Parcela[];
+  onDateChange: (parcelaNumero: number, newDate: string) => void;
 }
 
 export interface FormSelectOption {

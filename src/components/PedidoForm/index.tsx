@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FormHeader } from "./FormHeader";
 import { FormBasics } from "./FormBasics";
 import { FormItems } from "./FormItems";
 import { FormActions } from "./FormActions";
 import { FormParcelamento } from "./FormParcelamento";
 import { usePedidoForm } from "./usePedidoForm";
-import { Pedido } from "../../types/pedidos";
+import { Pedido, Parcela } from "../../types/pedidos";
 import { useParcelamento } from "./useParcelamento";
 import { PedidoFormProps } from "../../types/pedidos";
 
@@ -16,6 +16,7 @@ const PedidoForm = ({
   isEditing = false,
 }: PedidoFormProps) => {
   const [error, setError] = useState("");
+  const [parcelas, setParcelas] = useState<Parcela[]>([]);
 
   const {
     formData,
@@ -26,17 +27,28 @@ const PedidoForm = ({
     setShowParcelamento,
     quantidadeParcelas,
     setQuantidadeParcelas,
-    parcelamentoSemanal,
-    setParcelamentoSemanal,
     handleChange,
   } = usePedidoForm(initialData);
 
   const { calcularParcelas } = useParcelamento(
     formData.totalPedido,
-    formData.dataPedido,
-    quantidadeParcelas,
-    parcelamentoSemanal
+    quantidadeParcelas
   );
+
+  useEffect(() => {
+    if (showParcelamento && formData.totalPedido > 0) {
+      const novasParcelas = calcularParcelas();
+      setParcelas(novasParcelas);
+    }
+  }, [showParcelamento, formData.totalPedido, quantidadeParcelas]);
+
+  const handleDateChange = (parcelaNumero: number, newDate: string) => {
+    setParcelas((prev) =>
+      prev.map((p) =>
+        p.numero === parcelaNumero ? { ...p, dataVencimento: newDate } : p
+      )
+    );
+  };
 
   const formatDateForBackend = (dateString: string) => {
     if (!dateString) return new Date().toISOString();
@@ -56,12 +68,12 @@ const PedidoForm = ({
     }
 
     try {
-      // Calcular parcelas se o parcelamento estiver ativado
-      const parcelas = showParcelamento
-        ? calcularParcelas()
+      // Usar as parcelas do estado local
+      const parcelasToSubmit = showParcelamento
+        ? parcelas // Usar o estado local, não recálculo
         : formData.parcelas;
 
-      // Criar objeto completo com todas as propriedades necessárias
+      // Criar objeto completo
       const dataToSubmit: Omit<Pedido, "_id"> = {
         tipo: formData.tipo,
         status: formData.status,
@@ -75,20 +87,13 @@ const PedidoForm = ({
         totalPedido: formData.totalPedido,
         temNotaFiscal: formData.temNotaFiscal,
         observacoes: formData.observacoes,
-        parcelas: parcelas,
+        parcelas: parcelasToSubmit, // Usar as parcelas corretas
         condicaoPagamento: showParcelamento
           ? "PARCELADO"
           : formData.condicaoPagamento,
       };
 
       await onSubmit(dataToSubmit);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Erro ao processar pedido. Verifique os dados e tente novamente.";
-      setError(errorMessage);
-      console.error("Erro ao processar pedido:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -126,12 +131,10 @@ const PedidoForm = ({
 
         {showParcelamento && (
           <FormParcelamento
-            totalPedido={formData.totalPedido}
-            dataPedido={formData.dataPedido}
             quantidadeParcelas={quantidadeParcelas}
             setQuantidadeParcelas={setQuantidadeParcelas}
-            parcelamentoSemanal={parcelamentoSemanal}
-            setParcelamentoSemanal={setParcelamentoSemanal}
+            parcelas={parcelas}
+            onDateChange={handleDateChange}
           />
         )}
 

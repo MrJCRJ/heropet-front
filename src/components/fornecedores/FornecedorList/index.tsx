@@ -1,8 +1,7 @@
 // src/components/fornecedores/FornecedorList/index.tsx
 import { FornecedorTable } from "./FornecedorTable";
 import LoadingSpinner from "../../ui/LoadingSpinner";
-import ErrorState from "./ErrorState";
-import { EmptyState } from "./EmptyState";
+import { Alert } from "../../ui/Alert";
 import type { FornecedorListProps } from "../../../types/fornecedores";
 
 const FornecedorList = ({
@@ -20,8 +19,18 @@ const FornecedorList = ({
     );
   }
 
-  if (error) return <ErrorState error={error} />;
-  if (fornecedores.length === 0) return <EmptyState />;
+  if (error)
+    return (
+      <Alert
+        type="error"
+        message={
+          typeof error === "string"
+            ? error
+            : "Ocorreu um erro ao carregar os fornecedores"
+        }
+        className="mb-4"
+      />
+    );
 
   return (
     <div className="w-full overflow-x-auto mt-6 shadow-sm rounded-lg border border-gray-200">

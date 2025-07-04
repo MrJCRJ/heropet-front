@@ -1,35 +1,28 @@
-import { FormEvent, useState } from "react";
-import {
-  FornecedorFormProps,
-  FornecedorFormData,
-  SafeFornecedorFormData,
-  Endereco,
-} from "../../../types/fornecedores";
-import { FormFields } from "../../ui/FormFields";
-import { SubmitButton } from "../../ui/SubmitButton";
-import { Alert } from "../../ui/Alert";
+import { ClienteFormValues, SafeClienteFormData } from "../types/cliente";
+import { FormFields } from "./ui/FormFields";
+import { SubmitButton } from "./ui/SubmitButton";
+import { useState, FormEvent } from "react";
+import { Alert } from "./ui/Alert";
+import { ClienteFormProps } from "../types/cliente";
 
-const initialFormData: SafeFornecedorFormData = {
-  cnpj: "",
+const initialFormData: ClienteFormValues = {
+  cpfOuCnpj: "",
   nome: "",
-  nomeFantasia: "",
-  email: "",
   telefone: "",
   endereco: {
     cep: "",
-    logradouro: "",
     numero: "",
     complemento: "",
+    logradouro: "",
     bairro: "",
     localidade: "",
     uf: "",
   },
 };
 
-// Função para converter dados opcionais para o tipo seguro
 const toSafeFormData = (
-  data?: Partial<FornecedorFormData>
-): SafeFornecedorFormData => {
+  data?: Partial<ClienteFormValues>
+): SafeClienteFormData => {
   return {
     ...initialFormData,
     ...data,
@@ -40,47 +33,24 @@ const toSafeFormData = (
   };
 };
 
-export const FornecedorForm = ({
+const ClienteForm = ({
   initialData,
   onSubmit,
   isEditing = false,
   isLoading = false,
   error = null,
-}: FornecedorFormProps) => {
-  const [formData, setFormData] = useState<SafeFornecedorFormData>(
+}: ClienteFormProps) => {
+  const [formData, setFormData] = useState<SafeClienteFormData>(
     toSafeFormData(initialData)
   );
 
   const cleanNumericFields = (value: string): string =>
     value.replace(/\D/g, "");
 
-  const normalizeFormData = (
-    data: SafeFornecedorFormData
-  ): FornecedorFormData => {
-    return {
-      cnpj: cleanNumericFields(data.cnpj),
-      nome: data.nome,
-      nomeFantasia: data.nomeFantasia,
-      email: data.email,
-      telefone: data.telefone ? cleanNumericFields(data.telefone) : undefined,
-      endereco: {
-        cep: data.endereco.cep
-          ? cleanNumericFields(data.endereco.cep)
-          : undefined,
-        logradouro: data.endereco.logradouro,
-        numero: data.endereco.numero,
-        complemento: data.endereco.complemento,
-        bairro: data.endereco.bairro,
-        localidade: data.endereco.localidade,
-        uf: data.endereco.uf,
-      },
-    };
-  };
-
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => {
       if (name.startsWith("endereco.")) {
-        const field = name.split(".")[1] as keyof Endereco;
+        const field = name.split(".")[1] as keyof typeof prev.endereco;
         return {
           ...prev,
           endereco: {
@@ -98,13 +68,32 @@ export const FornecedorForm = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    onSubmit(normalizeFormData(formData));
+
+    // Criar objeto formatado para envio
+    const formValues: ClienteFormValues = {
+      cpfOuCnpj: cleanNumericFields(formData.cpfOuCnpj),
+      nome: formData.nome,
+      telefone: formData.telefone ? cleanNumericFields(formData.telefone) : "",
+      endereco: {
+        cep: formData.endereco.cep
+          ? cleanNumericFields(formData.endereco.cep)
+          : "",
+        logradouro: formData.endereco.logradouro || "",
+        numero: formData.endereco.numero || "",
+        complemento: formData.endereco.complemento || "",
+        bairro: formData.endereco.bairro || "",
+        localidade: formData.endereco.localidade || "",
+        uf: formData.endereco.uf || "",
+      },
+    };
+
+    onSubmit(formValues);
   };
 
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        {isEditing ? "Editar Fornecedor" : "Cadastrar Fornecedor"}
+        {isEditing ? "Editar Cliente" : "Cadastrar Cliente"}
       </h2>
 
       {error && (
@@ -121,10 +110,17 @@ export const FornecedorForm = ({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormFields
-          formData={formData}
+          formData={{
+            ...formData,
+            cpfOuCnpj: formData.cpfOuCnpj,
+            cnpj: undefined,
+            nomeFantasia: undefined,
+          }}
           isLoading={isLoading}
           isEditing={isEditing}
           onChange={handleChange}
+          showCnpjField={false}
+          showCpfField={true}
         />
 
         <div className="flex justify-end">
@@ -135,4 +131,4 @@ export const FornecedorForm = ({
   );
 };
 
-export default FornecedorForm;
+export default ClienteForm;

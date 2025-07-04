@@ -24,7 +24,6 @@ export const usePedidoForm = (initialData?: Omit<Pedido, "_id">) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showParcelamento, setShowParcelamento] = useState(false);
   const [quantidadeParcelas, setQuantidadeParcelas] = useState(1);
-  const [parcelamentoSemanal, setParcelamentoSemanal] = useState(true);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -52,8 +51,6 @@ export const usePedidoForm = (initialData?: Omit<Pedido, "_id">) => {
     setShowParcelamento,
     quantidadeParcelas,
     setQuantidadeParcelas,
-    parcelamentoSemanal,
-    setParcelamentoSemanal,
     handleChange,
   };
 };
