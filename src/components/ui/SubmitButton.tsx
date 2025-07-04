@@ -1,4 +1,4 @@
-import { Button } from "../ui/Button"; // Ajuste o caminho conforme necessário
+import { Button } from "./Button"; // Ajuste o caminho conforme necessário
 import { SubmitButtonProps } from "../../types/cliente";
 
 export const SubmitButton: React.FC<SubmitButtonProps> = ({

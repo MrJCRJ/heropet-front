@@ -5,8 +5,8 @@ import {
   SafeFornecedorFormData,
   Endereco,
 } from "../../../types/fornecedores";
-import { FornecedorFormFields } from "./FornecedorFormFields";
-import { SubmitButton } from "./SubmitButton";
+import { FormFields } from "../../ui/FormFields";
+import { SubmitButton } from "../../ui/SubmitButton";
 import { Alert } from "../../ui/Alert";
 
 const initialFormData: SafeFornecedorFormData = {
@@ -120,7 +120,7 @@ export const FornecedorForm = ({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <FornecedorFormFields
+        <FormFields
           formData={formData}
           isLoading={isLoading}
           isEditing={isEditing}
@@ -128,9 +128,7 @@ export const FornecedorForm = ({
         />
 
         <div className="flex justify-end">
-          <SubmitButton isLoading={isLoading}>
-            {isEditing ? "Atualizar" : "Cadastrar"}
-          </SubmitButton>
+          <SubmitButton isSubmitting={isLoading} isEdit={isEditing} />
         </div>
       </form>
     </div>

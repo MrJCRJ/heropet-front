@@ -17,43 +17,23 @@ export interface EnderecoViaCep {
 }
 
 export interface CepFieldProps {
-  /** Valor atual do CEP (com ou sem máscara) */
-  value: string;
-  /** Função chamada quando o CEP muda */
-  onChange: (cep: string) => void;
-  /** Se o campo está desabilitado */
+  field: {
+    value: string | undefined;
+    onChange: (value: string) => void;
+  };
   disabled?: boolean;
-  /** Função chamada quando um endereço é encontrado */
   onAddressFound?: (address: Omit<EnderecoViaCep, "cep">) => void;
-  /** Função chamada quando ocorre um erro na busca */
   onFetchError?: (error: Error | AxiosError) => void;
-  /** Mensagem de erro de validação */
   error?: string;
-  /** Label do campo */
   label?: string;
-  /** Se o campo é obrigatório */
   required?: boolean;
-  /** Classes adicionais para o container */
   className?: string;
-  /** Tempo de debounce para a busca do CEP (em ms) */
   debounceTime?: number;
 }
 
-/**
- * Componente de campo de CEP com busca automática de endereço
- *
- * @example
- * <CepField
- *   value={cep}
- *   onChange={setCep}
- *   onAddressFound={handleAddressFound}
- *   onFetchError={console.error}
- * />
- */
 export const CepField = React.memo(
   ({
-    value,
-    onChange,
+    field,
     disabled = false,
     onAddressFound,
     onFetchError,
@@ -67,18 +47,19 @@ export const CepField = React.memo(
     const [lastSearchedCep, setLastSearchedCep] = useState("");
     const [localError, setLocalError] = useState<string | null>(null);
 
-    // Remove a máscara do CEP
-    const cleanCep = (cep: string): string => cep.replace(/\D/g, "");
+    const cleanCep = (cep: string | undefined): string => {
+      return cep ? cep.replace(/\D/g, "") : "";
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
       const maskedCep = formatCEP(e.target.value);
-      onChange(maskedCep);
+      field.onChange(maskedCep); // Usa a função onChange do field
       setLocalError(null);
     };
 
     // Busca o endereço com debounce
     useEffect(() => {
-      const cepDigits = cleanCep(value);
+      const cepDigits = cleanCep(field.value);
 
       if (!onAddressFound || cepDigits.length !== 8) return;
 
@@ -111,7 +92,13 @@ export const CepField = React.memo(
       }, debounceTime);
 
       return () => clearTimeout(timer);
-    }, [value, lastSearchedCep, debounceTime, onAddressFound, onFetchError]);
+    }, [
+      field.value,
+      lastSearchedCep,
+      debounceTime,
+      onAddressFound,
+      onFetchError,
+    ]);
 
     const displayError = error || localError;
 
@@ -132,7 +119,7 @@ export const CepField = React.memo(
             type="text"
             id="cep"
             name="cep"
-            value={value}
+            value={field.value || ""}
             onChange={handleChange}
             disabled={disabled || isFetching}
             placeholder="00000-000"

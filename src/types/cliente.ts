@@ -10,9 +10,7 @@ export interface Cliente {
   cpfOuCnpj: string;
   nome: string;
   telefone: string;
-  cep: string;
-  numero: string;
-  complemento?: string;
+  endereco: Endereco; // Alterado para objeto único
 }
 
 export interface ClienteFornecedorItem {
@@ -20,23 +18,44 @@ export interface ClienteFornecedorItem {
   documento: string;
 }
 
-export interface EnderecoViaCep {
+// ======================================
+// Seção 2: Tipos para Formulários
+// ======================================
+
+export type ClienteFormValues = {
+  cpfOuCnpj: string;
+  nome: string;
+  telefone: string;
+  endereco: Endereco;
+};
+
+export type ClienteFormData = {
+  cpfOuCnpj: string;
+  nome: string;
+  telefone: string;
+  endereco: Endereco;
+};
+
+export interface Endereco {
+  cep?: string;
   logradouro?: string;
+  numero?: string;
+  complemento?: string;
   bairro?: string;
   localidade?: string;
   uf?: string;
 }
 
-// ======================================
-// Seção 2: Tipos para Formulários
-// ======================================
-
-export type ClienteFormValues = Omit<Cliente, "_id">;
+export type SafeClienteFormData = Omit<ClienteFormData, "endereco"> & {
+  endereco: Endereco;
+};
 
 export interface ClienteFormProps {
-  initialValues?: ClienteFormValues;
-  isEdit?: boolean;
-  onSubmit?: (values: ClienteFormValues) => Promise<void> | void;
+  initialData?: ClienteFormData;
+  onSubmit: (data: ClienteFormData) => void;
+  isEditing?: boolean;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 export interface FormBasicsProps {
@@ -92,16 +111,6 @@ export interface FormErrorProps {
 // ======================================
 // Seção 4: Tipos para Componentes Específicos
 // ======================================
-
-export interface AddressFieldsProps {
-  address: EnderecoViaCep & {
-    numero?: string;
-    complemento?: string;
-  };
-  onComplementoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNumeroChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled: boolean;
-}
 
 export interface ClienteFornecedorSelectProps {
   tipo: string;

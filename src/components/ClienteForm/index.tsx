@@ -1,101 +1,132 @@
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { ClienteFormValues } from "../../types/cliente";
-import ClienteFormFields from "./ClienteFormFields";
-import { SubmitButton } from "./SubmitButton";
-import axios from "axios";
-import httpClient from "../../api/httpClient";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { ClienteFormValues, SafeClienteFormData } from "../../types/cliente";
+import { FormFields } from "../ui/FormFields";
+import { SubmitButton } from "../ui/SubmitButton";
+import { useState, FormEvent } from "react";
 import { Alert } from "../ui/Alert";
 import { ClienteFormProps } from "../../types/cliente";
 
-const ClienteForm = ({ initialValues, isEdit = false }: ClienteFormProps) => {
-  const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
-
-  const validationSchema = Yup.object().shape({
-    cpfOuCnpj: Yup.string()
-      .required("CPF/CNPJ é obrigatório")
-      .matches(
-        /^\d{11}$|^\d{14}$/,
-        "CPF deve ter 11 dígitos ou CNPJ 14 dígitos (apenas números)"
-      ),
-    nome: Yup.string(),
-    telefone: Yup.string(),
-    cep: Yup.string().matches(
-      /^\d{5}-?\d{3}$/,
-      "CEP deve estar no formato 00000-000"
-    ),
-    logradouro: Yup.string(),
-    bairro: Yup.string(),
-    cidade: Yup.string(),
-    estado: Yup.string(),
-    numero: Yup.string(),
-    complemento: Yup.string(),
-  });
-
-  const defaultInitialValues: ClienteFormValues = {
-    cpfOuCnpj: "",
-    nome: "",
-    telefone: "",
+const initialFormData: ClienteFormValues = {
+  cpfOuCnpj: "",
+  nome: "",
+  telefone: "",
+  endereco: {
     cep: "",
     numero: "",
     complemento: "",
+    logradouro: "",
+    bairro: "",
+    localidade: "",
+    uf: "",
+  },
+};
+
+const toSafeFormData = (
+  data?: Partial<ClienteFormValues>
+): SafeClienteFormData => {
+  return {
+    ...initialFormData,
+    ...data,
+    endereco: {
+      ...initialFormData.endereco,
+      ...data?.endereco,
+    },
+  };
+};
+
+const ClienteForm = ({
+  initialData,
+  onSubmit,
+  isEditing = false,
+  isLoading = false,
+  error = null,
+}: ClienteFormProps) => {
+  const [formData, setFormData] = useState<SafeClienteFormData>(
+    toSafeFormData(initialData)
+  );
+
+  const cleanNumericFields = (value: string): string =>
+    value.replace(/\D/g, "");
+
+  const handleChange = (name: string, value: string) => {
+    setFormData((prev) => {
+      if (name.startsWith("endereco.")) {
+        const field = name.split(".")[1] as keyof typeof prev.endereco;
+        return {
+          ...prev,
+          endereco: {
+            ...prev.endereco,
+            [field]: value,
+          },
+        };
+      }
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
-  const handleSubmit = async (
-    values: ClienteFormValues,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
-    try {
-      setError(null);
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
 
-      if (isEdit) {
-        await httpClient.put(`/clientes/${values.cpfOuCnpj}`, values);
-      } else {
-        await httpClient.post("/clientes", values);
-      }
+    // Criar objeto formatado para envio
+    const formValues: ClienteFormValues = {
+      cpfOuCnpj: cleanNumericFields(formData.cpfOuCnpj),
+      nome: formData.nome,
+      telefone: formData.telefone ? cleanNumericFields(formData.telefone) : "",
+      endereco: {
+        cep: formData.endereco.cep
+          ? cleanNumericFields(formData.endereco.cep)
+          : "",
+        logradouro: formData.endereco.logradouro || "",
+        numero: formData.endereco.numero || "",
+        complemento: formData.endereco.complemento || "",
+        bairro: formData.endereco.bairro || "",
+        localidade: formData.endereco.localidade || "",
+        uf: formData.endereco.uf || "",
+      },
+    };
 
-      navigate("/clientes");
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const message = err.response?.data?.message || err.message;
-        setError(
-          `Erro ao ${isEdit ? "atualizar" : "cadastrar"} cliente: ${message}`
-        );
-      } else if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Ocorreu um erro desconhecido");
-      }
-    } finally {
-      setSubmitting(false);
-    }
+    onSubmit(formValues);
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
-        {isEdit ? "Editar Cliente" : "Novo Cliente"}
+    <div className="max-w-2xl mx-auto p-4">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        {isEditing ? "Editar Cliente" : "Cadastrar Cliente"}
       </h2>
 
-      {error && <Alert type="error" message={error} />}
+      {error && (
+        <Alert
+          type="error"
+          message={
+            typeof error === "string"
+              ? error
+              : "Ocorreu um erro ao processar o formulário"
+          }
+          className="mb-4"
+        />
+      )}
 
-      <Formik
-        initialValues={initialValues || defaultInitialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-        enableReinitialize
-        validate={() => ({})}
-      >
-        {({ isSubmitting }) => (
-          <Form className="space-y-4">
-            <ClienteFormFields isEdit={isEdit} />
-            <SubmitButton isSubmitting={isSubmitting} isEdit={isEdit} />
-          </Form>
-        )}
-      </Formik>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <FormFields
+          formData={{
+            ...formData,
+            cpfOuCnpj: formData.cpfOuCnpj,
+            cnpj: undefined,
+            nomeFantasia: undefined,
+          }}
+          isLoading={isLoading}
+          isEditing={isEditing}
+          onChange={handleChange}
+          showCnpjField={false}
+          showCpfField={true}
+        />
+
+        <div className="flex justify-end">
+          <SubmitButton isSubmitting={isLoading} isEdit={isEditing} />
+        </div>
+      </form>
     </div>
   );
 };

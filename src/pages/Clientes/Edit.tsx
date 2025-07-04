@@ -55,9 +55,9 @@ const ClienteEdit = () => {
     <div>
       {error && <Alert type="error" message={error} />}
       <ClienteForm
-        initialValues={initialValues}
+        initialData={initialValues}
         onSubmit={handleSubmit}
-        isEdit={true}
+        isEditing={true}
       />
     </div>
   );
