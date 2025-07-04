@@ -40,7 +40,12 @@ const PedidoForm = ({
       const novasParcelas = calcularParcelas();
       setParcelas(novasParcelas);
     }
-  }, [showParcelamento, formData.totalPedido, quantidadeParcelas]);
+  }, [
+    showParcelamento,
+    formData.totalPedido,
+    quantidadeParcelas,
+    calcularParcelas,
+  ]);
 
   const handleDateChange = (parcelaNumero: number, newDate: string) => {
     setParcelas((prev) =>
