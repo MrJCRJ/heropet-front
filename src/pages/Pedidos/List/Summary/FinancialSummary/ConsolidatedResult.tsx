@@ -1,8 +1,8 @@
-import { TooltipGenerico } from "./TooltipGenerico";
-import { FinancialValueDisplay } from "./FinancialValueDisplay";
-import { ConsolidatedResultTooltip } from "./ConsolidatedResultTooltip";
-import { ConsolidatedResultProps } from "../types/pedidos";
-import { formatarMoeda } from "../utils/currency";
+import { TooltipGenerico } from "../../../../../components/TooltipGenerico";
+import { FinancialValueDisplay } from "../../../../../components/FinancialValueDisplay";
+import { ConsolidatedResultTooltip } from "../../../../../components/ConsolidatedResultTooltip";
+import { ConsolidatedResultProps } from "../../../../../types/pedidos";
+import { formatarMoeda } from "../../../../../utils/currency";
 
 export const ConsolidatedResult = ({
   saldoGeral,
@@ -40,7 +40,7 @@ export const ConsolidatedResult = ({
                 saldoGeral >= 0 ? "text-blue-800" : "text-orange-800"
               }`}
             >
-              Resultado Financeiro Consolidado
+              Resultado
             </h3>
             <p
               className={`text-3xl font-semibold ${
