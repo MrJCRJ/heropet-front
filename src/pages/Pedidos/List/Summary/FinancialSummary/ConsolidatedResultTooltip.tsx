@@ -1,5 +1,5 @@
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
-import { formatarMoeda } from "../utils/currency";
+import { formatarMoeda } from "../../../../../utils/currency";
 
 interface ConsolidatedResultTooltipProps {
   totalVendas: number;
@@ -29,11 +29,15 @@ export const ConsolidatedResultTooltip = ({
       <div className="grid grid-cols-2 gap-2 mt-1">
         <div>
           <p className="text-sm text-gray-600">Vendas:</p>
-          <p className="font-medium">{formatarMoeda(totalVendas)}</p>
+          <p className="font-medium text-green-700">
+            {formatarMoeda(totalVendas)}
+          </p>
         </div>
         <div>
           <p className="text-sm text-gray-600">Investimentos:</p>
-          <p className="font-medium">{formatarMoeda(totalInvestimentos)}</p>
+          <p className="font-medium text-green-700">
+            {formatarMoeda(totalInvestimentos)}
+          </p>
         </div>
       </div>
       <div className="mt-2 pt-2 border-t border-green-100">
@@ -52,11 +56,15 @@ export const ConsolidatedResultTooltip = ({
       <div className="grid grid-cols-2 gap-2 mt-1">
         <div>
           <p className="text-sm text-gray-600">Compras:</p>
-          <p className="font-medium">{formatarMoeda(totalCompras)}</p>
+          <p className="font-medium text-red-700">
+            {formatarMoeda(totalCompras)}
+          </p>
         </div>
         <div>
           <p className="text-sm text-gray-600">Despesas:</p>
-          <p className="font-medium">{formatarMoeda(totalDespesas)}</p>
+          <p className="font-medium text-red-700">
+            {formatarMoeda(totalDespesas)}
+          </p>
         </div>
       </div>
       <div className="mt-2 pt-2 border-t border-red-100">

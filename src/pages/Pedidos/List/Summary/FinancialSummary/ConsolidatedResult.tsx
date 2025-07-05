@@ -1,6 +1,6 @@
 import { TooltipGenerico } from "../../../../../components/TooltipGenerico";
-import { FinancialValueDisplay } from "../../../../../components/FinancialValueDisplay";
-import { ConsolidatedResultTooltip } from "../../../../../components/ConsolidatedResultTooltip";
+import { FinancialValueDisplay } from "./FinancialValueDisplay";
+import { ConsolidatedResultTooltip } from "./ConsolidatedResultTooltip";
 import { ConsolidatedResultProps } from "../../../../../types/pedidos";
 import { formatarMoeda } from "../../../../../utils/currency";
 

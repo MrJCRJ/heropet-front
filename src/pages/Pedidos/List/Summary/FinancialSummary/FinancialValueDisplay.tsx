@@ -1,5 +1,5 @@
-import { formatarValorCompacto } from "../utils/currency";
-import { formatarMoeda } from "../utils/currency";
+import { formatarValorCompacto } from "../../../../../utils/currency";
+import { formatarMoeda } from "../../../../../utils/currency";
 
 type FinancialValueDisplayProps = {
   label: string;

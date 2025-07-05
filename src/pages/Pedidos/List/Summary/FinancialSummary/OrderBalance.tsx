@@ -1,8 +1,8 @@
-import { TooltipGenerico } from "./TooltipGenerico";
+import { TooltipGenerico } from "../../../../../components/TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
-import { BalanceSummaryProps } from "../types/pedidos";
-import { formatarMoeda } from "../utils/currency";
+import { BalanceSummaryProps } from "../../../../../types/pedidos";
+import { formatarMoeda } from "../../../../../utils/currency";
 
 export const OrderBalance = ({
   total,
