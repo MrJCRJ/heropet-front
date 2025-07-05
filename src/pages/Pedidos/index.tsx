@@ -1,12 +1,12 @@
-import { usePedidoList } from "./usePedidoList";
-import { PedidoHeader } from "./ListHeader";
-import { PedidoTable } from "./ListTable";
-import { EstoqueSummary } from "./Summary/EstoqueSummary";
-import { FinancialSummary } from "./Summary/FinancialSummary";
-import { ParceirosSummary } from "./Summary/Parceiros";
+import { usePedidoList } from "../../hooks/usePedidoList";
+import { PedidoHeader } from "./List/ListHeader";
+import { PedidoTable } from "./List/ListTable";
+import { EstoqueSummary } from "./List/Summary/EstoqueSummary";
+import { FinancialSummary } from "./List/Summary/FinancialSummary";
+import { ParceirosSummary } from "./List/Summary/Parceiros";
 
-import LoadingSpinner from "../../../components/ui/LoadingSpinner";
-import { Alert } from "../../../components/ui/Alert";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import { Alert } from "../../components/ui/Alert";
 
 const PedidoList = () => {
   const {
@@ -43,8 +43,16 @@ const PedidoList = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PedidoHeader />
       <div className="mt-6">
-        <FinancialSummary pedidos={pedidos} filtroTipo={filtroTipo} />
-        <EstoqueSummary pedidos={pedidos} />
+        {/* Contêiner flex para os resumos lado a lado */}
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <div className="flex-1">
+            <FinancialSummary pedidos={pedidos} filtroTipo={filtroTipo} />
+          </div>
+          <div className="flex-1">
+            <EstoqueSummary pedidos={pedidos} />
+          </div>
+        </div>
+
         <ParceirosSummary pedidos={pedidos} />
         <PedidoTable
           pedidos={pedidos}

@@ -4,7 +4,7 @@ import FornecedorList from "./pages/Fornecedores/List";
 import FornecedorCreate from "./pages/Fornecedores/Create";
 import FornecedorEdit from "./pages/Fornecedores/Edit";
 import FornecedorView from "./pages/Fornecedores/View";
-import PedidoList from "./pages/Pedidos/List";
+import PedidoList from "./pages/Pedidos";
 import PedidoCreate from "./pages/Pedidos/Create";
 import PedidoView from "./pages/Pedidos/View";
 import PedidoEdit from "./pages/Pedidos/Edit";

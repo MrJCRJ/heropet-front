@@ -84,7 +84,6 @@ export const usePedidoList = () => {
     }
   }, [selectedYear]);
 
-  // Restante do seu código...
   const carregarPedidos = useCallback(async () => {
     setLoading(true);
     setError("");
