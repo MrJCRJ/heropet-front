@@ -79,10 +79,11 @@ export const EstoqueSummary = ({ pedidos }: EstoqueSummaryProps) => {
           tooltip={
             <TooltipProdutosStatus
               produtos={produtosArray.filter(
-                (p) => p.quantidade > 0 && p.quantidade < 5
+                (p) => p.quantidade > 0 && p.quantidade < p.estoqueMinimo
               )}
-              mensagem="Produtos com menos de 5 unidades"
+              mensagem="Produtos abaixo do estoque mínimo calculado"
               recomendacao="Verificar necessidade de reposição"
+              mostrarEstoqueMinimo
             />
           }
         />

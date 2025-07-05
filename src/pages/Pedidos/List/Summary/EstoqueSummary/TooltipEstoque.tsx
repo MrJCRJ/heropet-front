@@ -61,22 +61,29 @@ interface TooltipProdutosStatusProps {
   produtos: ProdutoResumo[];
   mensagem: string;
   recomendacao: string;
+  mostrarEstoqueMinimo?: boolean;
 }
 
 export const TooltipProdutosStatus = ({
   produtos,
   mensagem,
   recomendacao,
+  mostrarEstoqueMinimo = false,
 }: TooltipProdutosStatusProps) => (
   <>
     <p className="font-semibold">{mensagem}</p>
     <p className="text-yellow-300 mb-1">Recomendação: {recomendacao}</p>
-    {produtos.map((p) => (
-      <div key={p.nome} className="flex justify-between mt-1">
-        <span className="truncate">{p.nome}</span>
-        <span className="text-yellow-300">{p.quantidade} un</span>
-      </div>
-    ))}
+    <ul className="mt-1 max-h-60 overflow-y-auto">
+      {produtos.map((p) => (
+        <li key={p.nome} className="flex justify-between py-1">
+          <span className="truncate">{p.nome}</span>
+          <span className="text-yellow-300">
+            {p.quantidade} un
+            {mostrarEstoqueMinimo && ` (min: ${(p as any).estoqueMinimo})`}
+          </span>
+        </li>
+      ))}
+    </ul>
   </>
 );
 
