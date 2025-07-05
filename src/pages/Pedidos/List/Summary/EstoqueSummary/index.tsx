@@ -1,5 +1,5 @@
 import { ResumoCard } from "./ResumoCard";
-import { useResumoEstoque } from "../../../../../utils/estoque";
+import { useResumoEstoque } from "../../../../../hooks/useEstoque";
 import { EstoqueSummaryProps } from "../../../../../types/pedidos";
 import { formatarMoeda } from "../../../../../utils/currency";
 import {
