@@ -347,6 +347,8 @@ export interface ProdutoResumo {
   precoUnitario: number;
   valorTotal: number;
   vendas: number;
+  vendasUltimos90Dias?: number;
+  estoqueMinimo?: number;
 }
 
 export interface EstoqueSummaryProps {

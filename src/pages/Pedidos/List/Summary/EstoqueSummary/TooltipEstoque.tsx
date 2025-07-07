@@ -79,7 +79,9 @@ export const TooltipProdutosStatus = ({
           <span className="truncate">{p.nome}</span>
           <span className="text-yellow-300">
             {p.quantidade} un
-            {mostrarEstoqueMinimo && ` (min: ${(p as any).estoqueMinimo})`}
+            {mostrarEstoqueMinimo &&
+              p.estoqueMinimo !== undefined &&
+              ` (min: ${p.estoqueMinimo})`}
           </span>
         </li>
       ))}
