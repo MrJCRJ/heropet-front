@@ -4,9 +4,9 @@ import { FormBasics } from "./FormBasics";
 import { FormItems } from "./FormItems";
 import { FormActions } from "./FormActions";
 import { FormParcelamento } from "./FormParcelamento";
-import { usePedidoForm } from "./usePedidoForm";
+import { usePedidoForm } from "../../hooks/usePedidoForm";
 import { Pedido, Parcela } from "../../types/pedidos";
-import { useParcelamento } from "./useParcelamento";
+import { useParcelamento } from "../../hooks/useParcelamento";
 import { PedidoFormProps } from "../../types/pedidos";
 
 const PedidoForm = ({

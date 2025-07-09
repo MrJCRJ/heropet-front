@@ -1,11 +1,10 @@
 import React, { useCallback } from "react";
 import { FormBasicsProps } from "../../types/cliente";
-import { useClientesFornecedores } from "./useClientesFornecedores";
+import { useClientesFornecedores } from "../../hooks/useClientesFornecedores";
 import { LoadingErrorSection } from "./LoadingErrorSection";
 import { TipoStatusSection } from "./TipoStatusSection";
 import { DocumentoNomeSection } from "./DocumentoNomeSection";
 import { DateSection } from "./DateSection";
-
 import { NotaFiscalSection } from "./NotaFiscalSection";
 import { ObservacoesSection } from "./ObservacoesSection";
 

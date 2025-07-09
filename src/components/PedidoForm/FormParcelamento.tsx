@@ -6,7 +6,7 @@ export const FormParcelamento = ({
   quantidadeParcelas,
   setQuantidadeParcelas,
   parcelas,
-  onDateChange,
+  onDateChange, // Esta prop está sendo recebida
 }: FormParcelamentoProps) => {
   return (
     <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -18,8 +18,11 @@ export const FormParcelamento = ({
           setQuantidadeParcelas={setQuantidadeParcelas}
         />
 
-        {quantidadeParcelas > 1 && (
-          <ParcelaPreview parcelas={parcelas} onDateChange={onDateChange} />
+        {quantidadeParcelas >= 1 && (
+          <ParcelaPreview
+            parcelas={parcelas}
+            onDateChange={onDateChange} // Corrigido: usando a prop recebida
+          />
         )}
       </div>
     </div>
