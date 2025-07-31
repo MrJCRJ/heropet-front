@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { usePedidoList } from "../../hooks/usePedidoList";
 import { PedidoTable } from "./List/ListTable";
 import { EstoqueSummary } from "./List/Summary/EstoqueSummary";
@@ -11,10 +11,8 @@ import { Alert } from "../../components/ui/Alert";
 type SlideComponent = {
   id: number;
   label: string;
-  component: React.ReactNode; // Alterado para React.ReactNode
+  component: React.ReactNode;
 };
-
-const SLIDE_INTERVAL = 3000; // 3 segundos
 
 const PedidoList = () => {
   const {
@@ -30,21 +28,10 @@ const PedidoList = () => {
     toggleOrdenacao,
   } = usePedidoList();
 
-  // Estados para controle do carrossel
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const slideCount = 4; // Constante para o número de slides
-
-  // Configuração do carrossel automático
-  useEffect(() => {
-    if (isPaused) return;
-
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slideCount);
-    }, SLIDE_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, [isPaused, slideCount]); // Adicionada dependência slideCount
+  const [transitionDirection, setTransitionDirection] = useState<
+    "left" | "right"
+  >("left");
 
   // Componentes dos slides
   const slides: SlideComponent[] = [
@@ -81,8 +68,11 @@ const PedidoList = () => {
     },
   ];
 
-  // Função para navegação
-  const goToSlide = (index: number) => setCurrentSlide(index);
+  // Função para navegação com controle de direção
+  const goToSlide = (index: number) => {
+    setTransitionDirection(index > currentSlide ? "left" : "right");
+    setCurrentSlide(index);
+  };
 
   // Estados de carregamento
   if (loading && pedidos.length === 0) {
@@ -115,23 +105,23 @@ const PedidoList = () => {
             onClick={() => goToSlide(index)}
             className={`flex-1 py-3 rounded-lg transition-all duration-300 ${
               currentSlide === index
-                ? "bg-blue-600 text-white font-medium"
+                ? "bg-blue-600 text-white font-medium shadow-md"
                 : "bg-gray-200 hover:bg-gray-300"
             }`}
+            aria-label={`Mostrar ${slide.label}`}
+            aria-current={currentSlide === index ? "page" : undefined}
           >
             {slide.label}
           </button>
         ))}
       </div>
 
-      {/* Carrossel de slides */}
-      <div
-        className="relative overflow-hidden rounded-lg min-h-[400px]"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
+      {/* Carrossel de slides com transição suave */}
+      <div className="relative overflow-hidden rounded-lg shadow-lg min-h-[500px] bg-white">
         <div
-          className="flex transition-transform duration-1000 ease-in-out"
+          className={`flex transition-transform duration-500 ease-in-out ${
+            transitionDirection === "left" ? "slide-in-left" : "slide-in-right"
+          }`}
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {slides.map((slide) => (
