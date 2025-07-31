@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { usePedidoList } from "../hooks/usePedidoList";
-import { PedidoTable } from "./Pedidos/List/ListTable";
-import { EstoqueSummary } from "./Pedidos/List/Summary/EstoqueSummary";
-import { FinancialSummary } from "./Pedidos/List/Summary/FinancialSummary";
-import { ParceirosSummary } from "./Pedidos/List/Summary/Parceiros";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
-import { Alert } from "../components/ui/Alert";
+import { usePedidoList } from "../../hooks/usePedidoList";
+import { PedidoTable } from "./List/ListTable";
+import { EstoqueSummary } from "./List/Summary/EstoqueSummary";
+import { FinancialSummary } from "./List/Summary/FinancialSummary";
+import { ParceirosSummary } from "./List/Summary/Parceiros";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import { Alert } from "../../components/ui/Alert";
 
 // Definição dos tipos
 type SlideComponent = {
