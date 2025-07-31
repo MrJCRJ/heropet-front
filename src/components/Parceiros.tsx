@@ -1,11 +1,8 @@
 // components/ParceirosSummary.tsx
-import {
-  ParceirosSummaryProps,
-  ParceiroResumo,
-} from "../../../../types/pedidos";
-import { formatarMoeda } from "../../../../utils/currency";
+import { ParceirosSummaryProps, ParceiroResumo } from "../types/pedidos";
+import { formatarMoeda } from "../utils/currency";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { TooltipGenerico } from "../../../../components/TooltipGenerico";
+import { TooltipGenerico } from "./TooltipGenerico";
 
 export const ParceirosSummary = ({ pedidos }: ParceirosSummaryProps) => {
   // Processa os pedidos para obter dados de clientes e fornecedores

@@ -1,10 +1,10 @@
-import { useFinancaList } from "../../../../Financas/List/useFinancaList";
-import { useFinancialCalculations } from "../../../../../hooks/useFinancialCalculations";
+import { useFinancaList } from "../../pages/Financas/List/useFinancaList";
+import { useFinancialCalculations } from "../../hooks/useFinancialCalculations";
 import { ConsolidatedResult } from "./ConsolidatedResult";
 import { OrderBalance } from "./OrderBalance";
 import { PendingReceivables } from "./PendingReceivables";
 import { PendingPayables } from "./PendingPayables";
-import { FinancialSummaryProps } from "../../../../../types/pedidos";
+import { FinancialSummaryProps } from "../../types/pedidos";
 
 export const FinancialSummary = ({
   pedidos,

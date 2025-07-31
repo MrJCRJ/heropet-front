@@ -1,8 +1,8 @@
-import { TooltipGenerico } from "../../../../../components/TooltipGenerico";
+import { TooltipGenerico } from "../TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ConsolidatedResultTooltip } from "./ConsolidatedResultTooltip";
-import { ConsolidatedResultProps } from "../../../../../types/pedidos";
-import { formatarMoeda } from "../../../../../utils/currency";
+import { ConsolidatedResultProps } from "../../types/pedidos";
+import { formatarMoeda } from "../../utils/currency";
 
 export const ConsolidatedResult = ({
   saldoGeral,

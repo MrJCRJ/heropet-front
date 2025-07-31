@@ -1,6 +1,6 @@
 import { CubeIcon, ExclamationTriangleIcon } from "@heroicons/react/24/solid";
-import { formatarValorCompacto } from "../../../../../utils/currency";
-import { ResumoCardProps } from "../../../../../types/pedidos";
+import { formatarValorCompacto } from "../../utils/currency";
+import { ResumoCardProps } from "../../types/pedidos";
 
 export const ResumoCard = ({
   titulo,

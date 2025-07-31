@@ -1,5 +1,5 @@
 import React from "react";
-import { DateFilterProps } from "../../../../types/pedidos";
+import { DateFilterProps } from "../../types/pedidos";
 
 const months = Array.from({ length: 12 }, (_, i) => ({
   value: i + 1,

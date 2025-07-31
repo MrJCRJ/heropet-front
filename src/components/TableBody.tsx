@@ -1,6 +1,6 @@
 import React from "react";
 import { Pedido } from "../types/pedidos";
-import { PedidoRow } from "../pages/Pedidos/List/ListRow";
+import { PedidoRow } from "../pages/Pedidos/ListRow";
 
 type TableBodyProps = {
   pedidos: Pedido[];

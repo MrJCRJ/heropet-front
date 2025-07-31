@@ -1,8 +1,8 @@
-import { TooltipGenerico } from "../../../../../components/TooltipGenerico";
+import { TooltipGenerico } from "../TooltipGenerico";
 import { FinancialValueDisplay } from "./FinancialValueDisplay";
 import { ArrowDownIcon } from "@heroicons/react/24/solid";
-import { PendingPayablesProps } from "../../../../../types/pedidos";
-import { formatarMoeda } from "../../../../../utils/currency";
+import { PendingPayablesProps } from "../../types/pedidos";
+import { formatarMoeda } from "../../utils/currency";
 
 export const PendingPayables = ({ totalAPagar }: PendingPayablesProps) => (
   <div>

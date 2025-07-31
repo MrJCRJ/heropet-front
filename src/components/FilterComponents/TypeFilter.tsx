@@ -1,5 +1,5 @@
 import React from "react";
-import { TypeFilterProps } from "../../../../types/pedidos";
+import { TypeFilterProps } from "../../types/pedidos";
 
 const tipos = [
   { valor: "TODOS", label: "Todos" },

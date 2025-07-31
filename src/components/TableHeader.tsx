@@ -1,7 +1,7 @@
 import React from "react";
-import { DateFilter } from "../pages/Pedidos/List/FilterComponents/DateFilter";
-import { TypeFilter } from "../pages/Pedidos/List/FilterComponents/TypeFilter";
-import { StatusFilter } from "../pages/Pedidos/List/FilterComponents/StatusFilter";
+import { DateFilter } from "./FilterComponents/DateFilter";
+import { TypeFilter } from "./FilterComponents/TypeFilter";
+import { StatusFilter } from "./FilterComponents/StatusFilter";
 import { FilterButton } from "./FilterButton";
 import { SortButton } from "./SortButton";
 import { TableHeaderProps } from "../types/pedidos";

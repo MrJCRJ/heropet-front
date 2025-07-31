@@ -1,7 +1,7 @@
 import { ResumoCard } from "./ResumoCard";
-import { useResumoEstoque } from "../../../../../hooks/useEstoque";
-import { EstoqueSummaryProps } from "../../../../../types/pedidos";
-import { formatarMoeda } from "../../../../../utils/currency";
+import { useResumoEstoque } from "../../hooks/useEstoque";
+import { EstoqueSummaryProps } from "../../types/pedidos";
+import { formatarMoeda } from "../../utils/currency";
 import {
   TooltipEstoqueCompleto,
   ProdutosMaisVendidos,

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { usePedidoList } from "../../hooks/usePedidoList";
-import { PedidoTable } from "./List/ListTable";
-import { EstoqueSummary } from "./List/Summary/EstoqueSummary";
-import { FinancialSummary } from "./List/Summary/FinancialSummary";
-import { ParceirosSummary } from "./List/Summary/Parceiros";
+import { PedidoTable } from "./ListTable";
+import { EstoqueSummary } from "../../components/EstoqueSummary";
+import { FinancialSummary } from "../../components/FinancialSummary";
+import { ParceirosSummary } from "../../components/Parceiros";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 

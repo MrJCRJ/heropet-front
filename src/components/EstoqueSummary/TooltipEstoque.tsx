@@ -1,8 +1,8 @@
 import {
   ProdutoResumo,
   TooltipEstoqueCompletoProps,
-} from "../../../../../types/pedidos";
-import { getQuantidadeColor } from "../../../../../hooks/useEstoque";
+} from "../../types/pedidos";
+import { getQuantidadeColor } from "../../hooks/useEstoque";
 
 export const TooltipEstoqueCompleto = ({
   produtos,

@@ -347,7 +347,7 @@ export interface ProdutoResumo {
   precoUnitario: number;
   valorTotal: number;
   vendas: number;
-  vendasUltimos90Dias?: number;
+  vendasUltimos90Dias?: Record<string, number>; // Alterado de number para Record<string, number>
   estoqueMinimo?: number;
 }
 

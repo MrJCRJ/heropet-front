@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
-import { PedidoTableProps } from "../../../types/pedidos";
-import { TableHeader } from "../../../components/TableHeader";
-import { TableBody } from "../../../components/TableBody";
-import { statusOptions } from "../../../types/pedidos";
-import { FiltroPedido, FiltroStatus } from "../../../types/pedidos";
+import { PedidoTableProps } from "../../types/pedidos";
+import { TableHeader } from "../../components/TableHeader";
+import { TableBody } from "../../components/TableBody";
+import { statusOptions } from "../../types/pedidos";
+import { FiltroPedido, FiltroStatus } from "../../types/pedidos";
 
 export const PedidoTable: React.FC<PedidoTableProps> = ({
   pedidos,
