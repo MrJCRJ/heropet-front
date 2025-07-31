@@ -6,14 +6,15 @@ import {
   atualizarPedido,
 } from "../../api/pedidos";
 import { Link } from "react-router-dom";
-import Modal from "../../components/ui/Modal";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 import { ParcelasView } from "./ParcelasView";
 import { ItensPedidoView } from "./ItensPedidoView";
-import { Pedido, PedidoStatus } from "../../types/pedidos";
-import { formatarData } from "../../utils/date";
-import { getStatusColor } from "../../utils/status";
+import { Pedido } from "../../types/pedidos";
+import { PedidoHeader } from "../../components/PedidoHeader";
+import { PedidoInfoSection } from "../../components/PedidoInfoSection";
+import { PedidoActions } from "../../components/PedidoActions";
+import { DeleteModal } from "../../components/DeleteModal";
 
 export const PedidoView = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,10 +30,8 @@ export const PedidoView = () => {
     const carregarPedido = async () => {
       try {
         if (!id) throw new Error("ID do pedido não fornecido");
-
         setLoading(true);
         setError("");
-
         const response = await buscarPedido(id);
         setPedido(response.data);
       } catch (err) {
@@ -42,26 +41,19 @@ export const PedidoView = () => {
         setLoading(false);
       }
     };
-
     carregarPedido();
   }, [id]);
 
   const handleTogglePago = async (numeroParcela: number) => {
     if (!pedido || !pedido.parcelas) return;
-
     try {
       const parcelasAtualizadas = pedido.parcelas.map((parcela) =>
         parcela.numero === numeroParcela
           ? { ...parcela, pago: !parcela.pago }
           : parcela
       );
-
       const pedidoAtualizado = { ...pedido, parcelas: parcelasAtualizadas };
-
-      await atualizarPedido(pedido._id!, {
-        parcelas: parcelasAtualizadas,
-      });
-
+      await atualizarPedido(pedido._id!, { parcelas: parcelasAtualizadas });
       setPedido(pedidoAtualizado);
     } catch (err) {
       setError("Erro ao atualizar parcela. Tente novamente.");
@@ -71,15 +63,11 @@ export const PedidoView = () => {
 
   const handleDelete = async () => {
     if (!id) return;
-
     setIsDeleting(true);
     try {
       await removerPedido(id);
       navigate("/pedidos", {
-        state: {
-          success: true,
-          message: "Pedido excluído com sucesso!",
-        },
+        state: { success: true, message: "Pedido excluído com sucesso!" },
       });
     } catch (err) {
       setError("Erro ao excluir pedido. Tente novamente.");
@@ -92,14 +80,9 @@ export const PedidoView = () => {
 
   const handleRemoveTodasParcelas = async () => {
     if (!pedido || !pedido.parcelas) return;
-
     try {
       const pedidoAtualizado = { ...pedido, parcelas: [] };
-
-      await atualizarPedido(pedido._id!, {
-        parcelas: [],
-      });
-
+      await atualizarPedido(pedido._id!, { parcelas: [] });
       setPedido(pedidoAtualizado);
     } catch (err) {
       setError("Erro ao remover parcelas. Tente novamente.");
@@ -108,142 +91,24 @@ export const PedidoView = () => {
   };
 
   if (loading) return <LoadingSpinner />;
-
-  if (error) {
-    return (
-      <div className="max-w-4xl mx-auto p-4">
-        <Alert type="error" message={error} />
-        <div className="mt-4">
-          <Link
-            to="/pedidos"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Voltar para lista
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!pedido) {
-    return (
-      <div className="max-w-4xl mx-auto p-4">
-        <Alert
-          type="info"
-          message="Pedido não encontrado"
-          actions={
-            <Link
-              to="/pedidos"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Voltar para lista
-            </Link>
-          }
-        />
-      </div>
-    );
-  }
+  if (error) return <ErrorView error={error} />;
+  if (!pedido) return <NotFoundView />;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Detalhes do Pedido</h1>
-        <Link
-          to="/pedidos"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800 font-medium"
-        >
-          Voltar para lista
-        </Link>
-      </div>
+      <PedidoHeader />
 
       <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
-        {/* Informações Básicas */}
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">
-            Informações
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Tipo</p>
-              <p className="mt-1 text-sm text-gray-900">
-                {pedido.tipo === "VENDA" ? (
-                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
-                    Venda
-                  </span>
-                ) : (
-                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
-                    Compra
-                  </span>
-                )}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Status</p>
-              <p className="mt-1 text-sm">
-                <span
-                  className={`px-2 py-1 text-xs font-medium rounded ${getStatusColor(
-                    pedido.status as PedidoStatus
-                  )}`}
-                >
-                  {pedido.status}
-                </span>
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Documento</p>
-              <p className="mt-1 text-sm text-gray-900">
-                {pedido.documentoClienteFornecedor || "-"}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Nome</p>
-              <p className="mt-1 text-sm text-gray-900">
-                {pedido.nomeClienteFornecedor || "-"}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">
-                Data do Pedido
-              </p>
-              <p className="mt-1 text-sm text-gray-900">
-                {formatarData(pedido.dataPedido)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">
-                Data de Entrega
-              </p>
-              <p className="mt-1 text-sm text-gray-900">
-                {formatarData(pedido.dataEntrega)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500">Nota Fiscal</p>
-              <p className="mt-1 text-sm text-gray-900">
-                {pedido.temNotaFiscal ? (
-                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
-                    Sim
-                  </span>
-                ) : (
-                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">
-                    Não
-                  </span>
-                )}
-              </p>
-            </div>
-          </div>
-        </div>
+        <PedidoInfoSection pedido={pedido} />
 
-        {/* Itens do Pedido */}
         <ItensPedidoView
           itens={pedido.itens}
           totalPedido={pedido.totalPedido}
         />
 
-        {/* Parcelas */}
         {pedido.parcelas && pedido.parcelas.length > 0 && (
           <ParcelasView
-            parcelas={pedido.parcelas || []}
+            parcelas={pedido.parcelas}
             onTogglePago={handleTogglePago}
             onRemoveTodasParcelas={
               isEditing ? handleRemoveTodasParcelas : undefined
@@ -252,70 +117,64 @@ export const PedidoView = () => {
           />
         )}
 
-        {/* Observações */}
         {pedido.observacoes && (
-          <div className="p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              Observações
-            </h2>
-            <p className="text-sm text-gray-700 whitespace-pre-line">
-              {pedido.observacoes}
-            </p>
-          </div>
+          <ObservacoesSection observacoes={pedido.observacoes} />
         )}
 
-        {/* Ações */}
-        <div className="p-6 bg-gray-50 flex flex-wrap gap-3 justify-end">
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md"
-          >
-            {isEditing ? "Cancelar Edição" : "Editar Parcelas"}
-          </button>
-          <Link
-            to={`/pedidos/${id}/editar`}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-medium transition-colors"
-          >
-            Editar Pedido
-          </Link>
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition-colors"
-            disabled={isDeleting}
-          >
-            Excluir Pedido
-          </button>
-        </div>
+        <PedidoActions
+          id={id}
+          isEditing={isEditing}
+          isDeleting={isDeleting}
+          setIsEditing={setIsEditing}
+          setShowDeleteModal={setShowDeleteModal}
+        />
       </div>
 
-      {/* Modal de confirmação de exclusão */}
-      <Modal
+      <DeleteModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title="Confirmar Exclusão"
-      >
-        <div className="space-y-4">
-          <p className="text-gray-700">
-            Tem certeza que deseja excluir este pedido?
-          </p>
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={() => setShowDeleteModal(false)}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800 font-medium transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white font-medium transition-colors"
-            >
-              Confirmar Exclusão
-            </button>
-          </div>
-        </div>
-      </Modal>
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };
+
+const ErrorView = ({ error }: { error: string }) => (
+  <div className="max-w-4xl mx-auto p-4">
+    <Alert type="error" message={error} />
+    <div className="mt-4">
+      <Link
+        to="/pedidos"
+        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+      >
+        Voltar para lista
+      </Link>
+    </div>
+  </div>
+);
+
+const NotFoundView = () => (
+  <div className="max-w-4xl mx-auto p-4">
+    <Alert
+      type="info"
+      message="Pedido não encontrado"
+      actions={
+        <Link
+          to="/pedidos"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Voltar para lista
+        </Link>
+      }
+    />
+  </div>
+);
+
+const ObservacoesSection = ({ observacoes }: { observacoes: string }) => (
+  <div className="p-6">
+    <h2 className="text-lg font-medium text-gray-900 mb-4">Observações</h2>
+    <p className="text-sm text-gray-700 whitespace-pre-line">{observacoes}</p>
+  </div>
+);
 
 export default PedidoView;
