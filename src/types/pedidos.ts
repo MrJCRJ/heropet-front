@@ -354,3 +354,39 @@ export interface ProdutoResumo {
 export interface EstoqueSummaryProps {
   pedidos: Pedido[];
 }
+
+export type TableHeaderProps = {
+  showTipoFilter: boolean;
+  setShowTipoFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  showStatusFilter: boolean;
+  setShowStatusFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  showDateFilter: boolean;
+  setShowDateFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  onOrdenarClick: () => void;
+  filtroTipo: FiltroPedido;
+  filtroStatus?: FiltroStatus;
+  ordenacao: string;
+  selectedMonth?: number;
+  selectedYear?: number;
+  getFilterLabel: () => string | null;
+  onFilterChange: (
+    tipo?: FiltroPedido,
+    status?: FiltroStatus,
+    mes?: number,
+    ano?: number
+  ) => void;
+  statusOptions: readonly StatusOption[];
+};
+
+export type StatusOption = {
+  readonly valor: string;
+  readonly label: string;
+};
+
+export const statusOptions = [
+  { valor: "PAGO", label: "Pagos" },
+  { valor: "PENDENTE", label: "Pendentes" },
+  { valor: "CANCELADO", label: "Cancelados" },
+  { valor: "PROCESSANDO", label: "Processando" },
+  { valor: "ATRASADO", label: "Atrasados" },
+] as const;
