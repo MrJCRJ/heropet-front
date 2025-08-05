@@ -13,6 +13,27 @@ export const PedidoRow = ({ pedido }: PedidoRowProps) => {
         .reduce((sum, parcela) => sum + parcela.valor, 0)
     : 0;
 
+  // Função para renderizar as parcelas de forma compacta
+  const renderParcelasStatus = () => {
+    if (!temParcelas) return null;
+
+    return (
+      <div className="flex flex-wrap gap-1 mt-1">
+        {parcelas.map((parcela, index) => (
+          <span
+            key={index}
+            className={`w-3 h-3 rounded-full ${
+              parcela.pago ? "bg-green-500" : "bg-yellow-500"
+            }`}
+            title={`Parcela ${index + 1}: ${
+              parcela.pago ? "Pago" : "Pendente"
+            } - ${formatarMoeda(parcela.valor)}`}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -43,13 +64,16 @@ export const PedidoRow = ({ pedido }: PedidoRowProps) => {
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
-        <span
-          className={`px-2 py-1 text-xs font-medium rounded ${getStatusColor(
-            pedido.status
-          )}`}
-        >
-          {pedido.status || "-"}
-        </span>
+        <div>
+          <span
+            className={`px-2 py-1 text-xs font-medium rounded ${getStatusColor(
+              pedido.status
+            )}`}
+          >
+            {pedido.status || "-"}
+          </span>
+          {renderParcelasStatus()}
+        </div>
       </td>
     </>
   );

@@ -1,6 +1,6 @@
-import { formatarData } from "../../utils/date";
-import { formatarMoeda } from "../../utils/currency";
-import { ParcelasViewProps } from "../../types/pedidos";
+import { formatarData } from "../utils/date";
+import { formatarMoeda } from "../utils/currency";
+import { ParcelasViewProps } from "../types/pedidos";
 
 export const ParcelasView = ({
   parcelas,

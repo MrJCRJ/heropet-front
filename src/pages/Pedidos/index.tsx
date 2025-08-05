@@ -52,7 +52,7 @@ const PedidoList = () => {
     },
     {
       id: 3,
-      label: "Pedidos",
+      label: "Registro de Pedidos",
       component: (
         <PedidoTable
           pedidos={pedidos}
@@ -95,7 +95,9 @@ const PedidoList = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-center">Sumário</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        Sumário de Pedidos
+      </h1>
 
       {/* Barra de navegação */}
       <div className="flex justify-between gap-2 mb-4">

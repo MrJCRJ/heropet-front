@@ -8,8 +8,8 @@ import {
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
-import { ParcelasView } from "./ParcelasView";
-import { ItensPedidoView } from "./ItensPedidoView";
+import { ParcelasView } from "../../components/ParcelasView";
+import { ItensPedidoView } from "../../components/ItensPedidoView";
 import { Pedido } from "../../types/pedidos";
 import { PedidoHeader } from "../../components/PedidoHeader";
 import { PedidoInfoSection } from "../../components/PedidoInfoSection";
