@@ -37,21 +37,6 @@ const PedidoList = () => {
   const slides: SlideComponent[] = [
     {
       id: 0,
-      label: "Financeiro",
-      component: <FinancialSummary pedidos={pedidos} filtroTipo={filtroTipo} />,
-    },
-    {
-      id: 1,
-      label: "Estoque",
-      component: <EstoqueSummary pedidos={pedidos} />,
-    },
-    {
-      id: 2,
-      label: "Parceiros",
-      component: <ParceirosSummary pedidos={pedidos} />,
-    },
-    {
-      id: 3,
       label: "Registro de Pedidos",
       component: (
         <PedidoTable
@@ -65,6 +50,21 @@ const PedidoList = () => {
           onFilterChange={handleFilterChange}
         />
       ),
+    },
+    {
+      id: 1,
+      label: "Financeiro",
+      component: <FinancialSummary pedidos={pedidos} filtroTipo={filtroTipo} />,
+    },
+    {
+      id: 2,
+      label: "Estoque",
+      component: <EstoqueSummary pedidos={pedidos} />,
+    },
+    {
+      id: 3,
+      label: "Parceiros",
+      component: <ParceirosSummary pedidos={pedidos} />,
     },
   ];
 
