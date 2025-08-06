@@ -8,7 +8,7 @@ import {
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
 import { Button } from "../../components/ui/Button";
-import { DetailCard } from "../../components/ui/DetailCard/DetailCard";
+import { DetailCard } from "../../components/ui/DetailCard";
 import { formatCNPJ, formatCEP, formatPhone } from "../../utils/masks";
 import { Fornecedor } from "../../types/fornecedores";
 

@@ -5,9 +5,10 @@ import {
   removerPedido,
   atualizarPedido,
 } from "../../api/pedidos";
-import { Link } from "react-router-dom";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import { Alert } from "../../components/ui/Alert";
+import { ErrorView } from "../../components/ui/ErrorView";
+import { NotFoundView } from "../../components/ui/NotFoundView";
+import { ObservacoesSection } from "../../components/ui/ObservacoesSection";
 import { ParcelasView } from "../../components/ParcelasView";
 import { ItensPedidoView } from "../../components/ItensPedidoView";
 import { Pedido } from "../../types/pedidos";
@@ -16,9 +17,11 @@ import { PedidoInfoSection } from "../../components/PedidoInfoSection";
 import { PedidoActions } from "../../components/PedidoActions";
 import { DeleteModal } from "../../components/DeleteModal";
 
+// === COMPONENTE PRINCIPAL ===
 export const PedidoView = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const [pedido, setPedido] = useState<Pedido | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,70 +29,81 @@ export const PedidoView = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+  // === CARREGAR PEDIDO ===
   useEffect(() => {
+    if (!id) return;
+
     const carregarPedido = async () => {
+      setLoading(true);
+      setError("");
+
       try {
-        if (!id) throw new Error("ID do pedido não fornecido");
-        setLoading(true);
-        setError("");
         const response = await buscarPedido(id);
         setPedido(response.data);
       } catch (err) {
-        setError("Erro ao carregar pedido. Tente novamente mais tarde.");
         console.error("Erro ao carregar pedido:", err);
+        setError("Erro ao carregar pedido. Tente novamente mais tarde.");
       } finally {
         setLoading(false);
       }
     };
+
     carregarPedido();
   }, [id]);
 
+  // === HANDLERS ===
+  const atualizarParcelas = async (parcelasAtualizadas: Pedido["parcelas"]) => {
+    if (!pedido || !pedido._id) return;
+
+    await atualizarPedido(pedido._id, { parcelas: parcelasAtualizadas });
+    setPedido({ ...pedido, parcelas: parcelasAtualizadas });
+  };
+
   const handleTogglePago = async (numeroParcela: number) => {
-    if (!pedido || !pedido.parcelas) return;
+    if (!pedido?.parcelas) return;
+
+    const parcelasAtualizadas = pedido.parcelas.map((parcela) =>
+      parcela.numero === numeroParcela
+        ? { ...parcela, pago: !parcela.pago }
+        : parcela
+    );
+
     try {
-      const parcelasAtualizadas = pedido.parcelas.map((parcela) =>
-        parcela.numero === numeroParcela
-          ? { ...parcela, pago: !parcela.pago }
-          : parcela
-      );
-      const pedidoAtualizado = { ...pedido, parcelas: parcelasAtualizadas };
-      await atualizarPedido(pedido._id!, { parcelas: parcelasAtualizadas });
-      setPedido(pedidoAtualizado);
+      await atualizarParcelas(parcelasAtualizadas);
     } catch (err) {
-      setError("Erro ao atualizar parcela. Tente novamente.");
       console.error("Erro ao atualizar parcela:", err);
+      setError("Erro ao atualizar parcela. Tente novamente.");
+    }
+  };
+
+  const handleRemoveTodasParcelas = async () => {
+    try {
+      await atualizarParcelas([]);
+    } catch (err) {
+      console.error("Erro ao remover parcelas:", err);
+      setError("Erro ao remover parcelas. Tente novamente.");
     }
   };
 
   const handleDelete = async () => {
     if (!id) return;
     setIsDeleting(true);
+
     try {
       await removerPedido(id);
       navigate("/pedidos", {
         state: { success: true, message: "Pedido excluído com sucesso!" },
       });
     } catch (err) {
-      setError("Erro ao excluir pedido. Tente novamente.");
       console.error("Erro ao excluir pedido:", err);
+      setError("Erro ao excluir pedido. Tente novamente.");
     } finally {
       setIsDeleting(false);
       setShowDeleteModal(false);
     }
   };
 
-  const handleRemoveTodasParcelas = async () => {
-    if (!pedido || !pedido.parcelas) return;
-    try {
-      const pedidoAtualizado = { ...pedido, parcelas: [] };
-      await atualizarPedido(pedido._id!, { parcelas: [] });
-      setPedido(pedidoAtualizado);
-    } catch (err) {
-      setError("Erro ao remover parcelas. Tente novamente.");
-      console.error("Erro ao remover parcelas:", err);
-    }
-  };
-
+  // === RENDER ===
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorView error={error} />;
   if (!pedido) return <NotFoundView />;
@@ -100,13 +114,12 @@ export const PedidoView = () => {
 
       <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
         <PedidoInfoSection pedido={pedido} />
-
         <ItensPedidoView
           itens={pedido.itens}
           totalPedido={pedido.totalPedido}
         />
 
-        {pedido.parcelas && pedido.parcelas.length > 0 && (
+        {!!pedido.parcelas?.length && (
           <ParcelasView
             parcelas={pedido.parcelas}
             onTogglePago={handleTogglePago}
@@ -117,7 +130,7 @@ export const PedidoView = () => {
           />
         )}
 
-        {pedido.observacoes && (
+        {!!pedido.observacoes && (
           <ObservacoesSection observacoes={pedido.observacoes} />
         )}
 
@@ -138,43 +151,5 @@ export const PedidoView = () => {
     </div>
   );
 };
-
-const ErrorView = ({ error }: { error: string }) => (
-  <div className="max-w-4xl mx-auto p-4">
-    <Alert type="error" message={error} />
-    <div className="mt-4">
-      <Link
-        to="/pedidos"
-        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-      >
-        Voltar para lista
-      </Link>
-    </div>
-  </div>
-);
-
-const NotFoundView = () => (
-  <div className="max-w-4xl mx-auto p-4">
-    <Alert
-      type="info"
-      message="Pedido não encontrado"
-      actions={
-        <Link
-          to="/pedidos"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Voltar para lista
-        </Link>
-      }
-    />
-  </div>
-);
-
-const ObservacoesSection = ({ observacoes }: { observacoes: string }) => (
-  <div className="p-6">
-    <h2 className="text-lg font-medium text-gray-900 mb-4">Observações</h2>
-    <p className="text-sm text-gray-700 whitespace-pre-line">{observacoes}</p>
-  </div>
-);
 
 export default PedidoView;

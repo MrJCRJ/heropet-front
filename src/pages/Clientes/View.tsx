@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { buscarCliente, excluirCliente } from "../../api/clientes";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Alert } from "../../components/ui/Alert";
-import { DetailCard } from "../../components/ui/DetailCard/DetailCard";
+import { DetailCard } from "../../components/ui/DetailCard";
 import { Button } from "../../components/ui/Button";
 import { formatCPF, formatCNPJ, formatPhone } from "../../utils/masks";
 
